@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Confirmation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: linear-gradient(135deg, #DBDBDB, #AC8DAF);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            color: #434676;
+        }
+
+        .header {
+            text-align: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .header h1 {
+                font-size: 36px;
+                margin: 0;
+                color: #6A4B78;
+                font-family: 'Lora', serif;
+            }
+
+        .content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            margin-top: -20px;
+        }
+
+            .content h1 {
+                color: #434676;
+                margin-bottom: 20px;
+                font-size: 24px;
+                font-family: 'Roboto', sans-serif;
+            }
+
+            .content p {
+                color: #666;
+                line-height: 1.6;
+                margin-bottom: 20px;
+                font-size: 16px;
+                font-family: 'Roboto', sans-serif;
+            }
+
+            .content a {
+                display: inline-block;
+                margin-top: 20px;
+                padding: 12px 24px;
+                background-color: #6A4B78;
+                color: #fff;
+                text-decoration: none;
+                border-radius: 5px;
+                font-size: 16px;
+                font-family: 'Roboto', sans-serif;
+            }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: black;
+            border-top: 1px solid #ddd;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Ensuring the email content is visible */
+        .email-container, .content, .footer {
+            display: block !important;
+            max-height: none !important;
+            overflow: visible !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <div class="header">
+            <h1>Roots&Wings</h1>
+        </div>
+        <div class="content">
+            <h1>Confirm Your Email Address</h1>
+            <p>Hi there,</p>
+            <p>Thank you for registering on our platform. Please click the button below to confirm your email address:</p>
+            <a href="{ConfirmationLink}" target="_blank">Confirm Email</a>
+            <p>In order to get the full experience of Roots&Wings, it's important to confirm your email.</p>
+            <p>If you did not sign up for this account, please ignore this email.</p>
+            <p>Best regards,<br>Roots&Wings</p>
+        </div>
+        <div class="footer">
+            &copy; 2026 Roots&Wings. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>

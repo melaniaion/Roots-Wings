@@ -2,10 +2,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Roots_Wings.Data;
 using Roots_Wings.Models;
+using Roots_Wings.Services;
+using Roots_Wings.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+//EMAIL SERVICE
+builder.Services.AddTransient<IEmailService, EmailService>();
+
 var connectionString = builder.Configuration.GetConnectionString("Roots&WingsConnection") ?? throw new InvalidOperationException("Connection string 'Roots&WingsConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));

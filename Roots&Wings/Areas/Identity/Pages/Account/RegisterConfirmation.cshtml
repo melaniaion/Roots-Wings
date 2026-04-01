@@ -1,0 +1,27 @@
+﻿@page
+@model RegisterConfirmationModel
+@{
+    ViewData["Title"] = "Register Confirmation";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account/register-confirmation.css" />
+}
+
+<div class="container register-confirmation-container">
+    <div class="card card-register-confirmation">
+        <div class="card-register-confirmation-header">
+            <h2>@ViewData["Title"]</h2>
+        </div>
+        <div class="card-register-confirmation-body">
+            <p>
+                A confirmation email has been sent to your email.<br>
+                Please check your inbox and follow the instructions to verify your account.
+            </p>
+            <p>
+                To use our app, you need to <span class="highlight">confirm your account</span>.<br>
+            </p>
+            <a href="/" class="btn-home">Go to Home</a>
+        </div>
+    </div>
+</div>
