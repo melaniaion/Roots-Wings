@@ -1,31 +1,88 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
+    scroll-behavior: smooth;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+    html {
+        font-size: 16px;
+    }
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background: linear-gradient(160deg, #FBF6F0 0%, #F4D9D9 50%, #E8EDE0 100%);
+    min-height: 100vh;
+    color: #5C3D2E;
+    font-family: 'DM Sans', sans-serif;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+/* Navbar — gradient cald de la terracotta la blush roz */
+.navbar {
+    background: linear-gradient(135deg, #F2E0D0, #F4D9D9) !important;
+    border-bottom: 2px solid #E8C4A8 !important;
+    padding: 0.6rem 1rem;
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+.navbar-brand {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    color: #5C3D2E !important;
+}
+
+    .navbar-brand:hover {
+        color: #8B5A3A !important;
+    }
+
+.nav-link {
+    color: #5C3D2E !important;
+    font-size: 0.9rem;
+}
+
+    .nav-link:hover {
+        color: #3D5C35 !important; /* moss green la hover — natura */
+    }
+
+/* Focus */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
+.form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #8B5A3A;
+}
+
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 35px;
+    background: linear-gradient(135deg, #F2E0D0, #F4D9D9);
+    border-top: 1px solid #E8C4A8;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #8B7B6A;
+}
+
+    .footer a {
+        color: #8B7B6A;
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            color: #3D5C35;
+        }
+
+/* Form placeholders */
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: #B5A898;
+    text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: start;
 }
