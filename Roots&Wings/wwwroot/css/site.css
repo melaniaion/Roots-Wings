@@ -129,6 +129,18 @@ body {
     color: #3D5C35 !important;
 }
 
+.navbar-nav {
+    display: flex !important;
+    flex-direction: row; 
+    gap: 7px; 
+    align-items: center;
+}
+
+.navbar-nav .nav-link {
+    min-width: 80px; 
+    text-align: center; 
+}
+
 /* Register button */
 .nav-link[href*="Register"],
 a[href*="Register"] {

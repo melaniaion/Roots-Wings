@@ -50,49 +50,50 @@
     flex-wrap: wrap;
 }
 
-.btn-primary-rw {
-    background: #5C3D2E;
-    color: #FBF6F0 !important;
-    padding: 0.8rem 2.2rem;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s;
-    border: none;
+body .btn-primary-rw,
+body a.btn-primary-rw {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    line-height: 1;
-}
-
-.btn-primary-rw:hover {
-    background: #3D5C35;
+    width: 240px;
+    height: 50px; 
+    background: #5C3D2E !important;
     color: #FBF6F0 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(92, 61, 46, 0.25);
+    border-radius: 30px;
+    border: 2px solid #5C3D2E !important;
+    text-decoration: none;
+    transition: all 0.3s ease;
 }
 
-.btn-secondary-rw {
-    background: transparent;
+body .btn-primary-rw:hover,
+body a.btn-primary-rw:hover {
+    background: #3D5C35 !important; 
+    color: #FBF6F0 !important; 
+    border-color: #3D5C35 !important;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+body .btn-secondary-rw,
+body a.btn-secondary-rw {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 240px;
+    height: 50px; 
+    background: transparent !important;
     color: #8B7B6A !important;
-    padding: 0.8rem 2.2rem;
     border-radius: 30px;
-    font-size: 1rem;
-    font-weight: 400;
+    border: 2px solid #B5A898 !important;
     text-decoration: none;
-    transition: all 0.2s;
-    border: 1.5px solid #B5A898;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 1;
+    transition: all 0.3s ease;
 }
 
-.btn-secondary-rw:hover {
-    border-color: #5C3D2E;
+body .btn-secondary-rw:hover {
+    border-color: #5C3D2E !important;
     color: #5C3D2E !important;
-    transform: translateY(-2px);
+    background: rgba(92, 61, 46, 0.05) !important;
+    transform: translateY(-3px);
 }
 
 /* Cards */
