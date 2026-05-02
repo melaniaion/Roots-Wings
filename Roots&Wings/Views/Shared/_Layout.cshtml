@@ -6,7 +6,6 @@
     <title>@ViewData["Title"] - Roots & Wings</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Roots_Wings.styles.css" asp-append-version="true" />
@@ -14,17 +13,26 @@
 </head>
 <body>
 
+    <!-- Floating nature background elements -->
+    <span class="nature n1">🌿</span>
+    <span class="nature n2">🌸</span>
+    <span class="nature n3">🍃</span>
+    <span class="nature n4">🌼</span>
+    <span class="nature n5">✨</span>
+
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom mb-3">
+        <nav class="navbar navbar-expand-sm border-bottom mb-3">
             <div class="container-fluid">
 
-                <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="~/images/logo.png" alt="logo" width="30" height="30" />
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                    <span class="butterfly-icon">🦋</span>
                     Roots & Wings
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -49,7 +57,7 @@
 
     <footer class="footer">
         <div class="container">
-            &copy; 2026 - Roots & Wings - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2026 Roots & Wings - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 

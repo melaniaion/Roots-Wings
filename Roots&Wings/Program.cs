@@ -7,16 +7,19 @@ using Roots_Wings.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 
 //EMAIL SERVICE
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+//DB
 var connectionString = builder.Configuration.GetConnectionString("Roots&WingsConnection") ?? throw new InvalidOperationException("Connection string 'Roots&WingsConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+//Idenity and Roles
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();

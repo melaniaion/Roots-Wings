@@ -13,17 +13,94 @@ html {
 
 body {
     margin-bottom: 60px;
-    background: linear-gradient(160deg, #FBF6F0 0%, #F4D9D9 50%, #E8EDE0 100%);
+    background: linear-gradient(145deg, #FBF0E8 0%, #F4D9D9 35%, #E8EDE0 70%, #FAF0C8 100%);
+    background-attachment: fixed;
     min-height: 100vh;
     color: #5C3D2E;
     font-family: 'DM Sans', sans-serif;
 }
 
-/* Navbar — gradient cald de la terracotta la blush roz */
+/* Floating nature elements */
+.nature {
+    position: fixed;
+    font-size: 2rem;
+    opacity: 0.15;
+    animation: floatNature 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+    user-select: none;
+}
+
+.n1 {
+    top: 12%;
+    left: 4%;
+    font-size: 2.4rem;
+    animation-delay: 0s;
+}
+
+.n2 {
+    top: 58%;
+    left: 3%;
+    font-size: 1.8rem;
+    animation-delay: 3s;
+}
+
+.n3 {
+    top: 18%;
+    right: 5%;
+    font-size: 2.2rem;
+    animation-delay: 1.5s;
+}
+
+.n4 {
+    top: 68%;
+    right: 4%;
+    font-size: 1.9rem;
+    animation-delay: 4s;
+}
+
+.n5 {
+    top: 40%;
+    left: 7%;
+    font-size: 1.4rem;
+    animation-delay: 2s;
+}
+
+@keyframes floatNature {
+    0%, 100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-18px) rotate(8deg);
+    }
+}
+
+/* Butterfly in brand */
+.butterfly-icon {
+    display: inline-block;
+    margin-right: 6px;
+    animation: flutter 3s ease-in-out infinite;
+}
+
+@keyframes flutter {
+    0%, 100% {
+        transform: rotate(-5deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(5deg) scale(1.1);
+    }
+}
+
+/* Navbar */
 .navbar {
-    background: linear-gradient(135deg, #F2E0D0, #F4D9D9) !important;
-    border-bottom: 2px solid #E8C4A8 !important;
+    background: rgba(255, 255, 255, 0.45) !important;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(232, 196, 168, 0.6) !important;
     padding: 0.6rem 1rem;
+    position: relative;
+    z-index: 100;
 }
 
 .navbar-brand {
@@ -31,20 +108,69 @@ body {
     font-weight: 500;
     font-size: 1.1rem;
     color: #5C3D2E !important;
+    display: flex;
+    align-items: center;
 }
 
-    .navbar-brand:hover {
-        color: #8B5A3A !important;
-    }
+.navbar-brand:hover {
+    color: #8B5A3A !important;
+}
 
 .nav-link {
     color: #5C3D2E !important;
     font-size: 0.9rem;
+    border-radius: 20px;
+    padding: 0.4rem 0.9rem !important;
+    transition: all 0.2s;
 }
 
-    .nav-link:hover {
-        color: #3D5C35 !important; /* moss green la hover — natura */
-    }
+.nav-link:hover {
+    background: rgba(242, 224, 208, 0.6);
+    color: #3D5C35 !important;
+}
+
+/* Register button */
+.nav-link[href*="Register"],
+a[href*="Register"] {
+    border: 1.5px solid #E8C4A8;
+    background: rgba(255,255,255,0.5);
+    color: #5C3D2E !important;
+    border-radius: 20px;
+    padding: 0.35rem 1rem !important;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-link[href*="Register"]:hover,
+a[href*="Register"]:hover {
+    background: rgba(255,255,255,0.9);
+}
+
+/* Login button */
+.nav-link[href*="Login"],
+a[href*="Login"] {
+    background: #5C3D2E;
+    color: #FBF6F0 !important;
+    border-radius: 20px;
+    padding: 0.35rem 1rem !important;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.nav-link[href*="Login"]:hover,
+a[href*="Login"]:hover {
+    background: #3D5C35;
+    color: #FBF6F0 !important;
+}
+
+/* Register and Login buttons spacing */
+.navbar-collapse {
+    gap: 0.5rem;
+}
+
+.navbar-collapse ul {
+    margin-bottom: 0;
+}
 
 /* Focus */
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
@@ -58,22 +184,24 @@ body {
     bottom: 0;
     width: 100%;
     height: 35px;
-    background: linear-gradient(135deg, #F2E0D0, #F4D9D9);
+    background: rgba(251, 246, 240, 0.85);
+    backdrop-filter: blur(8px);
     border-top: 1px solid #E8C4A8;
     display: flex;
     align-items: center;
     font-size: 12px;
     color: #8B7B6A;
+    z-index: 100;
 }
 
-    .footer a {
-        color: #8B7B6A;
-        text-decoration: none;
-    }
+.footer a {
+    color: #8B7B6A;
+    text-decoration: none;
+}
 
-        .footer a:hover {
-            color: #3D5C35;
-        }
+.footer a:hover {
+    color: #3D5C35;
+}
 
 /* Form placeholders */
 .form-floating > .form-control-plaintext::placeholder,

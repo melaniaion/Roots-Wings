@@ -12,7 +12,7 @@ namespace Roots_Wings.Services
         public EmailService(IConfiguration configuration, IWebHostEnvironment env)
         {
             _configuration = configuration;
-            _env = env;
+            _env = env;  //in order to access data from wwwroot
         }
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
@@ -38,7 +38,7 @@ namespace Roots_Wings.Services
                 {
                     Subject = subject,
                     Body = htmlMessage,
-                    IsBodyHtml = true
+                    IsBodyHtml = true  //to render the code
                 };
 
                 await smtp.SendMailAsync(message);
