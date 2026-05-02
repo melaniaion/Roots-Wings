@@ -1,2 +1,75 @@
-﻿body {
+﻿/* Page */
+.register-confirmation-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 4rem;
+}
+
+/* Card */
+.card-register-confirmation {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 196, 168, 0.6);
+    border-radius: 24px;
+    max-width: 420px;
+    width: 100%;
+    overflow: hidden;
+    text-align: center;
+}
+
+/* Header */
+.card-register-confirmation-header {
+    background: linear-gradient(135deg, #F2E0D0, #F4D9D9);
+    border-bottom: 1px solid #E8C4A8;
+    padding: 1.75rem 2rem;
+}
+
+.card-register-confirmation-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #5C3D2E;
+    margin: 0;
+}
+
+/* Body */
+.card-register-confirmation-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.card-register-confirmation-body p {
+    font-size: 0.95rem;
+    color: #8B7B6A;
+    line-height: 1.7;
+    margin: 0;
+}
+
+/* Highlighted word */
+.highlight {
+    color: #8B5A3A;
+    font-weight: 500;
+}
+
+/* Button */
+.btn-home {
+    display: inline-block;
+    margin-top: 0.75rem;
+    background: #5C3D2E;
+    color: #FBF6F0 !important;
+    padding: 0.75rem 2rem;
+    border-radius: 30px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-home:hover {
+    background: #3D5C35;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(92, 61, 46, 0.2);
 }
