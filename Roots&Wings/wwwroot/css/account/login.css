@@ -1,0 +1,111 @@
+﻿/* Center the whole page */
+.row {
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+/* Card container */
+.col-md-4 {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(232, 196, 168, 0.6);
+    border-radius: 24px;
+    padding: 2.5rem 2rem;
+    max-width: 420px;
+    width: 100%;
+}
+
+h1 {
+    display: none;
+}
+
+h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 500;
+    color: #5C3D2E;
+    margin-bottom: 0.25rem;
+    text-align: center;
+}
+
+hr {
+    border-color: #E8C4A8;
+    margin-bottom: 1.5rem;
+}
+
+/* Inputs */
+.form-floating > .form-control {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1.5px solid #E8C4A8;
+    border-radius: 12px;
+    color: #5C3D2E;
+    font-family: 'DM Sans', sans-serif;
+    height: 56px;
+}
+
+.form-floating > .form-control:focus {
+    border-color: #8B5A3A;
+    box-shadow: 0 0 0 0.15rem rgba(139, 90, 58, 0.15);
+    background: #fff;
+}
+
+.form-floating > label {
+    color: #B5A898;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.form-floating > .form-control:focus ~ label,
+.form-floating > .form-control:not(:placeholder-shown) ~ label {
+    color: #8B5A3A;
+}
+
+/* Login button */
+.btn-primary {
+    background: #5C3D2E !important;
+    border: none !important;
+    border-radius: 30px !important;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.8rem;
+    color: #FBF6F0 !important;
+    transition: all 0.2s;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.btn-primary:hover {
+    background: #3D5C35 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(92, 61, 46, 0.2);
+}
+
+/* ALL links below the button */
+#account a {
+    display: block;
+    text-align: center;
+    font-size: 0.85rem;
+    color: #8B7B6A !important;
+    text-decoration: none !important;
+    padding: 0.3rem 0;
+    transition: color 0.2s;
+    border: none !important;
+    background: none !important;
+    outline: none !important;
+}
+
+#account a:hover {
+    color: #5C3D2E !important;
+}
+
+/* Remove paragraph margins */
+#account p {
+    margin: 0;
+}
+
+/* Error messages */
+.text-danger {
+    font-size: 0.78rem;
+    color: #8B4A4A !important;
+}
