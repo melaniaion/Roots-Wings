@@ -226,3 +226,105 @@ a[href*="Login"]:hover {
 .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/*  Buttons */
+.btn-rw-primary {
+    background: #5C3D2E;
+    color: #FBF6F0;
+    border-radius: 30px;
+    padding: 0.6rem 1.8rem;
+    border: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s;
+}
+
+.btn-rw-primary:hover {
+    background: #3D5C35;
+    color: #FBF6F0;
+    text-decoration: none;
+}
+
+.btn-rw-secondary {
+    background: transparent;
+    color: #8B7B6A;
+    border: 1.5px solid #B5A898;
+    border-radius: 30px;
+    padding: 0.6rem 1.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.btn-rw-secondary:hover {
+    border-color: #5C3D2E;
+    color: #5C3D2E;
+    text-decoration: none;
+}
+
+.btn-rw-danger {
+    background: transparent;
+    color: #8B4A4A;
+    border: 1.5px solid #F4D9D9;
+    border-radius: 30px;
+    padding: 0.6rem 1.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.btn-rw-danger:hover {
+    background: #F4D9D9;
+    border-color: #8B4A4A;
+    text-decoration: none;
+}
+
+/* Reusable card */
+.rw-card {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    border-radius: 20px;
+    border: 1px solid #E8C4A8;
+    padding: 1.8rem;
+}
+
+/*Page title */
+.rw-page-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2rem;
+    color: #5C3D2E;
+    margin: 0;
+}
+
+/* Small uppercase label above a section */
+.rw-section-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #B5A898;
+    margin-bottom: 0.8rem;
+    display: block;
+}
+
+/* Back navigation link */
+.rw-back-link {
+    color: #8B7B6A;
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.rw-back-link:hover {
+    color: #5C3D2E;
+}

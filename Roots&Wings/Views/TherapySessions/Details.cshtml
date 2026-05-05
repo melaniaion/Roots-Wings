@@ -1,0 +1,192 @@
+﻿@model Roots_Wings.Models.TherapySession
+
+@{
+    ViewData["Title"] = Model.Title;
+
+    var linkedEntries = ViewBag.LinkedEntries as List<Roots_Wings.Models.JournalEntry>
+                        ?? new List<Roots_Wings.Models.JournalEntry>();
+    int selectedRange = ViewBag.SelectedRangeDays ?? 7;
+    bool hasPassed    = ViewBag.SessionHasPassed ?? false;
+
+    // Countdown shown in the header pill
+    var diff = (Model.SessionDate.Date - DateTime.Today).Days;
+    string countdown = diff == 0 ? "Today"
+                     : diff  > 0 ? $"In {diff} day{(diff == 1 ? "" : "s")}"
+                                 : $"{-diff} day{(-diff == 1 ? "" : "s")} ago";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+}
+
+<div class="mb-3">
+    <a asp-action="Index" class="rw-back-link">← Back to Sessions</a>
+</div>
+
+<!-- Session header -->
+<div class="rw-card mb-3">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
+        <div>
+            <div class="session-header-date">
+                @Model.SessionDate.ToString("dddd, MMMM d, yyyy · h:mm tt")
+                @if (!string.IsNullOrEmpty(Model.TherapistName))
+                {
+                    <span style="margin-left: 0.4rem; color: #B5A898;">
+                        · with @Model.TherapistName
+                    </span>
+                }
+            </div>
+            <h1 class="rw-page-title">@Model.Title</h1>
+        </div>
+
+        <span class="countdown-pill @(hasPassed ? "status-past" : "status-upcoming")">
+            @countdown
+        </span>
+    </div>
+</div>
+
+<!-- Prep and Post notes -->
+<div class="row g-3 mb-3">
+
+    <div class="col-md-6">
+        <div class="rw-card h-100">
+            <span class="notes-label">Before the session</span>
+            @if (!string.IsNullOrWhiteSpace(Model.PrepNotes))
+            {
+                <div class="notes-content">@Model.PrepNotes</div>
+            }
+            else
+            {
+                <p class="notes-empty">No prep notes written.</p>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="rw-card h-100">
+            <span class="notes-label">After the session</span>
+            @if (!string.IsNullOrWhiteSpace(Model.PostNotes))
+            {
+                <div class="notes-content">@Model.PostNotes</div>
+            }
+            else if (hasPassed)
+            {
+                <!-- Session has passed, invite the user to reflect -->
+                <p class="notes-empty">How did it go?</p>
+                <a asp-action="Edit"
+                   asp-route-id="@Model.Id"
+                   class="btn-rw-primary"
+                   style="font-size: 0.82rem; padding: 0.45rem 1.2rem; margin-top: 0.8rem;">
+                    Add reflection
+                </a>
+            }
+            else
+            {
+                <p class="notes-empty">Available after the session.</p>
+            }
+        </div>
+    </div>
+
+</div>
+
+<!-- Journal entries near this session -->
+<div class="rw-card mb-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <span class="rw-section-label" style="margin: 0;">
+            Journal entries around this date
+        </span>
+
+        <form method="get" asp-action="Details" asp-route-id="@Model.Id">
+            <select name="rangeDays"
+                    class="range-select"
+                    onchange="this.form.submit()">
+
+                @if (selectedRange == 3)
+                {
+                    <option value="3" selected>± 3 days</option>
+                }
+                else
+                {
+                    <option value="3">± 3 days</option>
+                }
+
+                @if (selectedRange == 7)
+                {
+                    <option value="7" selected>± 1 week</option>
+                }
+                else
+                {
+                    <option value="7">± 1 week</option>
+                }
+
+                @if (selectedRange == 14)
+                {
+                    <option value="14" selected>± 2 weeks</option>
+                }
+                else
+                {
+                    <option value="14">± 2 weeks</option>
+                }
+
+                @if (selectedRange == 30)
+                {
+                    <option value="30" selected>± 1 month</option>
+                }
+                else
+                {
+                    <option value="30">± 1 month</option>
+                }
+
+            </select>
+        </form>
+    </div>
+
+    @if (linkedEntries.Any())
+    {
+        foreach (var entry in linkedEntries)
+        {
+            <a asp-controller="Journal"
+               asp-action="Details"
+               asp-route-id="@entry.Id"
+               class="entry-link-card">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div>
+                        <div class="entry-card-date">
+                            @entry.CreatedAt.ToString("MMM d, yyyy")
+                        </div>
+                        <p class="entry-card-title">@entry.Title</p>
+                    </div>
+                    <div class="d-flex flex-wrap gap-1 justify-content-end">
+                        @foreach (var tag in entry.Tags)
+                        {
+                            <span class="entry-tag-pill">@tag.Name</span>
+                        }
+                    </div>
+                </div>
+            </a>
+        }
+    }
+    else
+    {
+        <p style="color: #B5A898; font-size: 0.88rem; font-style: italic; margin: 0;">
+            No journal entries found within this range.
+        </p>
+    }
+
+</div>
+
+<!-- Actions -->
+<div class="d-flex gap-2 mb-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-rw-secondary">
+        Edit Session
+    </a>
+
+    <form asp-action="Delete"
+          asp-route-id="@Model.Id"
+          method="post"
+          onsubmit="return confirm('Delete this session? This cannot be undone.');">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn-rw-danger">Delete</button>
+    </form>
+</div>
