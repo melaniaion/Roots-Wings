@@ -1,0 +1,216 @@
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Roots_Wings.Data;
+using Roots_Wings.Models;
+
+namespace Roots_Wings.Controllers
+{
+    [Authorize]
+    public class TherapySessionsController : Controller
+    {
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public TherapySessionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            _userManager = userManager;
+        }
+
+        // GET: /Sessions
+        public async Task<IActionResult> Index(int? month, int? year)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var today = DateTime.Today;
+
+            // Use query params if provided, otherwise default to current month
+            int displayMonth = month ?? today.Month;
+            int displayYear = year ?? today.Year;
+
+            // Guard against invalid values someone might type in the URL
+            if (displayMonth < 1 || displayMonth > 12)
+                displayMonth = today.Month;
+
+            ViewBag.DisplayMonth = displayMonth;
+            ViewBag.DisplayYear = displayYear;
+
+            var sessions = await _context.TherapySessions
+                .Where(s => s.UserId == userId)
+                .OrderBy(s => s.SessionDate)
+                .ToListAsync();
+
+            return View(sessions);
+        }
+
+        // GET: /Sessions/Details/5
+        public async Task<IActionResult> Details(int id, int rangeDays = 7)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            var rangeStart = session.SessionDate.AddDays(-rangeDays);
+            var rangeEnd = session.SessionDate.AddDays(rangeDays);
+
+            // Journal entries written close to this session date
+            var linkedEntries = await _context.JournalEntries
+                .Where(e => e.UserId == userId
+                    && e.CreatedAt >= rangeStart
+                    && e.CreatedAt <= rangeEnd)
+                .Include(e => e.Tags)
+                .OrderBy(e => e.CreatedAt)
+                .ToListAsync();
+
+            
+            ViewBag.LinkedEntries = linkedEntries;
+            ViewBag.SelectedRangeDays = rangeDays;
+            ViewBag.SessionHasPassed = session.SessionDate < DateTime.UtcNow;
+
+            return View(session);
+        }
+
+        // GET: /Sessions/Create
+        public IActionResult Create()
+        {
+            return View(new TherapySession { SessionDate = DateTime.Today.AddDays(1).AddHours(10) });
+        }
+
+        // POST: /Sessions/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken] // For CSRF protection
+        public async Task<IActionResult> Create(TherapySession newSession)
+        {
+            // These fields are set by the app, not the form
+            // So we remove them from validation
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+
+            if (!ModelState.IsValid)
+            {
+                return View(newSession);
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            // Check if the user already has a session on this calendar day
+            var dayStart = newSession.SessionDate.Date;
+            var dayEnd = dayStart.AddDays(1);
+
+            bool dayAlreadyTaken = await _context.TherapySessions
+                .AnyAsync(s => s.UserId == userId
+                            && s.SessionDate >= dayStart
+                            && s.SessionDate < dayEnd);
+
+            if (dayAlreadyTaken)
+            {
+                ModelState.AddModelError("SessionDate", "You already have a session on this day.");
+                return View(newSession);
+            }
+
+            newSession.UserId = userId;
+            newSession.CreatedAt = DateTime.UtcNow;
+
+            _context.TherapySessions.Add(newSession);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // GET: /Sessions/Edit/5
+        public async Task<IActionResult> Edit(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            return View(session);
+        }
+
+        // POST: /Sessions/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, TherapySession model)
+        {
+            ModelState.Remove("UserId");
+            ModelState.Remove("User");
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            // Check if the new date conflicts with another session on that day
+            // Excluding the current session from the check
+            var dayStart = model.SessionDate.Date;
+            var dayEnd = dayStart.AddDays(1);
+
+            bool dayAlreadyTaken = await _context.TherapySessions
+                .AnyAsync(s => s.UserId == userId
+                            && s.Id != id
+                            && s.SessionDate >= dayStart
+                            && s.SessionDate < dayEnd);
+
+            if (dayAlreadyTaken)
+            {
+                ModelState.AddModelError("SessionDate", "You already have a session on this day.");
+                return View(model);
+            }
+
+            session.Title = model.Title;
+            session.SessionDate = model.SessionDate;
+            session.TherapistName = model.TherapistName;
+            session.PrepNotes = model.PrepNotes;
+            session.PostNotes = model.PostNotes;
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Details), new { id = session.Id });
+        }
+
+        // POST: /Sessions/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            _context.TherapySessions.Remove(session);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+        }
+    }
+}
