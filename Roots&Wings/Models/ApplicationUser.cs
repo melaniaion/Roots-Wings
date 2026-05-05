@@ -10,5 +10,10 @@ namespace Roots_Wings.Models
         public string? ProfilePicture { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateLastLogin { get; set; }
+
+ 
+
+        public virtual ICollection<TherapySession> TherapySessions { get; set; } = new List<TherapySession>();
+        public virtual ICollection<JournalEntry> JournalEntries { get; set; } = new List<JournalEntry>();
     }
 }
