@@ -1,0 +1,62 @@
+﻿@model IEnumerable<Roots_Wings.Models.JournalEntry>
+
+@{
+    ViewData["Title"] = "Journal";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/journal.css" asp-append-version="true" />
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="rw-page-title">Journal</h1>
+    <a asp-action="Create" class="btn-rw-primary">+ New Entry</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        @if (Model.Any())
+        {
+            foreach (var entry in Model)
+            {
+                <a asp-action="Details" asp-route-id="@entry.Id" class="journal-entry-card">
+
+                    <div class="entry-card-date">
+                        @entry.CreatedAt.ToString("MMMM d, yyyy")
+                        @if (entry.UpdatedAt.HasValue)
+                        {
+                            <span style="margin-left: 0.5rem; font-style: italic;">· edited</span>
+                        }
+                    </div>
+
+                    <p class="entry-card-title">@entry.Title</p>
+
+                    <p class="entry-card-preview">@entry.Content</p>
+
+                    @if (entry.Tags.Any())
+                    {
+                        <div>
+                            @foreach (var tag in entry.Tags)
+                            {
+                                <span class="entry-tag-pill">@tag.Name</span>
+                            }
+                        </div>
+                    }
+
+                </a>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                📖<br />
+                Your journal is empty.<br />
+                <a asp-action="Create" style="color: #3D5C35;">
+                    Write your first entry
+                </a>
+            </div>
+        }
+
+    </div>
+</div>
