@@ -1,0 +1,68 @@
+﻿@model Roots_Wings.Models.JournalEntry
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/journal.css" asp-append-version="true" />
+}
+
+<div class="mb-3">
+    <a asp-action="Index" class="rw-back-link">← Back to Journal</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+
+        <div class="journal-page">
+
+            <!-- Date and edited indicator -->
+            <div class="entry-detail-date">
+                @Model.CreatedAt.ToString("MMMM d, yyyy · h:mm tt")
+                @if (Model.UpdatedAt.HasValue)
+                {
+                    <span style="margin-left: 0.5rem; font-style: italic;">
+                        · edited @Model.UpdatedAt.Value.ToString("MMM d")
+                    </span>
+                }
+            </div>
+
+            <h1 class="entry-detail-title">@Model.Title</h1>
+
+            <hr class="journal-divider" />
+
+            <div class="entry-detail-content">@Model.Content</div>
+
+            <!-- Tags -->
+            @if (Model.Tags.Any())
+            {
+                <div style="margin-top: 2rem; padding-top: 1.2rem; border-top: 1px solid rgba(232, 196, 168, 0.4);">
+                    <span class="rw-section-label">Feelings</span>
+                    @foreach (var tag in Model.Tags)
+                    {
+                        <span class="entry-tag-pill">@tag.Name</span>
+                    }
+                </div>
+            }
+
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex gap-2 mt-3">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-rw-secondary">
+                Edit Entry
+            </a>
+
+            <!-- Delete uses POST, I shouldn't delete with a GET link -to check later-->
+            <form asp-action="Delete"
+                  asp-route-id="@Model.Id"
+                  method="post"
+                  onsubmit="return confirm('Delete this entry? This cannot be undone.');">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-rw-danger">Delete</button>
+            </form>
+        </div>
+
+    </div>
+</div>
