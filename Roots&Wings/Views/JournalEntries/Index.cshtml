@@ -2,61 +2,86 @@
 
 @{
     ViewData["Title"] = "Journal";
+
+    int rotationIndex = 0;
 }
 
 @section Styles {
     <link rel="stylesheet" href="~/css/journal.css" asp-append-version="true" />
 }
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="rw-page-title">Journal</h1>
-    <a asp-action="Create" class="btn-rw-primary">+ New Entry</a>
-</div>
+<div class="journal-page">
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="journal-topbar">
 
-        @if (Model.Any())
-        {
-            foreach (var entry in Model)
+        <h1 class="journal-title">
+            Journal
+        </h1>
+
+        <a asp-action="Create" class="journal-create-btn">
+            + New Entry
+        </a>
+
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="journal-grid">
+
+            @foreach (var entry in Model.OrderByDescending(e => e.CreatedAt))
             {
-                <a asp-action="Details" asp-route-id="@entry.Id" class="journal-entry-card">
+                var rotationClass = $"rotation-{rotationIndex % 4}";
+                rotationIndex++;
 
-                    <div class="entry-card-date">
-                        @entry.CreatedAt.ToString("MMMM d, yyyy")
-                        @if (entry.UpdatedAt.HasValue)
-                        {
-                            <span style="margin-left: 0.5rem; font-style: italic;">· edited</span>
-                        }
+                <a asp-action="Details"
+                       asp-route-id="@entry.Id"
+                       class="journal-paper @rotationClass">
+
+                    <div class="paper-tape"></div>
+
+                    <div class="paper-date">
+                        @entry.CreatedAt.ToString("MMM dd, yyyy")
                     </div>
 
-                    <p class="entry-card-title">@entry.Title</p>
+                    <h2 class="paper-title">
+                        @entry.Title
+                    </h2>
 
-                    <p class="entry-card-preview">@entry.Content</p>
+                    <div class="paper-preview">
+                        @entry.Content
+                    </div>
 
-                    @if (entry.Tags.Any())
+                    @if (entry.Tags != null && entry.Tags.Any())
                     {
-                        <div>
+                        <div class="paper-tags">
+
                             @foreach (var tag in entry.Tags)
                             {
-                                <span class="entry-tag-pill">@tag.Name</span>
+                                <span class="paper-tag">
+                                    @tag.Name
+                                </span>
                             }
+
                         </div>
                     }
 
                 </a>
             }
-        }
-        else
-        {
-            <div class="empty-state">
-                📖<br />
-                Your journal is empty.<br />
-                <a asp-action="Create" style="color: #3D5C35;">
-                    Write your first entry
-                </a>
-            </div>
-        }
 
-    </div>
+        </div>
+    }
+    else
+    {
+        <div class="empty-journal">
+
+            <h2>Your journal is empty</h2>
+
+            <p>
+                Start with a thought, a feeling,
+                or simply something that happened today.
+            </p>
+
+        </div>
+    }
+
 </div>
