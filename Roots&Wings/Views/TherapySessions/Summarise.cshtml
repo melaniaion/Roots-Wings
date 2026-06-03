@@ -1,0 +1,142 @@
+﻿@model Roots_Wings.Models.TherapySession
+
+@{
+    ViewData["Title"] = "Session Summary";
+    var summary = ViewBag.Summary as Roots_Wings.DTOs.SummaryResult;
+    int sessionId = ViewBag.SessionId ?? Model.Id;
+    int rangeDays = ViewBag.RangeDays ?? 7;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/summarise.css" asp-append-version="true" />
+}
+
+<div class="mb-3">
+    <a asp-action="Details" asp-route-id="@Model.Id" class="rw-back-link">
+        ← Back to session
+    </a>
+</div>
+
+<!--
+    The form wraps everything.
+    The toggle checkboxes ARE the form inputs — no hidden fields needed.
+    Only checked blocks get submitted and appear in the PDF.
+-->
+<form asp-action="ExportPdf" asp-route-id="@Model.Id" method="post" id="exportForm">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="summaryOverview" value="@summary?.OneSentenceSummary" />
+    <input type="hidden" name="summaryThemes" value="@summary?.MainThemes" />
+    <input type="hidden" name="summaryEmotions" value="@summary?.EmotionalPatterns" />
+    <input type="hidden" name="summaryDiscuss" value="@summary?.ThingsToDiscuss" />
+    <input type="hidden" name="rangeDays" value="@rangeDays" />
+
+    <!-- App controls bar — this is the "app" part sitting above the document -->
+    <div class="summary-controls">
+        <p style="color:#8B7B6A; font-size:0.82rem; margin:0;">
+            Toggle sections on or off before exporting.
+        </p>
+        <button type="submit" class="btn-rw-primary">
+            Export PDF
+        </button>
+    </div>
+
+    <!-- The document -->
+    <div class="summary-document">
+
+        <!-- Letterhead -->
+        <div class="doc-letterhead">
+            <p class="doc-prepared-label">Prepared for therapy</p>
+            <h1 class="doc-session-title">@Model.Title</h1>
+            <p class="doc-session-date">
+                @Model.SessionDate.ToString("dddd, MMMM d, yyyy")
+                @if (!string.IsNullOrEmpty(Model.TherapistName))
+                {
+                    <span style="color:#B5A898;"> · with @Model.TherapistName</span>
+                }
+            </p>
+        </div>
+
+        <!-- Section 1: Overview -->
+        <div class="doc-section" id="section-summary">
+            <div class="doc-section-header">
+                <span class="doc-section-label">Overview</span>
+                <label class="toggle-switch" title="Include in PDF">
+                    <input type="checkbox"
+                           name="includeBlocks"
+                           value="summary"
+                           class="toggle-input"
+                           checked />
+                    <span class="toggle-pill"></span>
+                </label>
+            </div>
+            <p class="doc-overview-text">@summary?.OneSentenceSummary</p>
+        </div>
+
+        <!-- Section 2: Main themes -->
+        <div class="doc-section" id="section-themes">
+            <div class="doc-section-header">
+                <span class="doc-section-label">Main Themes</span>
+                <label class="toggle-switch" title="Include in PDF">
+                    <input type="checkbox"
+                           name="includeBlocks"
+                           value="themes"
+                           class="toggle-input"
+                           checked />
+                    <span class="toggle-pill"></span>
+                </label>
+            </div>
+            <div class="doc-section-body">@summary?.MainThemes</div>
+        </div>
+
+        <!-- Section 3: Emotional patterns -->
+        <div class="doc-section" id="section-emotions">
+            <div class="doc-section-header">
+                <span class="doc-section-label">Emotional Patterns</span>
+                <label class="toggle-switch" title="Include in PDF">
+                    <input type="checkbox"
+                           name="includeBlocks"
+                           value="emotions"
+                           class="toggle-input"
+                           checked />
+                    <span class="toggle-pill"></span>
+                </label>
+            </div>
+            <div class="doc-section-body">@summary?.EmotionalPatterns</div>
+        </div>
+
+        <!-- Section 4: Things to discuss -->
+        <div class="doc-section" id="section-discuss">
+            <div class="doc-section-header">
+                <span class="doc-section-label">Things to Discuss</span>
+                <label class="toggle-switch" title="Include in PDF">
+                    <input type="checkbox"
+                           name="includeBlocks"
+                           value="discuss"
+                           class="toggle-input"
+                           checked />
+                    <span class="toggle-pill"></span>
+                </label>
+            </div>
+            <div class="doc-section-body">@summary?.ThingsToDiscuss</div>
+        </div>
+
+    </div>
+
+    <p class="ai-notice">
+        ✦ Generated by Gemini AI · Review carefully before sharing with your therapist
+    </p>
+
+</form>
+
+@section Scripts {
+    <script>
+        // When a toggle changes, find its parent section and fade it
+        document.querySelectorAll('.toggle-input').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                var section = this.closest('.doc-section');
+                section.classList.toggle('excluded', !this.checked);
+            });
+        });
+    </script>
+}

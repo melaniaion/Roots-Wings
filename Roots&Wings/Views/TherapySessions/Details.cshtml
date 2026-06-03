@@ -97,6 +97,18 @@
             Journal entries around this date
         </span>
 
+        @if (linkedEntries.Any())
+        {
+            <a asp-controller="TherapySessions"
+                   asp-action="SummariseConsent"
+                   asp-route-id="@Model.Id"
+                   asp-route-rangeDays="@selectedRange"
+                   class="btn-rw-primary"
+                   style="font-size: 0.82rem; padding: 0.45rem 1.2rem;">
+                ✦ Summarise entries
+            </a>
+        }
+
         <form method="get" asp-action="Details" asp-route-id="@Model.Id">
             <select name="rangeDays"
                     class="range-select"

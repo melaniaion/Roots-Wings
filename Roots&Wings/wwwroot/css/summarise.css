@@ -1,0 +1,155 @@
+﻿/* App controls bar above the document */
+.summary-controls {
+    max-width: 680px;
+    margin: 0 auto 1.2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+/* The paper document */
+.summary-document {
+    background: #FFFDF9;
+    border: 1px solid #E8C4A8;
+    border-radius: 6px;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem;
+    box-shadow: 0 4px 24px rgba(92, 61, 46, 0.07);
+}
+
+/* Letterhead */
+.doc-letterhead {
+    text-align: center;
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #E8C4A8;
+}
+
+.doc-prepared-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #B5A898;
+    margin-bottom: 0.8rem;
+}
+
+.doc-session-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.9rem;
+    color: #5C3D2E;
+    margin: 0 0 0.4rem;
+}
+
+.doc-session-date {
+    font-size: 0.82rem;
+    color: #8B7B6A;
+}
+
+/* Each section */
+.doc-section {
+    padding: 1.8rem 0;
+    border-bottom: 1px solid rgba(232, 196, 168, 0.45);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.doc-section:last-of-type {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.doc-section.excluded {
+    opacity: 0.2;
+    transform: scale(0.99);
+}
+
+.doc-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.doc-section-label {
+    font-size: 0.67rem;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #B5A898;
+    font-weight: 500;
+}
+
+/* Overview gets serif italic treatment */
+.doc-overview-text {
+    font-family: 'DM Sans', sans-serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #5C3D2E;
+    line-height: 1.75;
+    text-align: center;
+}
+
+/* Body content for the other 3 sections */
+.doc-section-body {
+    font-size: 0.93rem;
+    color: #5C3D2E;
+    line-height: 1.95;
+    white-space: pre-wrap;
+    font-family: 'DM Sans', sans-serif;
+}
+
+/* Toggle pill switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 21px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.toggle-pill {
+    position: absolute;
+    inset: 0;
+    background: #E8C4A8;
+    border-radius: 21px;
+    transition: background 0.25s;
+}
+
+.toggle-pill::after {
+    content: '';
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    background: white;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.25s;
+}
+
+.toggle-switch input:checked + .toggle-pill {
+    background: #3D5C35;
+}
+
+.toggle-switch input:checked + .toggle-pill::after {
+    transform: translateX(17px);
+}
+
+/* AI notice at bottom */
+.ai-notice {
+    font-size: 0.72rem;
+    color: #B5A898;
+    text-align: center;
+    margin-top: 1.5rem;
+    letter-spacing: 0.04em;
+}
