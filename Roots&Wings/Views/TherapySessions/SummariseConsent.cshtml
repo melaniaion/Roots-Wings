@@ -1,0 +1,74 @@
+﻿@model Roots_Wings.Models.TherapySession
+
+@{
+    ViewData["Title"] = "Summarise Journal Entries";
+    int rangeDays = ViewBag.RangeDays ?? 7;
+    int entryCount = ViewBag.EntryCount ?? 0;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+}
+
+<div class="mb-3">
+    <a asp-action="Details" asp-route-id="@Model.Id" class="rw-back-link">
+        ← Back to session
+    </a>
+</div>
+
+<div class="rw-card" style="max-width: 580px; margin: 0 auto;">
+
+    
+
+    <h1 class="rw-page-title mb-2">Before we continue</h1>
+
+    <p style="color: #8B7B6A; font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem;">
+        You're about to summarise <strong style="color:#5C3D2E;">
+        @entryCount journal
+        @(entryCount == 1 ? "entry" : "entries")
+    </strong> written around
+    <strong style="color:#5C3D2E;">@Model.SessionDate.ToString("MMMM d, yyyy")</strong>.
+</p>
+
+<!-- What happens explanation -->
+<div style="background: rgba(242,224,208,0.3); border-radius: 14px;
+    padding: 1.2rem 1.4rem; margin-bottom: 1.5rem;">
+    <span class="rw-section-label" style="margin-bottom: 0.8rem;">What happens</span>
+    <ul style="color: #5C3D2E; font-size: 0.9rem; line-height: 2;
+        margin: 0; padding-left: 1.2rem;">
+        <li>The text of your journal entries is sent securely to Anthropic's AI API</li>
+        <li>The AI reads them and returns a structured summary</li>
+        <li>You choose which parts of the summary to keep</li>
+        <li>You can export a clean PDF to bring to your session</li>
+    </ul>
+</div>
+
+<!-- Privacy note -->
+<div style="background: #E8EDE0; border-radius: 14px;
+    padding: 1rem 1.4rem; margin-bottom: 2rem;">
+    <span class="rw-section-label" style="margin-bottom: 0.4rem;">Privacy</span>
+    <p style="color: #4A5C3F; font-size: 0.88rem; line-height: 1.6; margin: 0;">
+        Your entries are processed by Anthropic's API under their
+        <a href="https://www.anthropic.com/privacy" target="_blank"
+           style="color: #3D5C35;">privacy policy</a>.
+        They are not used to train AI models and are not stored by Anthropic.
+    </p>
+</div>
+
+<!-- The form carries id and rangeDays to the next step -->
+<form asp-action="Summarise" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="rangeDays" value="@rangeDays" />
+
+    <div class="d-flex gap-2 flex-wrap">
+        <button type="submit" class="btn-rw-primary">
+            Yes, summarise the journal entries
+        </button>
+        <a asp-action="Details" asp-route-id="@Model.Id"
+               class="btn-rw-secondary">
+            Cancel
+        </a>
+    </div>
+</form>
+
+</div>

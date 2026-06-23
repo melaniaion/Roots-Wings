@@ -13,6 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 //EMAIL SERVICE
 builder.Services.AddTransient<IEmailService, EmailService>();
 
+// Register Gemini as the AI provider.
+builder.Services.AddHttpClient<IAiSummaryService, GeminiSummaryService>();
+
+//PDF SERVICE
+builder.Services.AddScoped<IPdfExportService, PdfExportService>();
+
 //DB
 var connectionString = builder.Configuration.GetConnectionString("Roots&WingsConnection") ?? throw new InvalidOperationException("Connection string 'Roots&WingsConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -24,6 +30,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+// QuestPDF is free for community use
+QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
 var app = builder.Build();
 

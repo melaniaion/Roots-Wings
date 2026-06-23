@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Roots_Wings.Data;
+using Roots_Wings.DTOs;
 using Roots_Wings.Models;
+using Roots_Wings.Services;
 
 namespace Roots_Wings.Controllers
 {
@@ -12,11 +14,15 @@ namespace Roots_Wings.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAiSummaryService _aiSummaryService;
+        private readonly IPdfExportService _pdfExportService;
 
-        public TherapySessionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public TherapySessionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IAiSummaryService aiSummaryService, IPdfExportService pdfExportService)
         {
             _context = context;
             _userManager = userManager;
+            _aiSummaryService = aiSummaryService;
+            _pdfExportService = pdfExportService;
         }
 
         // GET: /Sessions
@@ -211,6 +217,100 @@ namespace Roots_Wings.Controllers
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: /Sessions/SummariseConsent/5?rangeDays=7
+        public async Task<IActionResult> SummariseConsent(int id, int rangeDays = 7)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null) return NotFound();
+
+            // Count how many entries will be included
+            var rangeStart = session.SessionDate.AddDays(-rangeDays);
+            var rangeEnd = session.SessionDate.AddDays(rangeDays);
+
+            var entryCount = await _context.JournalEntries
+                .CountAsync(e => e.UserId == userId
+                              && e.CreatedAt >= rangeStart
+                              && e.CreatedAt <= rangeEnd);
+
+            ViewBag.EntryCount = entryCount;
+            ViewBag.RangeDays = rangeDays;
+            ViewBag.SessionTitle = session.Title;
+
+            return View(session);
+        }
+
+        // POST: /Sessions/Summarise/5
+        // Called from the consent page form
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Summarise(int id, int rangeDays = 7)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null) return NotFound();
+
+            var rangeStart = session.SessionDate.AddDays(-rangeDays);
+            var rangeEnd = session.SessionDate.AddDays(rangeDays);
+
+            var entries = await _context.JournalEntries
+                .Where(e => e.UserId == userId
+                         && e.CreatedAt >= rangeStart
+                         && e.CreatedAt <= rangeEnd)
+                .OrderBy(e => e.CreatedAt)
+                .ToListAsync();
+
+            // Call the AI
+            var summary = await _aiSummaryService.SummariseEntriesAsync(entries, session);
+
+            ViewBag.Summary = summary;
+            ViewBag.SessionId = id;
+            ViewBag.RangeDays = rangeDays;
+            return View(session);
+        }
+
+        // POST: /Sessions/ExportPdf/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ExportPdf(
+            int id,
+            int rangeDays,
+            string[] includeBlocks,       // the checked toggles from the form
+            string summaryOverview,
+            string summaryThemes,
+            string summaryEmotions,
+            string summaryDiscuss)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null) return NotFound();
+
+            // Rebuild the summary DTO from the posted hidden fields
+            var summary = new SummaryResult
+            {
+                OneSentenceSummary = summaryOverview,
+                MainThemes = summaryThemes,
+                EmotionalPatterns = summaryEmotions,
+                ThingsToDiscuss = summaryDiscuss
+            };
+
+            var pdfBytes = _pdfExportService.GenerateSummaryPdf(
+                session, summary, includeBlocks ?? Array.Empty<string>());
+
+            // Stream the file directly to the browser as a download
+            var fileName = $"therapy-summary-{session.SessionDate:yyyy-MM-dd}.pdf";
+            return File(pdfBytes, "application/pdf", fileName);
         }
     }
 }
