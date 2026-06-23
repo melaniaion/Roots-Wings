@@ -96,52 +96,6 @@ body .btn-secondary-rw:hover {
     transform: translateY(-3px);
 }
 
-/* Cards */
-.cards {
-    display: flex;
-    gap: 1.25rem;
-    justify-content: center;
-    padding: 1rem 2rem;
-    flex-wrap: wrap;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.card-rw {
-    background: rgba(255, 255, 255, 0.55);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(232, 196, 168, 0.6);
-    border-radius: 20px;
-    padding: 1.5rem 1.25rem;
-    flex: 1 1 180px;
-    max-width: 210px;
-    text-align: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-rw:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 12px 32px rgba(92, 61, 46, 0.1);
-}
-
-.card-icon {
-    font-size: 2rem;
-    margin-bottom: 0.75rem;
-}
-
-.card-title {
-    font-size: 0.95rem;
-    font-weight: 500;
-    color: #5C3D2E;
-    margin-bottom: 0.4rem;
-}
-
-.card-desc {
-    font-size: 0.8rem;
-    color: #8B7B6A;
-    line-height: 1.5;
-}
-
 /* Tagline */
 .tagline {
     text-align: center;
