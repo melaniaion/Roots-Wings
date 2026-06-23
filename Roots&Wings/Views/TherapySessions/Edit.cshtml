@@ -1,0 +1,108 @@
+﻿@model Roots_Wings.Models.TherapySession
+
+@{
+    ViewData["Title"] = "Edit Session";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+}
+
+<div class="mb-3">
+    <a asp-action="Details" asp-route-id="@Model.Id" class="rw-back-link">← Back to Session</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="rw-card">
+
+            <h2 class="rw-page-title mb-1">Edit Session</h2>
+            <p style="color: #B5A898; font-size: 0.85rem; margin-bottom: 1.8rem;">
+                @Model.SessionDate.ToString("MMMM d, yyyy")
+            </p>
+
+            <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"
+                     style="font-size: 0.85rem;">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-rw">Session Title *</label>
+                    <input asp-for="Title" class="form-control-rw" />
+                    <span asp-validation-for="Title"
+                          class="text-danger"
+                          style="font-size: 0.8rem;">
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-rw">Date & Time *</label>
+                    <!--
+                        datetime-local requires the exact format yyyy-MM-ddTHH:mm
+                        asp-for alone doesn't guarantee this, so we set value explicitly
+                    -->
+                    <input type="datetime-local"
+                           name="SessionDate"
+                           class="form-control-rw"
+                           value="@Model.SessionDate.ToString("yyyy-MM-ddTHH:mm")" />
+                    <span asp-validation-for="SessionDate"
+                          class="text-danger"
+                          style="font-size: 0.8rem;">
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-rw">Therapist Name</label>
+                    <input asp-for="TherapistName"
+                           class="form-control-rw"
+                           placeholder="Optional" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-rw">Prep Notes</label>
+                    <textarea asp-for="PrepNotes"
+                              class="form-control-rw"
+                              placeholder="What do you want to bring up?">
+                    </textarea>
+                </div>
+
+                @if (Model.SessionDate < DateTime.Now)
+                    {
+                        <div class="mb-4">
+                            <label class="form-label-rw">Post Session Reflection</label>
+                            <textarea asp-for="PostNotes"
+                                        class="form-control-rw"
+                                        placeholder="What did you take away? How do you feel now?">
+                            </textarea>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Session hasn't happened yet so post notes make no sense here -->
+                        <div class="mb-4">
+                            <label class="form-label-rw">Post Session Reflection</label>
+                            <p style="color: #B5A898; font-size: 0.85rem; font-style: italic;">
+                                This will be available after your session on
+                                @Model.SessionDate.ToString("MMMM d, yyyy").
+                            </p>
+                        </div>
+                    }
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn-rw-primary">Save Changes</button>
+                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn-rw-secondary">Cancel</a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

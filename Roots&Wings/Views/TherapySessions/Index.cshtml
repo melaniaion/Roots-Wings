@@ -1,0 +1,192 @@
+﻿@model IEnumerable<Roots_Wings.Models.TherapySession>
+
+@{
+    ViewData["Title"] = "Sessions";
+
+    var today        = DateTime.Today;
+    int displayMonth = ViewBag.DisplayMonth ?? today.Month;
+    int displayYear  = ViewBag.DisplayYear  ?? today.Year;
+
+    var displayDate  = new DateTime(displayYear, displayMonth, 1);
+    var prevMonth    = displayDate.AddMonths(-1);
+    var nextMonth    = displayDate.AddMonths(1);
+
+    var daysInMonth  = DateTime.DaysInMonth(displayYear, displayMonth);
+    var startOffset  = ((int)displayDate.DayOfWeek + 6) % 7;
+
+    var sessionsThisMonth = Model
+        .Where(s => s.SessionDate.Year == displayYear && s.SessionDate.Month == displayMonth)
+        .GroupBy(s => s.SessionDate.Day)
+        .ToDictionary(g => g.Key, g => g.First());
+
+    var allUpcoming = Model
+        .Where(s => s.SessionDate >= DateTime.Now)
+        .OrderBy(s => s.SessionDate)
+        .ToList();
+
+    var upcomingToShow = allUpcoming.Take(3).ToList();
+    int upcomingExtra  = allUpcoming.Count - upcomingToShow.Count;
+
+    var past = Model
+        .Where(s => s.SessionDate < DateTime.Now)
+        .OrderByDescending(s => s.SessionDate)
+        .Take(3)
+        .ToList();
+
+    int totalRows = (int)Math.Ceiling((startOffset + daysInMonth) / 7.0);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="sessions-page-title">Your Sessions</h1>
+    <a asp-action="Create" class="btn-rw-primary">+ Add Session</a>
+</div>
+
+<div class="row g-4">
+
+    <div class="col-md-7">
+        <div class="rw-card">
+
+            <!-- Month navigation -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a href="@Url.Action("Index", new { month = prevMonth.Month, year = prevMonth.Year })"
+                   class="rw-back-link" style="font-size: 1.2rem;">&#8592;</a>
+
+                <div class="calendar-month-name" style="margin: 0;">
+                    @displayDate.ToString("MMMM yyyy")
+                </div>
+
+                <a href="@Url.Action("Index", new { month = nextMonth.Month, year = nextMonth.Year })"
+                   class="rw-back-link" style="font-size: 1.2rem;">&#8594;</a>
+            </div>
+
+            <table class="calendar-grid">
+                <thead>
+                    <tr>
+                        <th>Mon</th>
+                        <th>Tue</th>
+                        <th>Wed</th>
+                        <th>Thu</th>
+                        <th>Fri</th>
+                        <th>Sat</th>
+                        <th>Sun</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int day = 1; }
+
+                    @for (int row = 0; row < totalRows; row++)
+                    {
+                        <tr>
+                            @for (int col = 0; col < 7; col++)
+                            {
+                                int cellIndex = row * 7 + col;
+
+                                if (cellIndex < startOffset || day > daysInMonth)
+                                {
+                                    <td class="day-cell"></td>
+                                }
+                                else
+                                {
+                                    int  currentDay = day;
+                                    bool isToday    = currentDay == today.Day
+                                                   && displayMonth == today.Month
+                                                   && displayYear  == today.Year;
+                                    bool hasSession = sessionsThisMonth.ContainsKey(currentDay);
+                                    day++;
+
+                                    <td class="day-cell @(isToday ? "today" : "") @(hasSession ? "has-session" : "")">
+                                        @if (hasSession)
+                                        {
+                                            <a href="@Url.Action("Details", new { id = sessionsThisMonth[currentDay].Id })"
+                                               style="text-decoration: none; color: inherit; display: block;">
+                                                <span class="day-number">@currentDay</span>
+                                                <span class="session-leaf">🌿</span>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <span class="day-number">@currentDay</span>
+                                        }
+                                    </td>
+                                }
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="col-md-5">
+
+        <span class="rw-section-label">Upcoming</span>
+
+        @if (upcomingToShow.Any())
+        {
+            foreach (var session in upcomingToShow)
+            {
+                <a asp-action="Details" asp-route-id="@session.Id" class="session-card">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            <div class="session-card-date">
+                                @session.SessionDate.ToString("dddd, MMM d · h:mm tt")
+                            </div>
+                            <p class="session-card-title">@session.Title</p>
+                            @if (!string.IsNullOrEmpty(session.TherapistName))
+                            {
+                                <div class="session-card-therapist">with @session.TherapistName</div>
+                            }
+                        </div>
+                        <span class="status-pill status-upcoming">Upcoming</span>
+                    </div>
+                </a>
+            }
+
+            @if (upcomingExtra > 0)
+            {
+                <p style="font-size: 0.8rem; color: #B5A898; text-align: center; margin-top: 0.3rem;">
+                    and @upcomingExtra more upcoming. Navigate the calendar to find them
+                </p>
+            }
+        }
+        else
+        {
+            <div class="empty-state">
+                🗓️<br />
+                No upcoming sessions yet.<br />
+                <a asp-action="Create" style="color: #3D5C35;">Schedule your first one</a>
+            </div>
+        }
+
+        @if (past.Any())
+        {
+            <span class="rw-section-label mt-3">Recently past</span>
+
+            foreach (var session in past)
+            {
+                <a asp-action="Details" asp-route-id="@session.Id" class="session-card past">
+                    <div class="d-flex justify-content-between align-items-start gap-2">
+                        <div>
+                            <div class="session-card-date">
+                                @session.SessionDate.ToString("dddd, MMM d · h:mm tt")
+                            </div>
+                            <p class="session-card-title">@session.Title</p>
+                            @if (!string.IsNullOrEmpty(session.TherapistName))
+                            {
+                                <div class="session-card-therapist">with @session.TherapistName</div>
+                            }
+                        </div>
+                        <span class="status-pill status-past">Past</span>
+                    </div>
+                </a>
+            }
+        }
+
+    </div>
+
+</div>

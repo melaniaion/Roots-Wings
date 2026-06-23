@@ -1,0 +1,87 @@
+﻿@model IEnumerable<Roots_Wings.Models.JournalEntry>
+
+@{
+    ViewData["Title"] = "Journal";
+
+    int rotationIndex = 0;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/journal.css" asp-append-version="true" />
+}
+
+<div class="journal-page">
+
+    <div class="journal-topbar">
+
+        <h1 class="journal-title">
+            Journal
+        </h1>
+
+        <a asp-action="Create" class="journal-create-btn">
+            + New Entry
+        </a>
+
+    </div>
+
+    @if (Model.Any())
+    {
+        <div class="journal-grid">
+
+            @foreach (var entry in Model.OrderByDescending(e => e.CreatedAt))
+            {
+                var rotationClass = $"rotation-{rotationIndex % 4}";
+                rotationIndex++;
+
+                <a asp-action="Details"
+                       asp-route-id="@entry.Id"
+                       class="journal-paper @rotationClass">
+
+                    <div class="paper-tape"></div>
+
+                    <div class="paper-date">
+                        @entry.CreatedAt.ToString("MMM dd, yyyy")
+                    </div>
+
+                    <h2 class="paper-title">
+                        @entry.Title
+                    </h2>
+
+                    <div class="paper-preview">
+                        @entry.Content
+                    </div>
+
+                    @if (entry.Tags != null && entry.Tags.Any())
+                    {
+                        <div class="paper-tags">
+
+                            @foreach (var tag in entry.Tags)
+                            {
+                                <span class="paper-tag">
+                                    @tag.Name
+                                </span>
+                            }
+
+                        </div>
+                    }
+
+                </a>
+            }
+
+        </div>
+    }
+    else
+    {
+        <div class="empty-journal">
+
+            <h2>Your journal is empty</h2>
+
+            <p>
+                Start with a thought, a feeling,
+                or simply something that happened today.
+            </p>
+
+        </div>
+    }
+
+</div>

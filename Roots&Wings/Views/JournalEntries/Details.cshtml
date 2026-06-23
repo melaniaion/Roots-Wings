@@ -1,0 +1,122 @@
+﻿@model Roots_Wings.Models.JournalEntry
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/journal.css" asp-append-version="true" />
+}
+
+<div class="journal-create-page">
+
+    <a asp-action="Index" class="journal-back-link">
+        ← Back to Journal
+    </a>
+
+    <div class="journal-open-page">
+
+        <!-- Timestamp and Edited Time -->
+        <div class="journal-page-date">
+            @Model.CreatedAt.ToString("MMMM d, yyyy · h:mm tt")
+            @if (Model.UpdatedAt.HasValue)
+            {
+                <span style="margin-left: 0.5rem; opacity: 0.75; font-style: italic; text-transform: lowercase;">
+                    · edited @Model.UpdatedAt.Value.ToString("MMM d")
+                </span>
+            }
+        </div>
+
+        <!-- Sticker for tags -->
+        @if (Model.Tags != null && Model.Tags.Any())
+        {
+            <div class="journal-feelings-section" style="margin-bottom: 2rem;">
+                <div class="tag-flow-title" style="border-bottom: none; padding-bottom: 0;">
+                    <div class="active-tags-summary">
+                        @foreach (var tag in Model.Tags)
+                        {
+                            <span class="active-tag-badge">@tag.Name</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- Title -->
+        <div class="journal-field-group">
+            <h1 class="journal-writing-title" style="margin-bottom: 0; line-height: 1.2;">
+                @Model.Title
+            </h1>
+        </div>
+
+        <div class="journal-writing-divider"></div>
+
+        <!-- Content Display mapped directly to the notebook paper rules -->
+        <div class="journal-field-group">
+            <div class="journal-writing-content" style="white-space: pre-wrap; word-break: break-word;">@Model.Content</div>
+        </div>
+
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="journal-actions">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="journal-save-button" style="text-decoration: none;">
+            Edit Entry
+        </a>
+
+        <!-- Trigger Button for the Custom Modal -->
+        <button type="button" class="journal-discard-button" id="openDeleteModalBtn">
+            Delete Entry
+        </button>
+    </div>
+
+</div>
+
+<!-- IN-APP DELETION POP-UP MODAL -->
+<div class="journal-modal-overlay" id="deleteModal">
+    <div class="journal-modal-card">
+        <div class="journal-modal-title">Delete Entry permanently?</div>
+        <div class="journal-modal-text">
+            Are you absolutely sure you want to delete this page? This cannot be undone.
+        </div>
+        <div class="journal-modal-actions">
+            <button type="button" class="modal-btn modal-btn-cancel" id="closeDeleteModalBtn">Keep Entry</button>
+            
+            <!-- Standard form post executed on confirmation button hit -->
+            <form asp-action="Delete" asp-route-id="@Model.Id" method="post" id="deleteForm" style="margin: 0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="modal-btn modal-btn-confirm">Delete Permanently</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const deleteModal = document.getElementById("deleteModal");
+            const openModalBtn = document.getElementById("openDeleteModalBtn");
+            const closeModalBtn = document.getElementById("closeDeleteModalBtn");
+
+            // Modal Trigger Actions
+            if (openModalBtn) {
+                openModalBtn.addEventListener("click", function() {
+                    deleteModal.classList.add("is-active");
+                });
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener("click", function() {
+                    deleteModal.classList.remove("is-active");
+                });
+            }
+
+            // Close modal if user clicks outside of the card context
+            deleteModal.addEventListener("click", function(e) {
+                if (e.target === deleteModal) {
+                    deleteModal.classList.remove("is-active");
+                }
+            });
+        });
+    </script>
+}

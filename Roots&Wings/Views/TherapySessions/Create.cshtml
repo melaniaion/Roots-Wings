@@ -1,0 +1,84 @@
+﻿@model Roots_Wings.Models.TherapySession
+
+@{
+    ViewData["Title"] = "Add Session";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+}
+
+<div class="mb-3">
+    <a asp-action="Index" class="rw-back-link">← Back to Sessions</a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="rw-card">
+
+            <h2 class="rw-page-title mb-1">New Session</h2>
+            <p style="color: #B5A898; font-size: 0.85rem; margin-bottom: 1.8rem;">
+                Add an upcoming or past therapy appointment.
+            </p>
+
+            <form asp-action="Create" method="post">
+
+                @Html.AntiForgeryToken()
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger mb-3"
+                     style="font-size: 0.85rem;">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-rw">Session Title *</label>
+                    <input asp-for="Title"
+                           class="form-control-rw"
+                           placeholder="e.g. Weekly check-in, First session" />
+                    <span asp-validation-for="Title"
+                          class="text-danger"
+                          style="font-size: 0.8rem;">
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-rw">Date & Time *</label>
+                    <input asp-for="SessionDate"
+                           type="datetime-local"
+                           class="form-control-rw" />
+                    <span asp-validation-for="SessionDate"
+                          class="text-danger"
+                          style="font-size: 0.8rem;">
+                    </span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label-rw">Therapist Name</label>
+                    <input asp-for="TherapistName"
+                           class="form-control-rw"
+                           placeholder="Optional" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label-rw">Prep Notes</label>
+                    <textarea asp-for="PrepNotes"
+                              class="form-control-rw"
+                              placeholder="What do you want to bring up in this session?">
+                    </textarea>
+                    <p class="field-hint">You can leave this blank and fill it in closer to the session.</p>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn-rw-primary">Save Session</button>
+                    <a asp-action="Index" class="btn-rw-secondary">Cancel</a>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
