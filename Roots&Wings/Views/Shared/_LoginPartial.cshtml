@@ -2,25 +2,28 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+    <a asp-area="Identity" asp-page="/Account/Manage/Index" class="user-greeting-card" title="Manage Account">
+        <div class="user-avatar-flower">🌸</div>
+        <div class="user-message-block">
+            <span class="user-welcome">Welcome back,</span>
+            <span class="user-name">Melania</span>
+            <span class="user-motivation">Keep going, you're doing great. 💚</span>
+        </div>
+    </a>
+
+    <div class="sidebar-logout-container">
+        <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })" method="post">
+            <button type="submit" class="logout-action-link">
+                <i class="bi bi-box-arrow-left"></i> Sign out
+            </button>
         </form>
-    </li>
+    </div>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+    <div class="sidebar-auth-fallback">
+        <a class="auth-fallback-link" asp-area="Identity" asp-page="/Account/Login"><i class="bi bi-box-arrow-in-right"></i> Sign in</a>
+    </div>
 }
-</ul>
