@@ -49,9 +49,10 @@
             <nav class="sidebar-navigation">
                 <ul class="nav-stack">
                     <li>
-                        <a class="nav-item-artisan @(currentController == "Home" && currentAction == "Index" ? "active" : "")"
-                               asp-area="" asp-controller="Home" asp-action="Index">
-                            <i class="bi bi-house-heart artisan-icon"></i>
+                        <a class="nav-item-artisan @(currentController == "Home" && currentAction == "Index" ? "active" : "")" 
+                           asp-area="" asp-controller="Home" asp-action="Index">
+     
+                            <i class="bi bi-sun artisan-icon"></i>
                             <div class="nav-meta">
                                 <span class="nav-title">Today</span>
                                 <span class="nav-subtitle">Check-in & focus</span>
@@ -59,9 +60,10 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-item-artisan @(currentController == "TherapySessions" ? "active" : "")"
-                               asp-controller="TherapySessions" asp-action="Index">
-                            <i class="bi bi-heart-pulse artisan-icon"></i>
+                        <a class="nav-item-artisan @(currentController == "TherapySessions" ? "active" : "")" 
+                           asp-controller="TherapySessions" asp-action="Index">
+                            
+                            <i class="bi bi-calendar-event artisan-icon"></i>
                             <div class="nav-meta">
                                 <span class="nav-title">Sessions</span>
                                 <span class="nav-subtitle">Therapy & growth</span>
@@ -69,8 +71,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="nav-item-artisan @(currentController == "JournalEntries" ? "active" : "")"
-                               asp-controller="JournalEntries" asp-action="Index">
+                        <a class="nav-item-artisan @(currentController == "JournalEntries" ? "active" : "")" 
+                           asp-controller="JournalEntries" asp-action="Index">
                             <i class="bi bi-book artisan-icon"></i>
                             <div class="nav-meta">
                                 <span class="nav-title">Journal</span>
@@ -122,21 +124,21 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const toggleBtn = document.getElementById("sidebarToggle");
-                const appWorkspace = document.getElementById("appWorkspace");
+        document.addEventListener("DOMContentLoaded", function () {
+            const toggleBtn = document.getElementById("sidebarToggle");
+            const appWorkspace = document.getElementById("appWorkspace");
 
-                toggleBtn.addEventListener("click", function () {
-                    // Smooth layout toggling hook
-                    appWorkspace.classList.toggle("sidebar-collapsed");
-                    const isCollapsed = appWorkspace.classList.contains("sidebar-collapsed");
-                    localStorage.setItem("artisanSidebarState", isCollapsed ? "collapsed" : "expanded");
-                });
-
-                if (localStorage.getItem("artisanSidebarState") === "collapsed") {
-                    appWorkspace.classList.add("sidebar-collapsed");
-                }
+            toggleBtn.addEventListener("click", function () {
+                // Smooth layout toggling hook
+                appWorkspace.classList.toggle("sidebar-collapsed");
+                const isCollapsed = appWorkspace.classList.contains("sidebar-collapsed");
+                localStorage.setItem("artisanSidebarState", isCollapsed ? "collapsed" : "expanded");
             });
+
+            if (localStorage.getItem("artisanSidebarState") === "collapsed") {
+                appWorkspace.classList.add("sidebar-collapsed");
+            }
+        });
     </script>
 
     @await RenderSectionAsync("Scripts", required: false)
