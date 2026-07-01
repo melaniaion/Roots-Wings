@@ -15,5 +15,6 @@ namespace Roots_Wings.Models
 
         public virtual ICollection<TherapySession> TherapySessions { get; set; } = new List<TherapySession>();
         public virtual ICollection<JournalEntry> JournalEntries { get; set; } = new List<JournalEntry>();
+        public virtual ICollection<Goal> Goals { get; set; } = new List<Goal>();
     }
 }
