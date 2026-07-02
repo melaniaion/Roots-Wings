@@ -33,6 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Views\Goals\" />
     <Folder Include="wwwroot\images\profile-pictures\" />
   </ItemGroup>
 

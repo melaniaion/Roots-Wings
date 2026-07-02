@@ -1,0 +1,180 @@
+@model IEnumerable<Roots_Wings.Models.Goal>
+@{
+    ViewData["Title"] = "Growth Board";
+    var winsShelf = ViewBag.WinsShelf as List<Roots_Wings.Models.Goal> ?? new List<Roots_Wings.Models.Goal>();
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/growth-board.css" asp-append-version="true" />
+}
+
+<div class="growth-board-container">
+    
+    <!-- HEADER ZONE -->
+    <div class="gb-main-header">
+        <div class="gb-header-titles">
+            <span class="rw-mini-label">YOUR ASPIRATIONS</span>
+            <h1 class="rw-page-title">Growth Board</h1>
+        </div>
+        <div class="gb-header-tools">
+            <div class="gb-search-capsule">
+                <i class="bi bi-search"></i>
+                <input type="text" id="gbSearchInput" placeholder="Search aspirations..." autocomplete="off" />
+            </div>
+            <a asp-action="Create" class="btn-artisan-new-goal">
+                <span class="plus">+</span>
+                <span class="lbl">NEW<br>GOAL</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- WORKSPACE CANVAS -->
+    <div class="gb-content-stack">
+        
+        <!-- SECTION 1: GROWING NOW -->
+        <section class="gb-row-section">
+            <div class="gb-row-title-cluster">
+                <span class="row-emoji">🌱</span>
+                <div>
+                    <h3>Growing Now</h3>
+                    <p>Your active goals</p>
+                </div>
+            </div>
+
+            <!-- Carousel Wrapper with Hugging Controls -->
+            <div class="gb-carousel-wrapper-hugging">
+                <button type="button" class="btn-carousel-hug left-hug" id="btnPrevActive" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+                
+                <div class="gb-carousel-viewport" id="activeViewport">
+                    <div class="gb-carousel-track" id="activeGoalsTrack">
+                        @if (!Model.Any())
+                        {
+                            <div class="gb-empty-card-state">🌱 Framed aspirations will appear here.</div>
+                        }
+                        else
+                        {
+                            @foreach (var goal in Model)
+                            {
+                                <div class="gb-clean-therapy-card" data-title="@goal.Title.ToLower()">
+                                    <div class="card-tape-accent"></div>
+                                    <div class="card-top-row">
+                                        <h4 class="card-goal-title">@goal.Title</h4>
+                                        <div class="dropdown">
+                                            <button class="btn-card-dots" type="button" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></button>
+                                            <ul class="dropdown-menu dropdown-menu-end elite-dropdown">
+                                                <li><a class="dropdown-item" asp-action="Details" asp-route-id="@goal.Id">View Progress</a></li>
+                                                <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@goal.Id">Edit Title</a></li>
+                                                <li>
+                                                    <form asp-action="Delete" asp-route-id="@goal.Id" method="post" onsubmit="return confirm('Remove this aspiration?');">
+                                                        <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card-leaf-progress">
+                                        @foreach (var milestone in goal.Milestones)
+                                        {
+                                            <span class="progress-leaf @(milestone.CompletedAt.HasValue ? "done" : "blank")">🌿</span>
+                                        }
+                                    </div>
+
+                                    <div class="card-bottom-row">
+                                        @{
+                                            var completedCount = goal.Milestones.Count(m => m.CompletedAt.HasValue);
+                                            var totalCount = goal.Milestones.Count;
+                                        }
+                                        <span class="progress-string">@completedCount of @totalCount milestones completed</span>
+                                        <a asp-action="Details" asp-route-id="@goal.Id" class="card-arrow-link"><i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+
+                <button type="button" class="btn-carousel-hug right-hug" id="btnNextActive" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: WINS SHELF -->
+        <section class="gb-row-section">
+            <div class="gb-row-title-cluster">
+                <span class="row-emoji">🌸</span>
+                <div>
+                    <h3>Wins Shelf</h3>
+                    <p>Your completed goals – a reminder of your growth.</p>
+                </div>
+            </div>
+
+            <!-- Shelf Structure with Hugging Controls -->
+            <div class="gb-wood-shelf-system">
+                <div class="gb-carousel-wrapper-hugging">
+                    <button type="button" class="btn-carousel-hug left-hug" id="btnPrevShelf" aria-label="Previous Wins"><i class="bi bi-chevron-left"></i></button>
+                    
+                    <div class="gb-shelf-viewport" id="shelfViewport">
+                        <div class="gb-shelf-track" id="shelfGoalsTrack">
+                            @if (!winsShelf.Any())
+                            {
+                                <div class="gb-shelf-empty-msg">Your completed transitions rest here beautifully. Completed paths appear on this row.</div>
+                            }
+                            else
+                            {
+                                @foreach (var goal in winsShelf)
+                                {
+                                    <div class="gb-clean-therapy-card shelf-card">
+                                        <div class="shelf-washi-tape"></div>
+                                        <div class="shelf-badge-done"><i class="bi bi-check-circle-fill me-1"></i> Completed</div>
+                                        <h4 class="card-goal-title">@goal.Title</h4>
+                                        <div class="shelf-date-info">@goal.CompletedAt?.ToString("MMMM d, yyyy")</div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn-carousel-hug right-hug" id="btnNextShelf" aria-label="Next Wins"><i class="bi bi-chevron-right"></i></button>
+                </div>
+                <!-- Clean Modern Shelf Board Line Base -->
+                <div class="gb-shelf-wood-plank"></div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Live Text Input Filtering
+            const searchInput = document.getElementById("gbSearchInput");
+            const activeCards = document.querySelectorAll("#activeGoalsTrack .gb-clean-therapy-card");
+
+            if(searchInput) {
+                searchInput.addEventListener("input", function (e) {
+                    const query = e.target.value.toLowerCase().trim();
+                    activeCards.forEach(card => {
+                        const title = card.getAttribute("data-title") || "";
+                        card.style.display = title.includes(query) ? "flex" : "none";
+                    });
+                });
+            }
+
+            // Sliders configuration
+            function createHuggingSlider(viewportId, leftBtnId, rightBtnId) {
+                const vp = document.getElementById(viewportId);
+                const lBtn = document.getElementById(leftBtnId);
+                const rBtn = document.getElementById(rightBtnId);
+
+                if (vp && lBtn && rBtn) {
+                    rBtn.addEventListener("click", () => vp.scrollBy({ left: 360, behavior: 'smooth' }));
+                    lBtn.addEventListener("click", () => vp.scrollBy({ left: -360, behavior: 'smooth' }));
+                }
+            }
+
+            createHuggingSlider("activeViewport", "btnPrevActive", "btnNextActive");
+            createHuggingSlider("shelfViewport", "btnPrevShelf", "btnNextShelf");
+        });
+    </script>
+}
