@@ -10,12 +10,13 @@
 
 <div class="growth-board-container">
     
-    <!-- HEADER ZONE -->
+    <!-- EDITORIAL INTEGRATED HEADER ROW -->
     <div class="gb-main-header">
         <div class="gb-header-titles">
             <span class="rw-mini-label">YOUR ASPIRATIONS</span>
             <h1 class="rw-page-title">Growth Board</h1>
         </div>
+        
         <div class="gb-header-tools">
             <div class="gb-search-capsule">
                 <i class="bi bi-search"></i>
@@ -23,25 +24,21 @@
             </div>
             <a asp-action="Create" class="btn-artisan-new-goal">
                 <span class="plus">+</span>
-                <span class="lbl">NEW<br>GOAL</span>
+                <span class="lbl">NEW GOAL</span>
             </a>
         </div>
     </div>
 
-    <!-- WORKSPACE CANVAS -->
+    <!-- MAIN BODY SPACE -->
     <div class="gb-content-stack">
         
-        <!-- SECTION 1: GROWING NOW -->
+        <!-- SECTION 1: ACTIVE INTENTIONS -->
         <section class="gb-row-section">
             <div class="gb-row-title-cluster">
-                <span class="row-emoji">🌱</span>
-                <div>
-                    <h3>Growing Now</h3>
-                    <p>Your active goals</p>
-                </div>
+                <h3>Growing Now</h3>
+                <p>Your active goals</p>
             </div>
 
-            <!-- Carousel Wrapper with Hugging Controls -->
             <div class="gb-carousel-wrapper-hugging">
                 <button type="button" class="btn-carousel-hug left-hug" id="btnPrevActive" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
                 
@@ -49,14 +46,13 @@
                     <div class="gb-carousel-track" id="activeGoalsTrack">
                         @if (!Model.Any())
                         {
-                            <div class="gb-empty-card-state">🌱 Framed aspirations will appear here.</div>
+                            <div class="gb-empty-card-state">Your active intentions will rest here.</div>
                         }
                         else
                         {
                             @foreach (var goal in Model)
                             {
-                                <div class="gb-clean-therapy-card" data-title="@goal.Title.ToLower()">
-                                    <div class="card-tape-accent"></div>
+                                <div class="gb-mindful-card active-card" data-title="@goal.Title.ToLower()">
                                     <div class="card-top-row">
                                         <h4 class="card-goal-title">@goal.Title</h4>
                                         <div class="dropdown">
@@ -73,10 +69,10 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="card-leaf-progress">
+                                    <div class="card-milestone-dots">
                                         @foreach (var milestone in goal.Milestones)
                                         {
-                                            <span class="progress-leaf @(milestone.CompletedAt.HasValue ? "done" : "blank")">🌿</span>
+                                            <span class="milestone-dot @(milestone.CompletedAt.HasValue ? "done" : "pending")"></span>
                                         }
                                     </div>
 
@@ -85,12 +81,14 @@
                                             var completedCount = goal.Milestones.Count(m => m.CompletedAt.HasValue);
                                             var totalCount = goal.Milestones.Count;
                                         }
-                                        <span class="progress-string">@completedCount of @totalCount milestones completed</span>
+                                        <span class="progress-string">@completedCount of @totalCount milestones met</span>
                                         <a asp-action="Details" asp-route-id="@goal.Id" class="card-arrow-link"><i class="bi bi-arrow-right"></i></a>
                                     </div>
                                 </div>
                             }
                         }
+                        <!-- Dynamic script empty handling container -->
+                        <div class="gb-empty-card-state d-none filtered-empty-active">No matching aspirations found.</div>
                     </div>
                 </div>
 
@@ -98,18 +96,15 @@
             </div>
         </section>
 
-        <!-- SECTION 2: WINS SHELF -->
+        <!-- SECTION 2: THE WINS NOOK (SHELF) -->
         <section class="gb-row-section">
             <div class="gb-row-title-cluster">
-                <span class="row-emoji">🌸</span>
-                <div>
-                    <h3>Wins Shelf</h3>
-                    <p>Your completed goals – a reminder of your growth.</p>
-                </div>
+                <h3>Wins Shelf</h3>
+                <p>Your completed milestones – a reflection of your evolving path</p>
             </div>
 
-            <!-- Shelf Structure with Hugging Controls -->
-            <div class="gb-wood-shelf-system">
+            <!-- Integrated Structural Recessed Nook Wall Panel -->
+            <div class="gb-premium-shelf-nook">
                 <div class="gb-carousel-wrapper-hugging">
                     <button type="button" class="btn-carousel-hug left-hug" id="btnPrevShelf" aria-label="Previous Wins"><i class="bi bi-chevron-left"></i></button>
                     
@@ -117,27 +112,28 @@
                         <div class="gb-shelf-track" id="shelfGoalsTrack">
                             @if (!winsShelf.Any())
                             {
-                                <div class="gb-shelf-empty-msg">Your completed transitions rest here beautifully. Completed paths appear on this row.</div>
+                                <div class="gb-shelf-empty-msg">This nook frames your fully realized pathways.</div>
                             }
                             else
                             {
                                 @foreach (var goal in winsShelf)
                                 {
-                                    <div class="gb-clean-therapy-card shelf-card">
-                                        <div class="shelf-washi-tape"></div>
-                                        <div class="shelf-badge-done"><i class="bi bi-check-circle-fill me-1"></i> Completed</div>
+                                    <div class="gb-mindful-card shelf-card" data-title="@goal.Title.ToLower()">
+                                        <div class="shelf-badge-done">
+                                            <span class="badge-dot"></span> Completed
+                                        </div>
                                         <h4 class="card-goal-title">@goal.Title</h4>
-                                        <div class="shelf-date-info">@goal.CompletedAt?.ToString("MMMM d, yyyy")</div>
+                                        <div class="shelf-date-info">Integrated on @goal.CompletedAt?.ToString("MMM d, yyyy")</div>
                                     </div>
                                 }
                             }
+                            <!-- Dynamic script empty handling container -->
+                            <div class="gb-shelf-empty-msg d-none filtered-empty-shelf">No matching wins located.</div>
                         </div>
                     </div>
 
                     <button type="button" class="btn-carousel-hug right-hug" id="btnNextShelf" aria-label="Next Wins"><i class="bi bi-chevron-right"></i></button>
                 </div>
-                <!-- Clean Modern Shelf Board Line Base -->
-                <div class="gb-shelf-wood-plank"></div>
             </div>
         </section>
 
@@ -147,21 +143,54 @@
 @section Scripts {
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Live Text Input Filtering
             const searchInput = document.getElementById("gbSearchInput");
-            const activeCards = document.querySelectorAll("#activeGoalsTrack .gb-clean-therapy-card");
+            
+            // Selection targets for unified real-time global filtering
+            const activeCards = document.querySelectorAll("#activeGoalsTrack .active-card");
+            const shelfCards = document.querySelectorAll("#shelfGoalsTrack .shelf-card");
+            
+            const activeEmptyPlaceholder = document.querySelector(".filtered-empty-active");
+            const shelfEmptyPlaceholder = document.querySelector(".filtered-empty-shelf");
 
-            if(searchInput) {
+            if (searchInput) {
                 searchInput.addEventListener("input", function (e) {
                     const query = e.target.value.toLowerCase().trim();
+                    
+                    // Filter Active Shelf Track
+                    let visibleActiveCount = 0;
                     activeCards.forEach(card => {
                         const title = card.getAttribute("data-title") || "";
-                        card.style.display = title.includes(query) ? "flex" : "none";
+                        if (title.includes(query)) {
+                            card.style.setProperty('display', 'flex', 'important');
+                            visibleActiveCount++;
+                        } else {
+                            card.style.setProperty('display', 'none', 'important');
+                        }
                     });
+                    
+                    if (activeCards.length > 0) {
+                        activeEmptyPlaceholder.classList.toggle("d-none", visibleActiveCount > 0);
+                    }
+
+                    // Filter Completed Wins Shelf Track
+                    let visibleShelfCount = 0;
+                    shelfCards.forEach(card => {
+                        const title = card.getAttribute("data-title") || "";
+                        if (title.includes(query)) {
+                            card.style.setProperty('display', 'flex', 'important');
+                            visibleShelfCount++;
+                        } else {
+                            card.style.setProperty('display', 'none', 'important');
+                        }
+                    });
+                    
+                    if (shelfCards.length > 0) {
+                        shelfEmptyPlaceholder.classList.toggle("d-none", visibleShelfCount > 0);
+                    }
                 });
             }
 
-            // Sliders configuration
+            // Continuous Sliding Controls Physics
             function createHuggingSlider(viewportId, leftBtnId, rightBtnId) {
                 const vp = document.getElementById(viewportId);
                 const lBtn = document.getElementById(leftBtnId);
