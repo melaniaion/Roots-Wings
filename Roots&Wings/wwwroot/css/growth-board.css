@@ -1,0 +1,379 @@
+﻿/* ==========================================================================
+   CLEAN THERAPEUTIC GROWTH BOARD SYSTEM
+   ========================================================================== */
+.growth-board-container {
+    padding: 1rem 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* HEADER PLACEMENT EXCLUSIVELY MATCHING REFERENCE */
+.gb-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.rw-mini-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+    color: #BAA590;
+    display: block;
+}
+
+.rw-page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.3rem;
+    color: #4E3629;
+    margin: 0;
+}
+
+/* TOOLS LAYOUT */
+.gb-header-tools {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+/* Perfect Capsule Search Box Container */
+.gb-search-capsule {
+    position: relative;
+    background: #FFFFFF;
+    border: 1px solid rgba(140, 117, 101, 0.2);
+    border-radius: 24px;
+    padding: 0.55rem 1.2rem 0.55rem 2.6rem;
+    display: flex;
+    align-items: center;
+    width: 300px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.01);
+}
+
+    .gb-search-capsule i {
+        position: absolute;
+        left: 1.1rem;
+        color: #A38D7D;
+        font-size: 0.9rem;
+    }
+
+    .gb-search-capsule input {
+        background: transparent;
+        border: none;
+        outline: none;
+        font-size: 0.9rem;
+        color: #4E3629;
+        width: 100%;
+    }
+
+/* Minimalist Deep Brown Pill Button */
+.btn-artisan-new-goal {
+    background: #4E3629;
+    color: #FDF9F5 !important;
+    text-decoration: none !important;
+    border-radius: 22px;
+    padding: 0.6rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 4px 14px rgba(78, 54, 41, 0.12);
+    transition: all 0.2s ease;
+}
+
+    .btn-artisan-new-goal:hover {
+        background: #3D291F;
+        transform: translateY(-1px);
+    }
+
+    .btn-artisan-new-goal .plus {
+        font-size: 1.3rem;
+        font-weight: 300;
+        line-height: 1;
+    }
+
+    .btn-artisan-new-goal .lbl {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.78rem;
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: 0.03em;
+    }
+
+/* SECTION STRUCTURES */
+.gb-content-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.gb-row-section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.gb-row-title-cluster {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+    .gb-row-title-cluster .row-emoji {
+        font-size: 1.35rem;
+    }
+
+    .gb-row-title-cluster h3 {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.35rem;
+        color: #4E3629;
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .gb-row-title-cluster p {
+        font-size: 0.82rem;
+        color: #8C7565;
+        margin: 0;
+    }
+
+/* ==========================================================================
+   HUGGING CAROUSEL MECHANISM
+   ========================================================================== */
+.gb-carousel-wrapper-hugging {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Arrows Hugging Directly To Left & Right Sides */
+.btn-carousel-hug {
+    position: absolute;
+    z-index: 15;
+    background: #FFFFFF;
+    border: 1px solid rgba(140, 117, 101, 0.15);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #634B3D;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+    transition: all 0.2s ease;
+}
+
+    .btn-carousel-hug:hover {
+        background: #4E3629;
+        color: #FFFFFF;
+        border-color: #4E3629;
+    }
+
+.left-hug {
+    left: -18px;
+}
+
+.right-hug {
+    right: -18px;
+}
+
+/* VIEWPORT CONTROLS */
+.gb-carousel-viewport, .gb-shelf-viewport {
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding: 0.5rem 10px;
+}
+
+    .gb-carousel-viewport::-webkit-scrollbar, .gb-shelf-viewport::-webkit-scrollbar {
+        display: none;
+    }
+
+.gb-carousel-track, .gb-shelf-track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+}
+
+/* ==========================================================================
+   MODERN THERAPEUTIC CLEAN CARDS
+   ========================================================================== */
+.gb-clean-therapy-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    box-shadow: 0 6px 20px rgba(78, 54, 41, 0.03);
+    width: 335px;
+    min-height: 145px;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.25s cubic-bezier(0.1, 0.8, 0.2, 1);
+}
+
+    .gb-clean-therapy-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 28px rgba(78, 54, 41, 0.05);
+    }
+
+.card-tape-accent {
+    position: absolute;
+    top: -6px;
+    left: 42%;
+    width: 50px;
+    height: 13px;
+    background: rgba(186, 199, 167, 0.25);
+}
+
+.card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.card-goal-title {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1.2rem;
+    color: #2D1E15;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.btn-card-dots {
+    background: transparent;
+    border: none;
+    color: #CBBDB0;
+    font-size: 1.1rem;
+    padding: 0 4px;
+}
+
+    .btn-card-dots:hover {
+        color: #4E3629;
+    }
+
+/* Progress row adjustments */
+.card-leaf-progress {
+    display: flex;
+    gap: 0.45rem;
+    margin: 1rem 0;
+}
+
+.progress-leaf {
+    font-size: 1.2rem;
+}
+
+    .progress-leaf.blank {
+        opacity: 0.12;
+        filter: grayscale(100%);
+    }
+
+.card-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(78, 54, 41, 0.04);
+    padding-top: 0.75rem;
+}
+
+.progress-string {
+    font-size: 0.82rem;
+    color: #8C7565;
+}
+
+.card-arrow-link {
+    color: #4E3629;
+    font-size: 1.05rem;
+}
+
+/* ==========================================================================
+   THE MODERN WINS SHELF
+   ========================================================================== */
+.gb-wood-shelf-system {
+    position: relative;
+    background: rgba(254, 252, 249, 0.5);
+    border-radius: 20px 20px 0 0;
+    padding: 1.5rem 1rem 0 1rem;
+    border: 1px solid rgba(194, 180, 166, 0.15);
+    border-bottom: none;
+}
+
+.gb-shelf-track {
+    padding-bottom: 14px;
+}
+
+/* Completed Card Modifiers */
+.shelf-card {
+    background: #FAF7F2;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.01);
+}
+
+.shelf-washi-tape {
+    position: absolute;
+    top: -6px;
+    left: 42%;
+    width: 48px;
+    height: 13px;
+    background: rgba(212, 195, 176, 0.25);
+}
+
+.shelf-badge-done {
+    align-self: flex-start;
+    background: rgba(107, 138, 110, 0.08);
+    color: #4A6B4E;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.shelf-date-info {
+    font-size: 0.76rem;
+    color: #A38D7D;
+    margin-top: 0.5rem;
+}
+
+/* Shelf Board Solid Plank */
+.gb-shelf-wood-plank {
+    height: 10px;
+    width: calc(100% + 2rem);
+    margin-left: -1rem;
+    background: linear-gradient(to bottom, #A48B77 0%, #8A6E59 40%, #6E533F 100%);
+    border-radius: 2px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 10;
+}
+
+/* Context styling */
+.elite-dropdown {
+    background: #FFFFFF !important;
+    border: 1px solid rgba(78, 54, 41, 0.08) !important;
+    border-radius: 10px !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05) !important;
+}
+
+    .elite-dropdown .dropdown-item {
+        font-size: 0.85rem;
+        color: #4E3629;
+    }
+
+/* PLACEHOLDERS */
+.gb-empty-card-state, .gb-shelf-empty-msg {
+    color: #A38D7D;
+    font-family: 'Newsreader', serif;
+    font-style: italic;
+    padding: 2rem;
+    font-size: 0.95rem;
+}
