@@ -1,0 +1,268 @@
+@model Roots_Wings.Models.Goal
+@{
+    ViewData["Title"] = Model.Title;
+    var completed = Model.Milestones.Count(m => m.CompletedAt.HasValue);
+    var total = Model.Milestones.Count;
+    var percent = total == 0 ? 0 : (int)Math.Round(completed * 100.0 / total);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/growth-board.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/growth-details.css" asp-append-version="true" />
+}
+
+<!-- Back link lives at the true top-left of the page, outside the narrow column -->
+<a asp-action="Index" class="gd-back"><i class="bi bi-arrow-left"></i> Back to Growth Board</a>
+
+<div class="gd-page">
+
+    <!-- HERO -->
+    <div class="gd-hero @(Model.IsCompleted ? "is-complete" : "")">
+        <svg class="gd-hero-vein" viewBox="0 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M180 12 C120 42 78 88 50 168" stroke="#7A9B6E" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+            <path d="M150 28 C138 44 135 56 138 70" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
+            <path d="M126 48 C113 62 109 74 111 88" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
+            <path d="M104 72 C90 84 86 96 88 110" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
+        </svg>
+
+        <div class="gd-hero-top">
+            <div class="gd-hero-lead">
+                <span class="gd-eyebrow">
+                    <i class="bi @(Model.IsCompleted ? "bi-flower1" : "bi-leaf")"></i>
+                    @(Model.IsCompleted ? "A grown intention" : "Growing now")
+                </span>
+                <h1 class="gd-title">@Model.Title</h1>
+            </div>
+
+            <div class="gd-hero-actions">
+                <a asp-action="Edit" asp-route-id="@Model.Id" class="gd-icon-btn" title="Edit title &amp; reason"><i class="bi bi-pencil"></i></a>
+                <button type="button" class="gd-icon-btn gd-danger" title="Delete goal"
+                        onclick="gdConfirm({ title: 'Delete this goal?', text: 'This removes the goal and all its milestones. This can\'t be undone.', confirmText: 'Delete', danger: true, action: () => document.getElementById('deleteGoalForm').submit() })">
+                    <i class="bi bi-trash3"></i>
+                </button>
+                <form id="deleteGoalForm" asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-none"></form>
+            </div>
+        </div>
+
+        <div class="gd-why">
+            <p>@Model.Motivation</p>
+        </div>
+
+        @if (Model.IsCompleted)
+        {
+            <div class="gd-bloom">
+                <!-- Savoring, not a burst: a plant that has fully flowered, held in warm light.
+                     Reflects mastery + self-efficacy ("you grew this") rather than a dopamine splash. -->
+                <div class="gd-bloom-scene">
+                    <span class="gd-bloom-halo"></span>
+                    <svg class="gd-bloom-plant" viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <path class="gd-bp-stem" d="M60 126 C60 96 58 74 60 54" />
+                        <path class="gd-bp-leaf gd-bp-leaf-l" d="M59 92 C40 90 30 80 28 66 C46 66 57 76 59 92 Z" />
+                        <path class="gd-bp-leaf gd-bp-leaf-r" d="M61 78 C80 76 90 66 92 52 C74 52 63 62 61 78 Z" />
+                        <g class="gd-bp-flower">
+                            <circle class="gd-bp-petal" cx="60" cy="38" r="10" />
+                            <circle class="gd-bp-petal" cx="49" cy="46" r="10" />
+                            <circle class="gd-bp-petal" cx="71" cy="46" r="10" />
+                            <circle class="gd-bp-petal" cx="53" cy="30" r="10" />
+                            <circle class="gd-bp-petal" cx="67" cy="30" r="10" />
+                            <circle class="gd-bp-core" cx="60" cy="40" r="7" />
+                        </g>
+                        <circle class="gd-bp-spark gd-bp-spark-1" cx="30" cy="34" r="1.6" />
+                        <circle class="gd-bp-spark gd-bp-spark-2" cx="92" cy="30" r="1.4" />
+                        <circle class="gd-bp-spark gd-bp-spark-3" cx="84" cy="86" r="1.5" />
+                        <circle class="gd-bp-spark gd-bp-spark-4" cx="34" cy="102" r="1.3" />
+                    </svg>
+                </div>
+
+                <div class="gd-bloom-text">
+                    <span class="gd-bloom-eyebrow"><i class="bi bi-stars"></i> Fully grown</span>
+                    <span class="gd-bloom-title">You saw this all the way through.</span>
+                    <span class="gd-bloom-sub">Every milestone tended, one by one, until the whole thing bloomed. That growth was yours &mdash; take a slow breath and let it land.</span>
+
+                    <div class="gd-bloom-stats">
+                        <div class="gd-bloom-stat">
+                            <span class="gd-bloom-stat-num">@total</span>
+                            <span class="gd-bloom-stat-label">@(total == 1 ? "milestone" : "milestones") tended</span>
+                        </div>
+                        <span class="gd-bloom-stat-div"></span>
+                        <div class="gd-bloom-stat">
+                            <span class="gd-bloom-stat-num">@Model.CompletedAt?.ToString("MMM d")</span>
+                            <span class="gd-bloom-stat-label">the day it bloomed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else if (total > 0)
+        {
+            <div class="gd-progress">
+                <div class="gd-progress-track">
+                    <div class="gd-progress-fill" style="width:@(percent)%"></div>
+                </div>
+                <span class="gd-progress-label">@completed of @total grown</span>
+            </div>
+        }
+    </div>
+
+    @if (TempData["GoalError"] != null)
+    {
+        <div class="gd-error"><i class="bi bi-exclamation-circle"></i> @TempData["GoalError"]</div>
+    }
+
+    <!-- MILESTONES -->
+    <div class="gd-section-head">
+        <div>
+            <h2 class="gd-section-title">Milestones</h2>
+            <p class="gd-section-sub">each leaf grows as you tend to it</p>
+        </div>
+    </div>
+
+    <div class="gd-milestone-frame">
+        <ul class="gd-milestones">
+            @foreach (var m in Model.Milestones)
+            {
+                var done = m.CompletedAt.HasValue;
+                <li class="gd-milestone @(done ? "done" : "")" id="ms-@m.Id">
+                    <form asp-action="ToggleMilestone" asp-route-id="@m.Id" method="post">
+                        <button type="submit" class="gd-leaf-btn @(done ? "grown" : "")" title="@(done ? "Mark as still growing" : "Mark as grown")">
+                            <i class="bi @(done ? "bi-leaf-fill" : "bi-leaf")"></i>
+                        </button>
+                    </form>
+
+                    <div class="gd-milestone-body">
+                        <span class="gd-milestone-text" id="mtext-@m.Id">@m.Description</span>
+
+                        <form asp-action="EditMilestone" asp-route-id="@m.Id" method="post" class="gd-edit-row d-none" id="medit-@m.Id">
+                            <input type="text" name="description" value="@m.Description" maxlength="200" required />
+                            <button type="submit" class="gd-edit-save">Save</button>
+                            <button type="button" class="gd-edit-cancel"
+                                    onclick="gdCancelEdit(@m.Id, this)" data-original="@m.Description">Cancel</button>
+                        </form>
+                    </div>
+
+                    @if (done)
+                    {
+                        <!-- Completed: show when it was grown, in place of the action buttons -->
+                        <div class="gd-milestone-meta">
+                            <span class="gd-grown-date">
+                                <i class="bi bi-check2"></i>
+                                Grown @m.CompletedAt?.ToString("MMM d")
+                            </span>
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Still growing: keep edit + delete controls -->
+                        <div class="gd-actions">
+                            <button type="button" class="gd-action" title="Rename" onclick="gdStartEdit(@m.Id)"><i class="bi bi-pencil"></i></button>
+                            <button type="button" class="gd-action gd-action-danger" title="Remove"
+                                    onclick="gdConfirm({ title: 'Remove this milestone?', text: 'This step will be removed from the goal.', confirmText: 'Remove', danger: true, action: () => document.getElementById('mdel-@m.Id').submit() })">
+                                <i class="bi bi-x-lg"></i>
+                            </button>
+                            <form id="mdel-@m.Id" asp-action="DeleteMilestone" asp-route-id="@m.Id" method="post" class="d-none"></form>
+                        </div>
+                    }
+                </li>
+            }
+        </ul>
+
+        @if (!Model.IsCompleted)
+        {
+            <form asp-action="AddMilestone" asp-route-id="@Model.Id" method="post" class="gd-add">
+                <i class="bi bi-flower3 gd-add-leaf"></i>
+                <input type="text" name="description" placeholder="Add another step to grow..." maxlength="200" required />
+                <button type="submit" class="gd-add-btn" title="Add milestone" aria-label="Add milestone"><i class="bi bi-plus"></i></button>
+            </form>
+        }
+        else
+        {
+            <div class="gd-rest-note">
+                <i class="bi bi-flower1"></i>
+                <span>This goal has grown all the way. It rests on your Wins Shelf as a reminder of how far you've come.</span>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- MODERN CONFIRM MODAL (shared) -->
+<div class="gd-modal-overlay" id="gdModal">
+    <div class="gd-modal" role="dialog" aria-modal="true">
+        <div class="gd-modal-icon" id="gdModalIcon"><i class="bi bi-exclamation-lg"></i></div>
+        <h3 class="gd-modal-title" id="gdModalTitle"></h3>
+        <p class="gd-modal-text" id="gdModalText"></p>
+        <div class="gd-modal-actions">
+            <button type="button" class="gd-modal-btn gd-modal-confirm" id="gdModalConfirm"></button>
+            <button type="button" class="gd-modal-btn gd-modal-cancel" onclick="gdCloseModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function gdStartEdit(id) {
+            document.querySelectorAll('.gd-milestone.is-editing').forEach(el => {
+                if (el.id !== 'ms-' + id) gdExitEditVisual(el.id.replace('ms-', ''));
+            });
+            document.getElementById('ms-' + id).classList.add('is-editing');
+            document.getElementById('mtext-' + id).classList.add('d-none');
+            const form = document.getElementById('medit-' + id);
+            form.classList.remove('d-none');
+            const input = form.querySelector('input');
+            input.focus();
+            input.setSelectionRange(input.value.length, input.value.length);
+        }
+
+        function gdExitEditVisual(id) {
+            document.getElementById('ms-' + id).classList.remove('is-editing');
+            document.getElementById('mtext-' + id).classList.remove('d-none');
+            document.getElementById('medit-' + id).classList.add('d-none');
+        }
+
+        function gdCancelEdit(id, btn) {
+            const original = btn.getAttribute('data-original');
+            const input = document.getElementById('medit-' + id).querySelector('input');
+            if (input.value === original) {
+                gdExitEditVisual(id);
+            } else {
+                gdConfirm({
+                    title: 'Discard changes?',
+                    text: 'Your edit to this milestone won\'t be saved.',
+                    confirmText: 'Discard',
+                    danger: false,
+                    action: () => { input.value = original; gdExitEditVisual(id); }
+                });
+            }
+        }
+
+        let gdPendingAction = null;
+        function gdConfirm({ title, text, confirmText, danger, action }) {
+            document.getElementById('gdModalTitle').textContent = title;
+            document.getElementById('gdModalText').textContent = text;
+            const confirmBtn = document.getElementById('gdModalConfirm');
+            const icon = document.getElementById('gdModalIcon');
+            confirmBtn.textContent = confirmText;
+            confirmBtn.classList.toggle('soft', !danger);
+            icon.classList.toggle('soft', !danger);
+            icon.innerHTML = danger ? '<i class="bi bi-exclamation-lg"></i>' : '<i class="bi bi-question-lg"></i>';
+            gdPendingAction = action;
+            document.getElementById('gdModal').classList.add('open');
+        }
+
+        function gdCloseModal() {
+            document.getElementById('gdModal').classList.remove('open');
+            gdPendingAction = null;
+        }
+
+        document.getElementById('gdModalConfirm').addEventListener('click', function () {
+            if (gdPendingAction) gdPendingAction();
+            gdCloseModal();
+        });
+        document.getElementById('gdModal').addEventListener('click', function (e) {
+            if (e.target === this) gdCloseModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') gdCloseModal();
+        });
+    </script>
+}

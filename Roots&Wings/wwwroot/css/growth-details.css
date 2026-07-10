@@ -1,0 +1,1277 @@
+/* GOAL DETAILS */
+
+.gd-page {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 1.5rem 0.5rem 3rem 0.5rem;
+}
+
+.gd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: #8B7B6A;
+    text-decoration: none;
+    margin-bottom: 1.5rem;
+    transition: gap 0.2s, color 0.2s;
+}
+
+.gd-back:hover { color: #5C3D2E; gap: 0.7rem; }
+
+/* HERO */
+.gd-hero {
+    position: relative;
+    background:
+        radial-gradient(ellipse 120% 90% at 100% 0%, rgba(232, 237, 224, 0.55) 0%, transparent 60%),
+        linear-gradient(160deg, #FEFCF9 0%, #F7F1E8 100%);
+    border: 1px solid #ECD9C4;
+    border-radius: 24px;
+    padding: 2rem 2.1rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    box-shadow: 0 8px 30px -12px rgba(92, 61, 46, 0.14);
+}
+
+/* faint growing branch in the hero corner */
+.gd-hero-vein {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 190px;
+    height: 190px;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.gd-hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    position: relative;
+    z-index: 2;
+}
+
+.gd-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #7A9B6E;
+    margin-bottom: 0.6rem;
+}
+
+.gd-eyebrow .bi { font-size: 0.85rem; }
+
+.gd-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.1rem;
+    line-height: 1.15;
+    color: #5C3D2E;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* header edit/menu buttons */
+.gd-hero-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.gd-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #E8C4A8;
+    background: rgba(255, 255, 255, 0.7);
+    color: #8B5A3A;
+    font-size: 0.95rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.gd-icon-btn:hover {
+    background: #5C3D2E;
+    border-color: #5C3D2E;
+    color: #FBF6F0;
+    transform: translateY(-1px);
+}
+
+.gd-icon-btn.gd-danger:hover {
+    background: #8B4A4A;
+    border-color: #8B4A4A;
+}
+
+/* the "why" */
+.gd-why {
+    position: relative;
+    margin-top: 1.4rem;
+    padding-left: 1.4rem;
+    border-left: 2px solid #C3D0B5;
+    z-index: 2;
+}
+
+.gd-why p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.08rem;
+    line-height: 1.6;
+    color: #6E5847;
+    margin: 0;
+}
+
+/* progress ribbon */
+.gd-progress {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.8rem;
+    position: relative;
+    z-index: 2;
+}
+
+.gd-progress-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 8px;
+    background: rgba(139, 90, 58, 0.1);
+    overflow: hidden;
+}
+
+.gd-progress-fill {
+    height: 100%;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #8BAA7D, #6B8A5F);
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gd-progress-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6B8A5F;
+    white-space: nowrap;
+}
+
+.gd-done-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #E8EDE0;
+    color: #4A5C3F;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    position: relative;
+    z-index: 2;
+    margin-top: 1.6rem;
+}
+
+/* MILESTONES */
+.gd-section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 0 0.4rem 0.6rem 0.4rem;
+}
+
+.gd-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: #5C3D2E;
+    margin: 0;
+    font-weight: 500;
+}
+
+.gd-section-sub {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.88rem;
+    color: #8B7B6A;
+    margin: 0.15rem 0 0 0;
+}
+
+.gd-milestones {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.gd-milestone {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid #EFE0CD;
+    border-radius: 14px;
+    padding: 0.85rem 1rem;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.gd-milestone:hover {
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 5px 16px -8px rgba(92, 61, 46, 0.16);
+}
+
+/* the row currently being edited is clearly "lit" */
+.gd-milestone.is-editing {
+    background: #FFFFFF;
+    border-color: #C3D0B5;
+    box-shadow: 0 0 0 3px rgba(122, 155, 110, 0.15), 0 8px 20px -8px rgba(92, 61, 46, 0.2);
+}
+
+/* leaf toggle */
+.gd-leaf-btn {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid #E3D3BE;
+    background: rgba(255, 255, 255, 0.6);
+    color: #C9B79E;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gd-leaf-btn:hover {
+    border-color: #7A9B6E;
+    color: #7A9B6E;
+    transform: scale(1.06);
+}
+
+.gd-leaf-btn.grown {
+    background: #E8EDE0;
+    border-color: #7A9B6E;
+    color: #6B8A5F;
+    box-shadow: inset 0 0 0 1px rgba(122, 155, 110, 0.3);
+}
+
+/* text + inline edit */
+.gd-milestone-body { flex: 1; min-width: 0; }
+
+.gd-milestone-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.96rem;
+    color: #5C3D2E;
+    line-height: 1.4;
+    word-break: break-word;
+}
+
+.gd-milestone.done .gd-milestone-text {
+    color: #B5A898;
+    text-decoration: line-through;
+    text-decoration-color: rgba(181, 168, 152, 0.6);
+}
+
+.gd-edit-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.gd-edit-row input {
+    flex: 1;
+    background: #FFFFFF;
+    border: 1px solid #C3D0B5;
+    border-radius: 10px;
+    padding: 0.5rem 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: #5C3D2E;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(122, 155, 110, 0.12);
+}
+
+.gd-edit-save,
+.gd-edit-cancel {
+    border: none;
+    border-radius: 10px;
+    padding: 0.5rem 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.gd-edit-save {
+    background: #7A9B6E;
+    color: #FBF6F0;
+}
+
+.gd-edit-save:hover { background: #6B8A5F; }
+
+.gd-edit-cancel {
+    background: transparent;
+    color: #A79684;
+}
+
+.gd-edit-cancel:hover { color: #5C3D2E; }
+
+/* row actions, quiet until hover, so rows aren't cluttered */
+.gd-actions {
+    display: flex;
+    gap: 0.15rem;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.gd-milestone:hover .gd-actions,
+.gd-milestone:focus-within .gd-actions { opacity: 1; }
+
+.gd-action {
+    background: none;
+    border: none;
+    color: #C0AE99;
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0.4rem 0.5rem;
+    border-radius: 9px;
+    display: inline-flex;
+    transition: all 0.18s;
+}
+
+.gd-action:hover { background: rgba(242, 224, 208, 0.6); color: #5C3D2E; }
+.gd-action.gd-action-danger:hover { background: #F4D9D9; color: #8B4A4A; }
+
+/* add milestone */
+.gd-add {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1.5px dashed #DCC9B0;
+    border-radius: 14px;
+    padding: 0.5rem 0.6rem 0.5rem 1.1rem;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.gd-add:focus-within {
+    border-color: #7A9B6E;
+    border-style: solid;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.gd-add .gd-add-leaf { color: #C3D0B5; font-size: 1.05rem; flex-shrink: 0; }
+
+.gd-add input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #5C3D2E;
+    padding: 0.5rem 0;
+}
+
+.gd-add input::placeholder { color: #B5A898; }
+
+.gd-add-btn {
+    flex-shrink: 0;
+    background: #5C3D2E;
+    color: #FBF6F0;
+    border: none;
+    border-radius: 10px;
+    height: 40px;
+    padding: 0 1.1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.gd-add-btn:hover { background: #3D5C35; transform: translateY(-1px); }
+
+/* completed resting note */
+.gd-rest-note {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: linear-gradient(160deg, rgba(232, 237, 224, 0.6), rgba(242, 224, 208, 0.3));
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.gd-rest-note .bi { font-size: 1.5rem; color: #7A9B6E; }
+
+.gd-rest-note span {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.98rem;
+    color: #4A5C3F;
+    line-height: 1.5;
+}
+
+/* error banner */
+.gd-error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #F4D9D9;
+    color: #8B4A4A;
+    border-radius: 12px;
+    padding: 0.8rem 1.1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    margin-bottom: 1.4rem;
+}
+
+/* MODERN CONFIRM MODAL */
+.gd-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(60, 42, 30, 0.35);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    z-index: 1000;
+}
+
+.gd-modal-overlay.open { opacity: 1; visibility: visible; }
+
+.gd-modal {
+    background: linear-gradient(165deg, #FEFCF9, #F7F1E8);
+    border: 1px solid #ECD9C4;
+    border-radius: 22px;
+    padding: 1.8rem;
+    max-width: 380px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 24px 60px -18px rgba(92, 61, 46, 0.4);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gd-modal-overlay.open .gd-modal { transform: translateY(0) scale(1); }
+
+.gd-modal-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: #F4D9D9;
+    color: #8B4A4A;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+ .gd-modal-icon.soft { background: #E8EDE0; color: #4A5C3F; }
+
+.gd-modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: #5C3D2E;
+    margin: 0 0 0.5rem 0;
+}
+
+.gd-modal-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: #8B7B6A;
+    line-height: 1.55;
+    margin: 0 0 1.5rem 0;
+}
+
+.gd-modal-actions {
+    display: flex;
+    gap: 0.7rem;
+    justify-content: center;
+}
+
+.gd-modal-btn {
+    flex: 1;
+    border: none;
+    border-radius: 30px;
+    padding: 0.7rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.gd-modal-cancel {
+    background: transparent;
+    border: 1.5px solid #D8C8B4;
+    color: #8B7B6A;
+}
+
+.gd-modal-cancel:hover { border-color: #5C3D2E; color: #5C3D2E; }
+
+.gd-modal-confirm {
+    background: #8B4A4A;
+    color: #FBF6F0;
+}
+
+.gd-modal-confirm:hover { background: #723C3C; }
+
+.gd-modal-confirm.soft { background: #5C3D2E; }
+.gd-modal-confirm.soft:hover { background: #3D5C35; }
+
+
+.gd-page { position: relative; }
+
+.gd-back {
+    align-self: flex-start;
+    display: flex;
+    width: fit-content;
+    margin-right: auto;
+}
+
+/* Seedling progress illustration */
+.gd-seedling-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    margin-top: 1.6rem;
+    position: relative;
+    z-index: 2;
+}
+
+.gd-seedling {
+    width: 88px;
+    height: 96px;
+    flex-shrink: 0;
+}
+
+    /* stem draws in softly */
+    .gd-seedling .stem {
+        stroke: #7A9B6E;
+        stroke-width: 2.4;
+        fill: none;
+        stroke-linecap: round;
+    }
+
+    .gd-seedling .leaf {
+        transition: fill 0.5s ease, stroke 0.5s ease, transform 0.5s cubic-bezier(0.16,1,0.3,1);
+        transform-origin: center;
+    }
+
+    /* pending leaf: soft cream outline */
+    .gd-seedling .leaf {
+        fill: #F3EADB;
+        stroke: #D7C7B0;
+        stroke-width: 1.2;
+    }
+
+    /* grown leaf */
+    .gd-seedling .leaf.grown {
+        fill: #6E8C63;
+        stroke: #57734E;
+    }
+
+    .gd-seedling .leaf-vein {
+        stroke: #DCCDB6;
+        stroke-width: 0.7;
+        transition: stroke 0.5s ease;
+    }
+
+    .gd-seedling .leaf.grown + .leaf-vein,
+    .gd-seedling .leaf.grown ~ .leaf-vein { stroke: rgba(255,255,255,0.5); }
+
+    .gd-seedling .tip {
+        fill: #8BAA7D;
+        transition: fill 0.4s ease;
+    }
+
+.gd-seedling-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.gd-seedling-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: #5C3D2E;
+    font-weight: 500;
+}
+
+.gd-seedling-caption {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: #9C8B79;
+}
+
+/* Glassmorphism section frame with paper texture */
+.gd-milestone-frame {
+    position: relative;
+    background: rgba(255, 255, 255, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 22px;
+    padding: 1.6rem 1.5rem;
+    box-shadow: 0 8px 32px -12px rgba(92, 61, 46, 0.14);
+    overflow: hidden;
+}
+
+    /* faint paper-fibre texture layered over the glass */
+    .gd-milestone-frame::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            repeating-linear-gradient(0deg, rgba(139, 90, 58, 0.015) 0 2px, transparent 2px 4px),
+            repeating-linear-gradient(90deg, rgba(139, 90, 58, 0.015) 0 2px, transparent 2px 4px),
+            radial-gradient(circle at 20% 30%, rgba(232, 237, 224, 0.25), transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(242, 224, 208, 0.2), transparent 55%);
+        pointer-events: none;
+        border-radius: 22px;
+    }
+
+    .gd-milestone-frame > * { position: relative; z-index: 1; }
+
+/* organic milestone cards (asymmetric leaf-tip corners) */
+.gd-milestones { gap: 0.7rem; }
+
+.gd-milestone {
+    background: rgba(255, 255, 255, 0.68);
+    border: 1px solid rgba(139, 90, 58, 0.1);
+    border-radius: 16px 16px 16px 5px;
+}
+
+    .gd-milestone:nth-child(even) {
+        border-radius: 16px 16px 5px 16px;
+    }
+
+    .gd-milestone.done {
+        background: rgba(232, 237, 224, 0.5);
+    }
+
+/* deeper sage for the grown leaf toggle */
+.gd-leaf-btn.grown {
+    background: #6E8C63;
+    border-color: #57734E;
+    color: #FBF6F0;
+    box-shadow: inset 0 1px 2px rgba(255,255,255,0.25), 0 3px 8px -3px rgba(87, 115, 78, 0.5);
+}
+
+/* floral touch on the add row */
+.gd-add {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: #D7C7B0;
+}
+
+.gd-add-leaf.floral::before { content: none; }
+
+/* SEEDLING  */
+
+/* seedling: leaves climb a stem, filling sage as milestones complete */
+.gd-seedling-wrap {
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+    margin-top: 1.6rem;
+    position: relative;
+    z-index: 2;
+}
+
+.gd-seed {
+    position: relative;
+    width: 74px;
+    height: 96px;
+    flex-shrink: 0;
+}
+
+    .gd-seed .gd-stem {
+        position: absolute;
+        left: 50%;
+        bottom: 6px;
+        top: 16px;
+        width: 2.5px;
+        transform: translateX(-50%);
+        background: linear-gradient(180deg, #8BAA7D, #7A9B6E);
+        border-radius: 3px;
+    }
+
+    .gd-seed .gd-lf {
+        position: absolute;
+        font-size: 1.15rem;
+        line-height: 1;
+        transition: color 0.5s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .gd-seed .gd-lf.grown { color: #6E8C63; }
+    .gd-seed .gd-lf.pending { color: #DBD1BF; }
+
+    /* left / right leaf placement + natural outward tilt */
+    .gd-seed .gd-lf.left {
+        right: 50%;
+        margin-right: -3px;
+        transform: scaleX(-1) rotate(10deg);
+    }
+
+    .gd-seed .gd-lf.right {
+        left: 50%;
+        margin-left: -3px;
+        transform: rotate(10deg);
+    }
+
+    /* heights up the stem (node 0 lowest) */
+    .gd-seed .n0 { bottom: 4px; }
+    .gd-seed .n1 { bottom: 19px; }
+    .gd-seed .n2 { bottom: 34px; }
+    .gd-seed .n3 { bottom: 49px; }
+    .gd-seed .n4 { bottom: 64px; }
+
+    .gd-seed .gd-tip {
+        position: absolute;
+        top: 4px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #8BAA7D;
+        font-size: 0.75rem;
+    }
+
+/* ── Calm completion: a bloom, not a burst ──
+   Research-informed: rewards savoring & mastery reflection, not a dopamine splash.
+   A fully grown plant that gently blooms, warm light, a lasting affirmation. */
+.gd-hero.is-complete {
+    background:
+        radial-gradient(ellipse 130% 100% at 50% 0%, rgba(232, 237, 224, 0.75) 0%, transparent 62%),
+        linear-gradient(160deg, #FEFCF9 0%, #F3EEE4 100%);
+    border-color: #D8CBB4;
+}
+
+.gd-bloom {
+    display: flex;
+    align-items: center;
+    gap: 1.3rem;
+    margin-top: 1.6rem;
+    position: relative;
+    z-index: 2;
+}
+
+.gd-bloom-emblem {
+    position: relative;
+    width: 66px;
+    height: 66px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    /* soft radiating glow behind the bloom */
+    .gd-bloom-emblem::before {
+        content: "";
+        position: absolute;
+        inset: -8px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(201, 123, 154, 0.18), rgba(122, 155, 110, 0.12) 45%, transparent 70%);
+        animation: gdGlow 4s ease-in-out infinite;
+    }
+
+@keyframes gdGlow {
+    0%, 100% { transform: scale(1); opacity: 0.85; }
+    50% { transform: scale(1.08); opacity: 1; }
+}
+
+.gd-bloom-circle {
+    position: relative;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #EAF0E2, #DCE7D0);
+    border: 1px solid rgba(122, 155, 110, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6E8C63;
+    font-size: 1.6rem;
+    box-shadow: inset 0 1px 3px rgba(255,255,255,0.6);
+}
+
+.gd-bloom-text { display: flex; flex-direction: column; gap: 0.25rem; }
+
+.gd-bloom-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.15rem;
+    color: #4A5C3F;
+}
+
+.gd-bloom-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: #8B7B6A;
+    line-height: 1.5;
+    max-width: 34ch;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gd-bloom-emblem::before { animation: none; }
+}
+
+/* ==========================================================================
+   V3 REFINEMENTS
+   - back link anchored to the true top-left of the page
+   - per-milestone completion date (replaces action buttons when done)
+   - icon-only "+" add button
+   - a less rigidly-centered, more modern rhythm
+   ========================================================================== */
+
+/* ── Back link: top-left of the whole page, not the narrow column ──
+   It now sits above .gd-page and hugs the viewport's left edge. */
+.gd-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: fit-content;
+    margin: 0.4rem 0 0 0.4rem;
+    padding: 0.5rem 0.9rem 0.5rem 0.7rem;
+    align-self: auto;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #8B7B6A;
+    text-decoration: none;
+    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(139, 90, 58, 0.08);
+    transition: gap 0.2s ease, color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .gd-back:hover {
+        gap: 0.65rem;
+        color: #5C3D2E;
+        background: rgba(255, 255, 255, 0.75);
+        box-shadow: 0 4px 14px -8px rgba(92, 61, 46, 0.25);
+    }
+
+    .gd-back .bi { font-size: 0.95rem; }
+
+/* ── Hero: nudge the composition off-center for a more editorial feel ── */
+.gd-page {
+    padding-top: 0.4rem;
+}
+
+.gd-hero-lead {
+    max-width: 82%;
+}
+
+.gd-title {
+    letter-spacing: -0.01em;
+}
+
+/* Section header pulled flush-left with a small accent, less "floating middle" */
+.gd-section-head {
+    position: relative;
+    align-items: flex-end;
+    margin: 0.4rem 0.2rem 0.9rem 0.2rem;
+    padding-left: 0.9rem;
+}
+
+    .gd-section-head::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.15rem;
+        bottom: 0.35rem;
+        width: 3px;
+        border-radius: 3px;
+        background: linear-gradient(180deg, #8BAA7D, #C3D0B5);
+    }
+
+/* ── Milestone row: give the leaf + text room, keep the right cluster tidy ── */
+.gd-milestone {
+    gap: 0.9rem;
+    padding: 0.85rem 1rem 0.85rem 0.85rem;
+}
+
+/* ── Completed milestone: date pill where the buttons used to be ── */
+.gd-milestone-meta {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.gd-grown-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: #6B8A5F;
+    background: rgba(232, 237, 224, 0.85);
+    border: 1px solid rgba(122, 155, 110, 0.28);
+    border-radius: 30px;
+    padding: 0.3rem 0.75rem 0.3rem 0.6rem;
+    white-space: nowrap;
+}
+
+    .gd-grown-date .bi {
+        font-size: 0.9rem;
+        color: #6E8C63;
+    }
+
+/* keep the action cluster pinned right too, so both states line up */
+.gd-actions {
+    margin-left: auto;
+}
+
+/* ── Icon-only "+" add button ── */
+.gd-add-btn {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+    gap: 0;
+    border-radius: 12px;
+    font-size: 1.15rem;
+    line-height: 1;
+    box-shadow: 0 4px 12px -5px rgba(92, 61, 46, 0.4);
+}
+
+    .gd-add-btn .bi {
+        font-size: 1.25rem;
+        margin: 0;
+    }
+
+    .gd-add-btn:hover {
+        background: #3D5C35;
+        transform: translateY(-1px) rotate(90deg);
+    }
+
+/* ── Modal: buttons swapped — action on the LEFT, Cancel on the RIGHT ──
+   (Markup order already reflects this; these rules just keep the visual
+   weight balanced with the destructive action leading.) */
+.gd-modal-actions {
+    gap: 0.7rem;
+}
+
+.gd-modal-confirm {
+    order: 1;
+}
+
+.gd-modal-cancel {
+    order: 2;
+}
+
+/* ── Small-screen tidy-up ── */
+@media (max-width: 560px) {
+    .gd-hero-lead { max-width: 100%; }
+
+    .gd-grown-date {
+        font-size: 0.7rem;
+        padding: 0.28rem 0.6rem 0.28rem 0.5rem;
+    }
+
+    .gd-milestone {
+        gap: 0.7rem;
+        padding: 0.75rem 0.85rem;
+    }
+}
+
+/* ==========================================================================
+   V4 — THE BLOOM (completed goal state only)
+   Grounded in achievement psychology: a completed goal should reward
+   SAVORING + MASTERY REFLECTION and reinforce self-efficacy ("you grew this"),
+   not deliver a dopamine burst. So the moment is warm, still, and keepsake-like
+   — a fully flowered plant held in dawn light — rather than a confetti splash.
+   Scoped entirely to .gd-hero.is-complete / .gd-bloom, so the active-goal
+   design (which is already right) is untouched.
+   ========================================================================== */
+
+/* ── Softer dawn-light atmosphere for the finished hero ── */
+.gd-hero.is-complete {
+    background:
+        radial-gradient(ellipse 90% 70% at 78% -10%, rgba(246, 213, 196, 0.55) 0%, transparent 60%),
+        radial-gradient(ellipse 120% 100% at 20% 0%, rgba(232, 237, 224, 0.85) 0%, transparent 62%),
+        linear-gradient(165deg, #FEFBF6 0%, #F6EFE6 55%, #F1EAE0 100%);
+    border-color: #E4D6C0;
+    box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.7) inset,
+        0 18px 48px -20px rgba(122, 96, 70, 0.28);
+}
+
+    /* a faint gold ring of light around the whole keepsake */
+    .gd-hero.is-complete::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 24px;
+        pointer-events: none;
+        box-shadow: inset 0 0 0 1px rgba(201, 168, 122, 0.22);
+    }
+
+/* the completed eyebrow leans warm-gold rather than sage */
+.gd-hero.is-complete .gd-eyebrow { color: #C08A57; }
+
+/* the reason line gets a warm-gold ruler instead of green */
+.gd-hero.is-complete .gd-why { border-left-color: #E4C9A6; }
+
+/* ── The bloom block: plant on the left, savoring copy on the right ── */
+.gd-bloom {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    margin-top: 1.9rem;
+    padding-top: 1.7rem;
+    border-top: 1px dashed rgba(196, 160, 120, 0.4);
+    position: relative;
+    z-index: 2;
+    animation: gdBloomRise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes gdBloomRise {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Scene: haloed, gently breathing plant ── */
+.gd-bloom-scene {
+    position: relative;
+    width: 118px;
+    height: 128px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gd-bloom-halo {
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 50% 42%,
+            rgba(255, 240, 214, 0.9) 0%,
+            rgba(240, 206, 178, 0.45) 34%,
+            rgba(196, 216, 182, 0.28) 58%,
+            transparent 72%);
+    filter: blur(6px);
+    animation: gdHaloBreathe 5.5s ease-in-out infinite;
+}
+
+@keyframes gdHaloBreathe {
+    0%, 100% { transform: scale(1);    opacity: 0.85; }
+    50%      { transform: scale(1.09); opacity: 1; }
+}
+
+.gd-bloom-plant {
+    position: relative;
+    width: 108px;
+    height: 118px;
+    overflow: visible;
+}
+
+/* stem draws itself in, like the plant finishing its growth */
+.gd-bp-stem {
+    stroke: #7E9E70;
+    stroke-width: 3;
+    stroke-linecap: round;
+    fill: none;
+    stroke-dasharray: 90;
+    stroke-dashoffset: 90;
+    animation: gdStemDraw 1s ease 0.15s forwards;
+}
+
+@keyframes gdStemDraw { to { stroke-dashoffset: 0; } }
+
+.gd-bp-leaf {
+    fill: #85A676;
+    stroke: #6E8C63;
+    stroke-width: 1;
+    opacity: 0;
+    transform-origin: 60px 84px;
+    animation: gdLeafOpen 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.gd-bp-leaf-l { animation-delay: 0.7s; }
+.gd-bp-leaf-r { animation-delay: 0.9s; }
+
+@keyframes gdLeafOpen {
+    from { opacity: 0; transform: scale(0.4) rotate(-8deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* the flower: warm petals that ease open and settle */
+.gd-bp-flower {
+    transform-origin: 60px 40px;
+    animation: gdFlowerOpen 1s cubic-bezier(0.34, 1.56, 0.64, 1) 1.05s both;
+}
+
+@keyframes gdFlowerOpen {
+    0%   { opacity: 0; transform: scale(0) rotate(-30deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+.gd-bp-petal {
+    fill: #F3C6B0;
+    stroke: #E7A98C;
+    stroke-width: 1;
+}
+
+    .gd-bp-petal:nth-child(2) { fill: #F5D0B4; }
+    .gd-bp-petal:nth-child(4) { fill: #F1BFA6; }
+
+.gd-bp-core {
+    fill: #E8B25F;
+    stroke: #D89A3E;
+    stroke-width: 1;
+}
+
+/* soft ambient sparks drifting up — magic, not confetti */
+.gd-bp-spark {
+    fill: #E9C583;
+    opacity: 0;
+    animation: gdSpark 4.5s ease-in-out infinite;
+}
+
+.gd-bp-spark-1 { animation-delay: 1.8s; }
+.gd-bp-spark-2 { animation-delay: 2.9s; }
+.gd-bp-spark-3 { animation-delay: 3.6s; }
+.gd-bp-spark-4 { animation-delay: 2.3s; }
+
+@keyframes gdSpark {
+    0%      { opacity: 0; transform: translateY(4px) scale(0.6); }
+    30%     { opacity: 0.9; }
+    60%     { opacity: 0.5; }
+    100%    { opacity: 0; transform: translateY(-10px) scale(1); }
+}
+
+/* ── Savoring copy ── */
+.gd-bloom-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.gd-bloom-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #C08A57;
+}
+
+    .gd-bloom-eyebrow .bi { font-size: 0.85rem; }
+
+.gd-bloom-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    line-height: 1.2;
+    color: #4A5C3F;
+    letter-spacing: -0.01em;
+}
+
+.gd-bloom-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.86rem;
+    color: #8B7B6A;
+    line-height: 1.6;
+    max-width: 40ch;
+}
+
+/* ── Keepsake stat strip: two quiet facts to reflect on ── */
+.gd-bloom-stats {
+    display: flex;
+    align-items: center;
+    gap: 1.1rem;
+    margin-top: 0.7rem;
+}
+
+.gd-bloom-stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.05rem;
+}
+
+.gd-bloom-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: #6E8C63;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.gd-bloom-stat-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+    color: #A0917E;
+}
+
+.gd-bloom-stat-div {
+    width: 1px;
+    height: 30px;
+    background: linear-gradient(180deg, transparent, rgba(196, 160, 120, 0.5), transparent);
+}
+
+/* ── The completed milestone frame + resting note, warmed to match ── */
+.gd-hero.is-complete ~ .gd-milestone-frame .gd-rest-note,
+.gd-rest-note {
+    background: linear-gradient(150deg, rgba(232, 237, 224, 0.65), rgba(246, 224, 205, 0.45));
+    border: 1px solid rgba(201, 168, 122, 0.25);
+}
+
+/* ── Motion sensitivity: keep the meaning, drop the movement ── */
+@media (prefers-reduced-motion: reduce) {
+    .gd-bloom,
+    .gd-bp-stem,
+    .gd-bp-leaf,
+    .gd-bp-flower { animation: none; }
+    .gd-bp-leaf,
+    .gd-bp-flower { opacity: 1; transform: none; }
+    .gd-bp-stem { stroke-dashoffset: 0; }
+    .gd-bloom-halo { animation: none; }
+    .gd-bp-spark { display: none; }
+}
+
+/* ── Small screens: stack the plant above the copy, keep it centered ── */
+@media (max-width: 560px) {
+    .gd-bloom {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.1rem;
+    }
+
+    .gd-bloom-sub { max-width: 100%; }
+
+    .gd-bloom-stats { justify-content: center; }
+}
