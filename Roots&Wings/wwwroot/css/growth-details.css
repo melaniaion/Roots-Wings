@@ -759,8 +759,8 @@
         font-size: 0.75rem;
     }
 
-/* ── Calm completion: a bloom, not a burst ──
-   Research-informed: rewards savoring & mastery reflection, not a dopamine splash.
+/* 
+   Research to add later: rewards savoring & mastery reflection, not a dopamine splash.
    A fully grown plant that gently blooms, warm light, a lasting affirmation. */
 .gd-hero.is-complete {
     background:
@@ -840,14 +840,13 @@
 }
 
 /* ==========================================================================
-   V3 REFINEMENTS
+   V3 REFINEMENTS - to check!
    - back link anchored to the true top-left of the page
    - per-milestone completion date (replaces action buttons when done)
    - icon-only "+" add button
-   - a less rigidly-centered, more modern rhythm
    ========================================================================== */
 
-/* ── Back link: top-left of the whole page, not the narrow column ──
+/* Back link: top-left of the whole page
    It now sits above .gd-page and hugs the viewport's left edge. */
 .gd-back {
     display: inline-flex;
@@ -877,7 +876,7 @@
 
     .gd-back .bi { font-size: 0.95rem; }
 
-/* ── Hero: nudge the composition off-center for a more editorial feel ── */
+/* Hero: nudge the composition off-center for a more editorial feel */
 .gd-page {
     padding-top: 0.4rem;
 }
@@ -909,13 +908,13 @@
         background: linear-gradient(180deg, #8BAA7D, #C3D0B5);
     }
 
-/* ── Milestone row: give the leaf + text room, keep the right cluster tidy ── */
+/* Milestone row: give the leaf + text room, keep the right cluster tidy  */
 .gd-milestone {
     gap: 0.9rem;
     padding: 0.85rem 1rem 0.85rem 0.85rem;
 }
 
-/* ── Completed milestone: date pill where the buttons used to be ── */
+/* Completed milestone: date pill where the buttons used to be */
 .gd-milestone-meta {
     flex-shrink: 0;
     display: flex;
@@ -949,7 +948,7 @@
     margin-left: auto;
 }
 
-/* ── Icon-only "+" add button ── */
+/* Icon-only "+" add button */
 .gd-add-btn {
     width: 40px;
     height: 40px;
@@ -972,9 +971,7 @@
         transform: translateY(-1px) rotate(90deg);
     }
 
-/* ── Modal: buttons swapped — action on the LEFT, Cancel on the RIGHT ──
-   (Markup order already reflects this; these rules just keep the visual
-   weight balanced with the destructive action leading.) */
+/* buttons swapped, action on the LEFT, Cancel on the RIGHT - UI/Ux principle (user's mental expectations - checl the course) */
 .gd-modal-actions {
     gap: 0.7rem;
 }
@@ -987,7 +984,7 @@
     order: 2;
 }
 
-/* ── Small-screen tidy-up ── */
+/* Small-screen tidy-up */
 @media (max-width: 560px) {
     .gd-hero-lead { max-width: 100%; }
 
@@ -1006,13 +1003,10 @@
    V4 — THE BLOOM (completed goal state only)
    Grounded in achievement psychology: a completed goal should reward
    SAVORING + MASTERY REFLECTION and reinforce self-efficacy ("you grew this"),
-   not deliver a dopamine burst. So the moment is warm, still, and keepsake-like
-   — a fully flowered plant held in dawn light — rather than a confetti splash.
-   Scoped entirely to .gd-hero.is-complete / .gd-bloom, so the active-goal
-   design (which is already right) is untouched.
+   not deliver a dopamine burst. So the moment is warm, still.
    ========================================================================== */
 
-/* ── Softer dawn-light atmosphere for the finished hero ── */
+/* Softer atmosphere for the finished hero */
 .gd-hero.is-complete {
     background:
         radial-gradient(ellipse 90% 70% at 78% -10%, rgba(246, 213, 196, 0.55) 0%, transparent 60%),
@@ -1040,7 +1034,7 @@
 /* the reason line gets a warm-gold ruler instead of green */
 .gd-hero.is-complete .gd-why { border-left-color: #E4C9A6; }
 
-/* ── The bloom block: plant on the left, savoring copy on the right ── */
+/* The bloom block: plant on the left, savoring copy on the right */
 .gd-bloom {
     display: flex;
     align-items: center;
@@ -1058,7 +1052,7 @@
     to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Scene: haloed, gently breathing plant ── */
+/* Scene: haloed, gently breathing plant */
 .gd-bloom-scene {
     position: relative;
     width: 118px;
@@ -1151,7 +1145,7 @@
     stroke-width: 1;
 }
 
-/* soft ambient sparks drifting up — magic, not confetti */
+/* soft ambient sparks drifting up */
 .gd-bp-spark {
     fill: #E9C583;
     opacity: 0;
@@ -1170,7 +1164,7 @@
     100%    { opacity: 0; transform: translateY(-10px) scale(1); }
 }
 
-/* ── Savoring copy ── */
+/* Savoring copy */
 .gd-bloom-text {
     display: flex;
     flex-direction: column;
@@ -1208,7 +1202,7 @@
     max-width: 40ch;
 }
 
-/* ── Keepsake stat strip: two quiet facts to reflect on ── */
+/* Keepsake stat strip: two quiet facts to reflect on  */
 .gd-bloom-stats {
     display: flex;
     align-items: center;
@@ -1243,14 +1237,14 @@
     background: linear-gradient(180deg, transparent, rgba(196, 160, 120, 0.5), transparent);
 }
 
-/* ── The completed milestone frame + resting note, warmed to match ── */
+/* The completed milestone frame + resting note, warmed to match  */
 .gd-hero.is-complete ~ .gd-milestone-frame .gd-rest-note,
 .gd-rest-note {
     background: linear-gradient(150deg, rgba(232, 237, 224, 0.65), rgba(246, 224, 205, 0.45));
     border: 1px solid rgba(201, 168, 122, 0.25);
 }
 
-/* ── Motion sensitivity: keep the meaning, drop the movement ── */
+/* Motion sensitivity: keep the meaning, drop the movement  */
 @media (prefers-reduced-motion: reduce) {
     .gd-bloom,
     .gd-bp-stem,
@@ -1263,7 +1257,7 @@
     .gd-bp-spark { display: none; }
 }
 
-/* ── Small screens: stack the plant above the copy, keep it centered ── */
+/* Small screens: stack the plant above the copy, keep it centered  */
 @media (max-width: 560px) {
     .gd-bloom {
         flex-direction: column;

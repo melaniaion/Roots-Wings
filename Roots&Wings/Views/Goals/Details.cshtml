@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="~/css/growth-details.css" asp-append-version="true" />
 }
 
-<!-- Back link lives at the true top-left of the page, outside the narrow column -->
+<!-- Back link at the top-left of the page, outside the narrow column -->
 <a asp-action="Index" class="gd-back"><i class="bi bi-arrow-left"></i> Back to Growth Board</a>
 
 <div class="gd-page">
@@ -29,8 +29,8 @@
         <div class="gd-hero-top">
             <div class="gd-hero-lead">
                 <span class="gd-eyebrow">
-                    <i class="bi @(Model.IsCompleted ? "bi-flower1" : "bi-leaf")"></i>
-                    @(Model.IsCompleted ? "A grown intention" : "Growing now")
+                    <i class="bi @(Model.IsCompleted ? "bi bi-check-circle" : "bi-leaf")"></i>
+                    @(Model.IsCompleted ? "Completed" : "Growing now")
                 </span>
                 <h1 class="gd-title">@Model.Title</h1>
             </div>
@@ -52,7 +52,7 @@
         @if (Model.IsCompleted)
         {
             <div class="gd-bloom">
-                <!-- Savoring, not a burst: a plant that has fully flowered, held in warm light.
+                <!--  a plant that has fully flowered, held in warm light.
                      Reflects mastery + self-efficacy ("you grew this") rather than a dopamine splash. -->
                 <div class="gd-bloom-scene">
                     <span class="gd-bloom-halo"></span>
@@ -76,9 +76,9 @@
                 </div>
 
                 <div class="gd-bloom-text">
-                    <span class="gd-bloom-eyebrow"><i class="bi bi-stars"></i> Fully grown</span>
-                    <span class="gd-bloom-title">You saw this all the way through.</span>
-                    <span class="gd-bloom-sub">Every milestone tended, one by one, until the whole thing bloomed. That growth was yours &mdash; take a slow breath and let it land.</span>
+                    <span class="gd-bloom-eyebrow">Fully grown</span>
+                    <span class="gd-bloom-title">Honoring the quiet days.</span>
+                    <span class="gd-bloom-sub">Growth happens in the dark, too. This bloom is for the heavy days and private doubts where you still quietly chose to keep going.</span>
 
                     <div class="gd-bloom-stats">
                         <div class="gd-bloom-stat">
@@ -114,7 +114,7 @@
     <div class="gd-section-head">
         <div>
             <h2 class="gd-section-title">Milestones</h2>
-            <p class="gd-section-sub">each leaf grows as you tend to it</p>
+            <p class="gd-section-sub">small steps to a big change</p>
         </div>
     </div>
 
