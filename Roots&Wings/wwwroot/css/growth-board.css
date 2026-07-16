@@ -1,0 +1,505 @@
+﻿/* THE GROWTH BOARD */
+
+.growth-board-container {
+    padding: 1.5rem 0.5rem 2rem 0.5rem;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+/* Header */
+.gb-main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 2.8rem;
+    gap: 1rem;
+}
+
+.rw-mini-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    color: #B5A898;
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.gb-main-header .rw-page-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2.4rem;
+    color: #5C3D2E;
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+}
+
+.gb-proposition {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.02rem;
+    color: #A0846E;
+    margin: 0;
+    max-width: 30rem;
+    line-height: 1.5;
+}
+
+.gb-proposition .accent {
+    color: #7A9B6E;
+}
+
+.gb-header-tools {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+.gb-search-capsule {
+    position: relative;
+    background: rgba(255, 255, 255, 0.55);
+    border: 1px solid #E8C4A8;
+    border-radius: 30px;
+    padding: 0.5rem 1.2rem 0.5rem 2.5rem;
+    display: flex;
+    align-items: center;
+    width: 260px;
+    transition: all 0.2s ease;
+}
+
+.gb-search-capsule:focus-within {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #8B5A3A;
+    box-shadow: 0 0 0 3px rgba(139, 90, 58, 0.08);
+}
+
+.gb-search-capsule i {
+    position: absolute;
+    left: 1.05rem;
+    color: #B5A898;
+    font-size: 0.9rem;
+}
+
+.gb-search-capsule input {
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 0.88rem;
+    color: #5C3D2E;
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+}
+
+.gb-search-capsule input::placeholder {
+    color: #B5A898;
+}
+
+.btn-artisan-new-goal {
+    background: #5C3D2E;
+    color: #FBF6F0 !important;
+    text-decoration: none !important;
+    border-radius: 30px;
+    height: 40px;
+    padding: 0 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    box-shadow: 0 3px 10px rgba(92, 61, 46, 0.12);
+    transition: all 0.2s ease;
+}
+
+.btn-artisan-new-goal:hover {
+    background: #3D5C35;
+    transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(61, 92, 53, 0.2);
+}
+
+.btn-artisan-new-goal .plus {
+    font-size: 1.15rem;
+    font-weight: 300;
+}
+
+/* Sections */
+.gb-content-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.gb-row-title-cluster {
+    display: flex;
+    align-items: baseline;
+    gap: 0.8rem;
+    margin-bottom: 1.4rem;
+}
+
+.gb-row-title-cluster h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: #5C3D2E;
+    margin: 0;
+    font-weight: 500;
+}
+
+.gb-row-title-cluster p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: #8B7B6A;
+    margin: 0;
+}
+
+/* Carousel */
+.gb-carousel-wrapper-hugging {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.btn-carousel-hug {
+    position: absolute;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid #E8C4A8;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #8B5A3A;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(92, 61, 46, 0.1);
+    transition: all 0.25s ease;
+}
+
+.btn-carousel-hug:hover {
+    background: #5C3D2E;
+    color: #FBF6F0;
+    border-color: #5C3D2E;
+}
+
+.left-hug {
+    left: -18px;
+}
+
+.right-hug {
+    right: -18px;
+}
+
+.gb-carousel-viewport, .gb-shelf-viewport {
+    width: 100%;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    padding: 0.5rem 4px;
+}
+
+.gb-carousel-viewport::-webkit-scrollbar, .gb-shelf-viewport::-webkit-scrollbar {
+    display: none;
+}
+
+.gb-carousel-track, .gb-shelf-track {
+    display: flex;
+    gap: 1.4rem;
+    width: max-content;
+}
+
+/* ACTIVE GOAL CARDS */
+.gb-leaf-card {
+    position: relative;
+    width: 320px;
+    min-height: 200px;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(160deg, #FEFCF9 0%, #F8F2E9 100%);
+    border: 1px solid #ECD9C4;
+    border-radius: 18px 18px 18px 4px;
+    box-shadow: 0 4px 16px rgba(92, 61, 46, 0.05);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.gb-leaf-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(92, 61, 46, 0.11);
+    border-color: #D8B896;
+    color: inherit;
+    text-decoration: none;
+}
+
+.gb-leaf-vein {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 118px;
+    height: 118px;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.card-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.card-goal-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 500;
+    font-size: 1.18rem;
+    color: #5C3D2E;
+    margin: 0;
+    line-height: 1.35;
+}
+
+.card-goal-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.76rem;
+    color: #A79684;
+    margin: 0.3rem 0 0 0;
+    position: relative;
+    z-index: 2;
+}
+
+/* Row of leaves (Bootstrap leaf icons, colored by state) */
+.gb-growth-sprig {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    height: 28px;
+    margin: 1rem 0;
+    position: relative;
+    z-index: 2;
+}
+
+.sprig-leaf {
+    font-size: 1.2rem;
+    line-height: 1;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), color 0.35s ease;
+}
+
+.sprig-leaf:nth-child(odd) {
+    transform: rotate(-8deg);
+}
+
+.sprig-leaf:nth-child(even) {
+    transform: rotate(8deg);
+}
+
+.sprig-leaf.grown {
+    color: #7A9B6E;
+}
+
+.sprig-leaf.budding {
+    color: #D2C2AC;
+}
+
+.gb-leaf-card:hover .sprig-leaf.grown:nth-child(odd) {
+    transform: rotate(-8deg) translateY(-2px);
+}
+
+.gb-leaf-card:hover .sprig-leaf.grown:nth-child(even) {
+    transform: rotate(8deg) translateY(-2px);
+}
+
+.sprig-more {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem;
+    color: #A38D7D;
+    margin-left: 0.25rem;
+    font-weight: 500;
+    align-self: center;
+}
+
+.card-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid rgba(139, 90, 58, 0.1);
+    padding-top: 0.75rem;
+    position: relative;
+    z-index: 2;
+}
+
+.progress-string {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: #8B7B6A;
+}
+
+.card-arrow-link {
+    color: #8B7B6A;
+    font-size: 1rem;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.gb-leaf-card:hover .card-arrow-link {
+    color: #3D5C35;
+    transform: translateX(3px);
+}
+
+/* WINS SHELF, a  floating wooden shelf */
+.gb-shelf-scene {
+    position: relative;
+    padding: 0 0.5rem;
+    margin-bottom: 2rem;
+}
+
+.gb-shelf-viewport {
+    /* room so the cards bottoms meet the plank and shadows aren't clipped */
+    padding-bottom: 0;
+}
+
+.gb-shelf-track {
+    align-items: flex-end;
+    padding: 0.5rem 2px 0.9rem 2px;
+}
+
+.gb-settled-card {
+    position: relative;
+    width: 250px;
+    min-height: 150px;
+    padding: 1.3rem 1.4rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-decoration: none;
+    color: inherit;
+    background: linear-gradient(155deg, #F4ECE0 0%, #EADFCD 100%);
+    border: 1px solid rgba(139, 90, 58, 0.12);
+    border-radius: 12px 12px 3px 3px;
+    box-shadow: 0 4px 10px -3px rgba(92, 61, 46, 0.18);
+    overflow: hidden;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.gb-settled-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 18px -6px rgba(92, 61, 46, 0.26);
+    color: inherit;
+    text-decoration: none;
+}
+
+/* The floating wooden shelf */
+.gb-shelf-plank {
+    position: relative;
+    height: 13px;
+    margin: 0 0.5rem;
+    border-radius: 5px;
+    background: linear-gradient(180deg, #E4C8A2 0%, #D3AF83 48%, #C29E70 100%);
+    /* top sheen + soft rounded bottom edge, all in one element = no double line */
+    box-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.5), inset 0 -3px 4px rgba(122, 88, 54, 0.28), 0 10px 18px -8px rgba(92, 61, 46, 0.3);
+}
+
+/* very soft grounding shadow, wide and faint hopefully - to test later */
+.gb-shelf-plank::after {
+    content: "";
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: calc(100% + 3px);
+    height: 10px;
+    background: radial-gradient(ellipse 55% 100% at 50% 0%, rgba(92, 61, 46, 0.1), transparent 80%);
+    pointer-events: none;
+}
+
+.gb-settled-sprig {
+    position: absolute;
+    right: 0.6rem;
+    bottom: 0.5rem;
+    width: 58px;
+    height: 58px;
+    opacity: 0.24;
+    pointer-events: none;
+}
+
+.shelf-badge-done {
+    align-self: flex-start;
+    color: #4A5C3F;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.66rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: relative;
+    z-index: 2;
+}
+
+.shelf-badge-done .badge-dot {
+    width: 5px;
+    height: 5px;
+    background: #7A9B6E;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(122, 155, 110, 0.2);
+}
+
+.gb-settled-card .card-goal-title {
+    position: relative;
+    z-index: 2;
+    margin-top: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.shelf-date-info {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.8rem;
+    color: #8B7B6A;
+    margin-top: 0.7rem;
+    padding-top: 0.6rem;
+    border-top: 1px solid rgba(139, 90, 58, 0.1);
+    position: relative;
+    z-index: 2;
+}
+
+/* Dropdown */
+.elite-dropdown {
+    background: #FFFFFF !important;
+    border: 1px solid #E8C4A8 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 6px 18px rgba(92, 61, 46, 0.1) !important;
+    padding: 0.4rem 0;
+}
+
+.elite-dropdown .dropdown-item {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: #5C3D2E;
+    padding: 0.45rem 1rem;
+}
+
+.elite-dropdown .dropdown-item:hover {
+    background: rgba(242, 224, 208, 0.5);
+}
+
+.elite-dropdown .dropdown-item.text-danger {
+    color: #8B4A4A;
+}
+
+/* Empty states */
+.gb-empty-card-state, .gb-shelf-empty-msg {
+    color: #B5A898;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    padding: 2.2rem;
+    font-size: 0.95rem;
+}

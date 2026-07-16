@@ -1,0 +1,142 @@
+@model Roots_Wings.Models.Goal
+@{
+    ViewData["Title"] = "Plant a new intention";
+    var seededMilestones = ViewBag.MilestoneDescriptions as List<string> ?? new List<string>();
+    if (seededMilestones.Count == 0)
+    {
+        // start with a couple of empty rows so the form feels alive
+        seededMilestones = new List<string> { "", "" };
+    }
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/growth-board.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/growth-create.css" asp-append-version="true" />
+}
+
+<!-- Consistent back link: borderless, top-left, above the column -->
+<a asp-action="Index" class="gc-back"><i class="bi bi-arrow-left"></i> Back to Growth Board</a>
+
+<div class="gc-page">
+
+    <!-- HERO -->
+    <div class="gc-hero">
+        <svg class="gc-hero-vein" viewBox="0 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M180 12 C120 42 78 88 50 168" stroke="#7A9B6E" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/>
+            <path d="M150 28 C138 44 135 56 138 70" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.45"/>
+            <path d="M126 48 C113 62 109 74 111 88" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.45"/>
+        </svg>
+
+        <span class="gc-eyebrow"><i class="bi bi-seedling"></i> A new goal</span>
+        <h1 class="gc-title">What do you want to grow?</h1>
+        <p class="gc-lede">Name it, say why it matters, and break it into a few small steps. Each step is a new leaf waiting to unfold.</p>
+    </div>
+
+    <form asp-action="Create" method="post" class="gc-form" id="createForm">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="gc-validation"></div>
+
+        <!-- THE INTENTION -->
+        <section class="gc-card">
+            <span class="gc-step-label"><span class="gc-step-dot">1</span> The intention</span>
+
+            <div class="gc-field">
+                <label asp-for="Title" class="gc-label">Name your goal</label>
+                <input asp-for="Title" class="gc-input" maxlength="120" autocomplete="off"
+                       placeholder="e.g. Rebuild a morning routine that feels like mine" />
+                <span asp-validation-for="Title" class="gc-field-error"></span>
+                <span class="gc-hint">Keep it personal, write it the way you'd say it to yourself.</span>
+            </div>
+
+            <div class="gc-field">
+                <label asp-for="Motivation" class="gc-label">Your why</label>
+                <textarea asp-for="Motivation" class="gc-input gc-textarea" maxlength="500" rows="3"
+                          placeholder="Because I want to start the day on my own terms, not the phone's."></textarea>
+                <span asp-validation-for="Motivation" class="gc-field-error"></span>
+                <span class="gc-hint">On the hard days, this is the line you'll come back to.</span>
+            </div>
+        </section>
+
+        <!-- THE STEPS -->
+        <section class="gc-card">
+            <span class="gc-step-label"><span class="gc-step-dot">2</span> The small steps</span>
+            <p class="gc-card-sub">Add at least one. Don't worry about getting it perfect, you can always edit, add, or remove them later.</p>
+
+            <ul class="gc-milestones" id="milestoneList">
+                @for (var i = 0; i < seededMilestones.Count; i++)
+                {
+                    <li class="gc-milestone-row">
+                        <span class="gc-leaf-dot"><i class="bi bi-leaf"></i></span>
+                        <input type="text" name="milestoneDescriptions" value="@seededMilestones[i]"
+                               class="gc-milestone-input" maxlength="200" autocomplete="off"
+                               placeholder="A small step toward it..." />
+                        <button type="button" class="gc-row-remove" title="Remove step" aria-label="Remove step"
+                                onclick="gcRemoveRow(this)"><i class="bi bi-x-lg"></i></button>
+                    </li>
+                }
+            </ul>
+
+            <button type="button" class="gc-add-step" onclick="gcAddRow()">
+                <i class="bi bi-plus"></i> Add another step
+            </button>
+        </section>
+
+        <!-- ACTIONS -->
+        <div class="gc-actions">
+            <a asp-action="Index" class="gc-btn-ghost">Cancel</a>
+            <button type="submit" class="gc-btn-primary">
+                Plant this intention
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function gcMakeRow(value = "") {
+            const li = document.createElement('li');
+            li.className = 'gc-milestone-row';
+            li.innerHTML =
+                '<span class="gc-leaf-dot"><i class="bi bi-leaf"></i></span>' +
+                '<input type="text" name="milestoneDescriptions" class="gc-milestone-input" maxlength="200" autocomplete="off" placeholder="A small step toward it..." />' +
+                '<button type="button" class="gc-row-remove" title="Remove step" aria-label="Remove step" onclick="gcRemoveRow(this)"><i class="bi bi-x-lg"></i></button>';
+            li.querySelector('input').value = value;
+            return li;
+        }
+
+        function gcAddRow() {
+            const list = document.getElementById('milestoneList');
+            const row = gcMakeRow();
+            list.appendChild(row);
+            row.classList.add('gc-row-enter');
+            requestAnimationFrame(() => row.classList.remove('gc-row-enter'));
+            row.querySelector('input').focus();
+            gcSyncRemoveButtons();
+        }
+
+        function gcRemoveRow(btn) {
+            const list = document.getElementById('milestoneList');
+            if (list.querySelectorAll('.gc-milestone-row').length <= 1) {
+                // never leave zero rows; just clear the last one
+                btn.closest('.gc-milestone-row').querySelector('input').value = '';
+                return;
+            }
+            const row = btn.closest('.gc-milestone-row');
+            row.classList.add('gc-row-leave');
+            setTimeout(() => { row.remove(); gcSyncRemoveButtons(); }, 180);
+        }
+
+        function gcSyncRemoveButtons() {
+            const rows = document.querySelectorAll('#milestoneList .gc-milestone-row');
+            const only = rows.length <= 1;
+            rows.forEach(r => r.querySelector('.gc-row-remove').classList.toggle('is-hidden', only));
+        }
+
+        document.addEventListener('DOMContentLoaded', gcSyncRemoveButtons);
+    </script>
+}

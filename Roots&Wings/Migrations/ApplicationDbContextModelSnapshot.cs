@@ -17,7 +17,7 @@ namespace Roots_Wings.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.7")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -253,6 +253,41 @@ namespace Roots_Wings.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Roots_Wings.Models.Goal", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Motivation")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Goals");
+                });
+
             modelBuilder.Entity("Roots_Wings.Models.JournalEntry", b =>
                 {
                     b.Property<int>("Id")
@@ -285,6 +320,38 @@ namespace Roots_Wings.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("JournalEntries");
+                });
+
+            modelBuilder.Entity("Roots_Wings.Models.Milestone", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("GoalId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Order")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GoalId");
+
+                    b.ToTable("Milestones");
                 });
 
             modelBuilder.Entity("Roots_Wings.Models.Tag", b =>
@@ -414,6 +481,17 @@ namespace Roots_Wings.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Roots_Wings.Models.Goal", b =>
+                {
+                    b.HasOne("Roots_Wings.Models.ApplicationUser", "User")
+                        .WithMany("Goals")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Roots_Wings.Models.JournalEntry", b =>
                 {
                     b.HasOne("Roots_Wings.Models.ApplicationUser", "User")
@@ -423,6 +501,17 @@ namespace Roots_Wings.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Roots_Wings.Models.Milestone", b =>
+                {
+                    b.HasOne("Roots_Wings.Models.Goal", "Goal")
+                        .WithMany("Milestones")
+                        .HasForeignKey("GoalId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Goal");
                 });
 
             modelBuilder.Entity("Roots_Wings.Models.TherapySession", b =>
@@ -438,9 +527,16 @@ namespace Roots_Wings.Migrations
 
             modelBuilder.Entity("Roots_Wings.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("Goals");
+
                     b.Navigation("JournalEntries");
 
                     b.Navigation("TherapySessions");
+                });
+
+            modelBuilder.Entity("Roots_Wings.Models.Goal", b =>
+                {
+                    b.Navigation("Milestones");
                 });
 #pragma warning restore 612, 618
         }

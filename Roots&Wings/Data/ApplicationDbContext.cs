@@ -12,6 +12,8 @@ namespace Roots_Wings.Data
         public DbSet<TherapySession> TherapySessions { get; set; }
         public DbSet<JournalEntry> JournalEntries { get; set; }
         public DbSet<Tag> Tags { get; set; }
+        public DbSet<Goal> Goals { get; set; }
+        public DbSet<Milestone> Milestones { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +43,21 @@ namespace Roots_Wings.Data
             modelBuilder.Entity<Tag>()
                 .HasIndex(t => t.Name)
                 .IsUnique();
+
+            // Relația User - Goals
+            modelBuilder.Entity<Goal>()
+                .HasOne(g => g.User)
+                .WithMany(u => u.Goals)
+                .HasForeignKey(g => g.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Relația Goal - Milestones
+            // Deleting a goal deletes its milestones with it; milestones don't exist independently.
+            modelBuilder.Entity<Milestone>()
+                .HasOne(m => m.Goal)
+                .WithMany(g => g.Milestones)
+                .HasForeignKey(m => m.GoalId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

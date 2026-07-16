@@ -1,0 +1,253 @@
+/*  GROWTH BOARD - EDIT A GOAL */
+
+/* back link (borderless, top-left, above the column) */
+.ge-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    width: fit-content;
+    margin: 0.6rem 0 0 0.6rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.86rem;
+    font-weight: 500;
+    color: #8B7B6A;
+    text-decoration: none;
+    transition: gap 0.2s ease, color 0.2s ease;
+}
+
+    .ge-back:hover { color: #5C3D2E; gap: 0.7rem; text-decoration: none; }
+    .ge-back .bi { font-size: 0.95rem; }
+
+.ge-page {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 1rem 0.5rem 3rem 0.5rem;
+}
+
+/* HERO */
+.ge-hero {
+    position: relative;
+    background:
+        radial-gradient(ellipse 120% 90% at 100% 0%, rgba(242, 224, 208, 0.5) 0%, transparent 60%),
+        linear-gradient(160deg, #FEFCF9 0%, #F7F1E8 100%);
+    border: 1px solid #ECD9C4;
+    border-radius: 24px;
+    padding: 2rem 2.1rem;
+    margin-bottom: 1.6rem;
+    overflow: hidden;
+    box-shadow: 0 8px 30px -12px rgba(92, 61, 46, 0.14);
+}
+
+.ge-hero-vein {
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 190px;
+    height: 190px;
+    opacity: 0.4;
+    pointer-events: none;
+}
+
+.ge-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #B08968;
+    margin-bottom: 0.6rem;
+    position: relative;
+    z-index: 2;
+}
+
+    .ge-eyebrow .bi { font-size: 0.85rem; }
+
+.ge-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 2rem;
+    line-height: 1.15;
+    color: #5C3D2E;
+    margin: 0 0 0.6rem 0;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    position: relative;
+    z-index: 2;
+    max-width: 88%;
+}
+
+.ge-lede {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    color: #8B7B6A;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 46ch;
+    position: relative;
+    z-index: 2;
+}
+
+/* FORM */
+.ge-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.ge-card {
+    position: relative;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 22px;
+    padding: 1.7rem 1.6rem;
+    box-shadow: 0 8px 32px -14px rgba(92, 61, 46, 0.14);
+}
+
+.ge-field + .ge-field { margin-top: 1.3rem; }
+
+.ge-label {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #6E5847;
+    margin-bottom: 0.5rem;
+}
+
+.ge-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid #E3D3BE;
+    border-radius: 14px;
+    padding: 0.8rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #5C3D2E;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+    .ge-input::placeholder { color: #B5A898; }
+
+    .ge-input:focus {
+        border-color: #7A9B6E;
+        background: #FFFFFF;
+        box-shadow: 0 0 0 3px rgba(122, 155, 110, 0.14);
+    }
+
+.ge-textarea {
+    resize: vertical;
+    min-height: 96px;
+    line-height: 1.6;
+}
+
+.ge-hint {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.76rem;
+    color: #A0917E;
+    margin-top: 0.45rem;
+    line-height: 1.5;
+}
+
+.ge-field-error {
+    display: block;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: #8B4A4A;
+    margin-top: 0.4rem;
+}
+
+/* Note: milestones live elsewhere */
+.ge-note {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: linear-gradient(150deg, rgba(232, 237, 224, 0.55), rgba(246, 224, 205, 0.35));
+    border: 1px solid rgba(201, 168, 122, 0.25);
+    border-radius: 16px;
+    padding: 0.95rem 1.2rem;
+}
+
+    .ge-note .bi { font-size: 1.15rem; color: #7A9B6E; flex-shrink: 0; }
+
+    .ge-note span {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.85rem;
+        color: #6E5847;
+        line-height: 1.5;
+    }
+
+/* Validation summary */
+.ge-validation:not(:empty) {
+    background: #F4D9D9;
+    color: #8B4A4A;
+    border-radius: 14px;
+    padding: 0.8rem 1.1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+    .ge-validation ul { margin: 0; padding-left: 1.1rem; }
+    .ge-validation:empty { display: none; }
+
+/* Actions */
+.ge-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    margin-top: 0.4rem;
+}
+
+.ge-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #5C3D2E;
+    color: #FBF6F0;
+    border: none;
+    border-radius: 30px;
+    padding: 0.75rem 1.6rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    box-shadow: 0 6px 18px -8px rgba(92, 61, 46, 0.5);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .ge-btn-primary:hover { background: #3D5C35; color: #FBF6F0; transform: translateY(-1px); }
+    .ge-btn-primary .bi { font-size: 1rem; }
+
+.ge-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #8B7B6A;
+    text-decoration: none;
+    padding: 0.75rem 1rem;
+    border-radius: 30px;
+    transition: color 0.2s ease, background 0.2s ease;
+}
+
+    .ge-btn-ghost:hover { color: #5C3D2E; background: rgba(255, 255, 255, 0.5); }
+
+/* Small screens */
+@media (max-width: 560px) {
+    .ge-hero { padding: 1.6rem 1.4rem; }
+    .ge-title { font-size: 1.6rem; max-width: 100%; }
+    .ge-card { padding: 1.4rem 1.2rem; }
+    .ge-actions { flex-direction: column-reverse; align-items: stretch; }
+    .ge-btn-primary { justify-content: center; }
+    .ge-btn-ghost { text-align: center; justify-content: center; }
+}
