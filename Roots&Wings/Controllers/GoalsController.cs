@@ -31,12 +31,11 @@ namespace Roots_Wings.Controllers
                 .OrderByDescending(g => g.CreatedAt)
                 .ToListAsync();
 
-            // OPTIMIZATION: Limit to 3 items for the visual shelf layout
+          
             var winsShelf = await _context.Goals
                 .Where(g => g.UserId == userId && g.CompletedAt != null)
                 .Include(g => g.Milestones.OrderBy(m => m.Order))
                 .OrderByDescending(g => g.CompletedAt)
-                .Take(3)
                 .ToListAsync();
 
             ViewBag.WinsShelf = winsShelf;
