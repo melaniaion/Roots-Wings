@@ -26,199 +26,109 @@ namespace Roots_Wings.Controllers
             var user = await db.Users.FindAsync(userId);
             var now = DateTime.UtcNow;
 
-            var lastSession = db.TherapySessions
-                .Where(s => s.UserId == userId && s.SessionDate < now)
-                .OrderByDescending(s => s.SessionDate)
-                .FirstOrDefault();
-
+            // ── Next session ──
             var nextSession = db.TherapySessions
                 .Where(s => s.UserId == userId && s.SessionDate >= now)
                 .OrderBy(s => s.SessionDate)
                 .FirstOrDefault();
 
-            // ── Progress across the gap between two sessions ──
-            int percent = 0;
-            if (nextSession != null)
-            {
-                var start = lastSession?.SessionDate ?? nextSession.SessionDate.AddDays(-7);
-                var span = (nextSession.SessionDate - start).TotalSeconds;
-                var done = (now - start).TotalSeconds;
-                var p = span <= 0 ? 1.0 : Math.Clamp(done / span, 0, 1);
-                percent = (int)Math.Round(p * 100);
-            }
+            var lastSession = db.TherapySessions
+                .Where(s => s.UserId == userId && s.SessionDate < now)
+                .OrderByDescending(s => s.SessionDate)
+                .FirstOrDefault();
 
-            // Ring: r=54, circumference = 2*PI*54 = 339.29
-            double dashOffset = 339.29 * (1 - (percent / 100.0));
-
-            // ── Countdown, resolved here so the view does no logic ──
-            string countNum = "—";
+            // ── Countdown, resolved here so the view only prints ──
+            string countNum = "";
             string countUnit = "";
+            string dashOffset = "339.29";
+
             if (nextSession != null)
             {
                 var hours = (nextSession.SessionDate - now).TotalHours;
-                if (hours <= 1) { countNum = "now"; countUnit = ""; }
-                else if (hours < 24) { countNum = ((int)Math.Ceiling(hours)).ToString(); countUnit = "hours"; }
+
+                if (hours <= 1)
+                {
+                    countNum = "now";
+                    countUnit = "";
+                }
+                else if (hours < 24)
+                {
+                    countNum = ((int)Math.Ceiling(hours)).ToString();
+                    countUnit = (int)Math.Ceiling(hours) == 1 ? "hour" : "hours";
+                }
                 else
                 {
                     int d = (int)Math.Ceiling((nextSession.SessionDate - now).TotalDays);
                     countNum = d.ToString();
                     countUnit = d == 1 ? "day" : "days";
                 }
+
+                // The ring fills over the final 14 days — a visual approach, not a
+                // "progress" metric. Far out = nearly empty, session day = full.
+                double daysOut = (nextSession.SessionDate - now).TotalDays;
+                double fill = Math.Clamp(1 - (daysOut / 14.0), 0.04, 1);
+                dashOffset = (339.29 * (1 - fill)).ToString("0.##",
+                    System.Globalization.CultureInfo.InvariantCulture);
             }
 
-            // ── Interval material ──
-            var intervalStart = lastSession != null ? lastSession.SessionDate : DateTime.MinValue;
-
-            var entries = db.JournalEntries
-                .Include(e => e.Tags)
-                .Where(e => e.UserId == userId && e.CreatedAt > intervalStart)
-                .OrderByDescending(e => e.CreatedAt)
-                .ToList();
-
-            JournalEntry featured = entries
-                .Where(e => e.Content.Length > 180)
-                .OrderByDescending(e => e.Content.Length)
-                .FirstOrDefault();
-
-            if (featured == null)
-                featured = entries.FirstOrDefault();
-
-            // Themes: plain Dictionary, no anonymous types, no dynamic.
-            var themes = entries
-                .SelectMany(e => e.Tags)
-                .GroupBy(t => t.Name)
-                .Where(g => g.Count() > 1)
-                .OrderByDescending(g => g.Count())
-                .Take(4)
-                .ToDictionary(g => g.Key, g => g.Count());
-
-            // ── Growth in this interval ──
+            // ── Top 3 most recently added goals ──
             var goals = db.Goals
                 .Include(g => g.Milestones)
                 .Where(g => g.UserId == userId && g.CompletedAt == null)
+                .OrderByDescending(g => g.CreatedAt)
+                .Take(3)
                 .ToList();
 
-            var goal = goals
-                .Where(g => g.Milestones.Any(m => m.CompletedAt == null))
-                .OrderByDescending(g => g.Milestones.Count(m => m.CompletedAt != null))
+            // ── Most recent journal entry ──
+            var lastEntry = db.JournalEntries
+                .Where(e => e.UserId == userId)
+                .OrderByDescending(e => e.CreatedAt)
                 .FirstOrDefault();
 
-            int grown = goals
-                .SelectMany(g => g.Milestones)
-                .Count(m => m.CompletedAt.HasValue && m.CompletedAt.Value > intervalStart);
+            string entryWhen = "";
+            string entryText = "";
+            if (lastEntry != null)
+            {
+                var days = (int)Math.Floor((now - lastEntry.CreatedAt).TotalDays);
+                var time = lastEntry.CreatedAt.ToString("HH:mm");
+                entryWhen = days == 0 ? "Today, " + time
+                          : days == 1 ? "Yesterday, " + time
+                          : lastEntry.CreatedAt.ToString("d MMM") + ", " + time;
+                entryText = Excerpt(lastEntry.Content, 150);
+            }
 
-            int bloomed = db.Goals
-                .Count(g => g.UserId == userId
-                         && g.CompletedAt.HasValue
-                         && g.CompletedAt.Value > intervalStart);
+            // ── Session date, split for the card ──
+            string sessionDate = "";
+            string sessionDay = "";
+            if (nextSession != null)
+            {
+                sessionDate = nextSession.SessionDate.ToString("d MMMM yyyy, HH:mm");
+                sessionDay = nextSession.SessionDate.ToString("dddd");
+            }
 
-            // ── Everything typed, so the view just prints ──
             ViewBag.UserName = user != null ? user.Name : "";
-            ViewBag.Today = now.ToString("dddd, d MMMM");
+            ViewBag.Today = now.ToString("dddd, d MMMM yyyy");
             ViewBag.Greeting = now.Hour < 12 ? "Good morning"
                              : now.Hour < 18 ? "Good afternoon"
                              : "Good evening";
+
             ViewBag.Line = Lines[now.DayOfYear % Lines.Length];
             ViewBag.Prompt = Prompts[(now.DayOfYear * 7) % Prompts.Length];
 
-            ViewBag.LastSession = lastSession;
             ViewBag.NextSession = nextSession;
-            ViewBag.Percent = percent;
-            ViewBag.DashOffset = dashOffset.ToString("0.##",
-                System.Globalization.CultureInfo.InvariantCulture);
+            ViewBag.SessionDate = sessionDate;
+            ViewBag.SessionDay = sessionDay;
             ViewBag.CountNum = countNum;
             ViewBag.CountUnit = countUnit;
+            ViewBag.DashOffset = dashOffset;
+            ViewBag.HasPrep = nextSession != null && !string.IsNullOrWhiteSpace(nextSession.PrepNotes);
 
-            // Human-readable "when the last session was", built here not in Razor.
-            string sinceLabel = "";
-            if (lastSession != null)
-            {
-                int d = (int)Math.Floor((now - lastSession.SessionDate).TotalDays);
-                sinceLabel = d == 0 ? "earlier today" : d == 1 ? "yesterday" : d + " days ago";
-            }
-            ViewBag.SinceLabel = sinceLabel;
-
-            ViewBag.Entries = entries;
-            ViewBag.EntryCount = entries.Count;
-            ViewBag.Featured = featured;
-            ViewBag.Themes = themes;
-            ViewBag.Goal = goal;
-            ViewBag.Grown = grown;
-            ViewBag.Bloomed = bloomed;
-
-            ViewBag.NeedsCapture = lastSession != null
-                && (now - lastSession.SessionDate).TotalHours <= 72
-                && string.IsNullOrWhiteSpace(lastSession.PostNotes);
-
-            ViewBag.Agenda = SplitAgenda(nextSession != null ? nextSession.PrepNotes : null);
-
-            // Excerpts done here — no helper methods in the view.
-            ViewBag.ThreadText = lastSession != null ? Excerpt(lastSession.PostNotes, 300) : "";
-            ViewBag.ThreadLong = lastSession != null
-                && !string.IsNullOrWhiteSpace(lastSession.PostNotes)
-                && lastSession.PostNotes.Length > 300;
-            ViewBag.FeaturedText = featured != null ? Excerpt(featured.Content, 240) : "";
+            ViewBag.Goals = goals;
+            ViewBag.LastEntry = lastEntry;
+            ViewBag.EntryWhen = entryWhen;
+            ViewBag.EntryText = entryText;
 
             return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddAgendaItem(int sessionId, string item)
-        {
-            var userId = _userManager.GetUserId(User);
-            var session = db.TherapySessions
-                .FirstOrDefault(s => s.Id == sessionId && s.UserId == userId);
-
-            if (session == null) return NotFound();
-            if (string.IsNullOrWhiteSpace(item)) return RedirectToAction("Index");
-
-            var lines = SplitAgenda(session.PrepNotes);
-
-            // Capped at 3 — CBT agenda-setting guidance holds that more than
-            // three items can't be covered properly in one session.
-            if (lines.Count >= 3)
-            {
-                TempData["TodayNote"] = "Three is enough to cover well in one session.";
-                return RedirectToAction("Index");
-            }
-
-            lines.Add(item.Trim());
-            session.PrepNotes = string.Join("\n", lines);
-            await db.SaveChangesAsync();
-
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveAgendaItem(int sessionId, int index)
-        {
-            var userId = _userManager.GetUserId(User);
-            var session = db.TherapySessions
-                .FirstOrDefault(s => s.Id == sessionId && s.UserId == userId);
-
-            if (session == null) return NotFound();
-
-            var lines = SplitAgenda(session.PrepNotes);
-            if (index >= 0 && index < lines.Count)
-            {
-                lines.RemoveAt(index);
-                session.PrepNotes = lines.Count > 0 ? string.Join("\n", lines) : null;
-                await db.SaveChangesAsync();
-            }
-
-            return RedirectToAction("Index");
-        }
-
-        private static List<string> SplitAgenda(string notes)
-        {
-            if (string.IsNullOrWhiteSpace(notes)) return new List<string>();
-            return notes
-                .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                .Select(l => l.Trim())
-                .Where(l => l.Length > 0)
-                .ToList();
         }
 
         private static string Excerpt(string s, int n)
@@ -226,8 +136,8 @@ namespace Roots_Wings.Controllers
             if (string.IsNullOrEmpty(s)) return "";
             if (s.Length <= n) return s;
             int cut = s.LastIndexOf(' ', Math.Min(n, s.Length - 1));
-            if (cut < 40) cut = n;   // no early space — just hard-cut
-            return s.Substring(0, cut) + "…";
+            if (cut < 40) cut = n;
+            return s.Substring(0, cut) + "...";
         }
 
         private static readonly string[] Lines = new[]
@@ -250,15 +160,15 @@ namespace Roots_Wings.Controllers
 
         private static readonly string[] Prompts = new[]
         {
-            "What did you avoid this week, and what was underneath it?",
-            "What are you tired of explaining?",
+            "How are you feeling about our next session?",
             "What do you keep almost saying out loud?",
-            "Where did you say yes when you meant no?",
-            "What are you carrying that isn't yours?",
+            "What are you tired of explaining?",
             "What have you been putting off feeling?",
-            "Who took up the most room in your head this week?",
+            "What are you carrying that isn't yours?",
+            "Where did you say yes when you meant no?",
             "What changed that you haven't let yourself notice?",
-            "What felt heavier than it should have — and why that?",
+            "Who took up the most room in your head this week?",
+            "What felt heavier than it should have?",
             "Where were you most yourself this week?",
         };
     }
