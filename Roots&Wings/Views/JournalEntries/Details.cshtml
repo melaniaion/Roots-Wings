@@ -18,11 +18,11 @@
 
         <!-- Timestamp and Edited Time -->
         <div class="journal-page-date">
-            @Model.CreatedAt.ToString("MMMM d, yyyy · h:mm tt")
+            @Model.CreatedAt.ToLocal().ToString("MMMM d, yyyy · h:mm tt")
             @if (Model.UpdatedAt.HasValue)
             {
                 <span style="margin-left: 0.5rem; opacity: 0.75; font-style: italic; text-transform: lowercase;">
-                    · edited @Model.UpdatedAt.Value.ToString("MMM d")
+                    · edited @Model.UpdatedAt.ToLocal().Value.ToString("MMM d")
                 </span>
             }
         </div>

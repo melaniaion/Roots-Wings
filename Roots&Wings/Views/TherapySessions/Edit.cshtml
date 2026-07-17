@@ -18,7 +18,7 @@
 
             <h2 class="rw-page-title mb-1">Edit Session</h2>
             <p style="color: #B5A898; font-size: 0.85rem; margin-bottom: 1.8rem;">
-                @Model.SessionDate.ToString("MMMM d, yyyy")
+                @Model.SessionDate.ToLocal().ToString("MMMM d, yyyy")
             </p>
 
             <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
@@ -48,7 +48,7 @@
                     <input type="datetime-local"
                            name="SessionDate"
                            class="form-control-rw"
-                           value="@Model.SessionDate.ToString("yyyy-MM-ddTHH:mm")" />
+                           value="@Model.SessionDate.ToLocal().ToString("yyyy-MM-ddTHH:mm")" />
                     <span asp-validation-for="SessionDate"
                           class="text-danger"
                           style="font-size: 0.8rem;">
@@ -87,7 +87,7 @@
                             <label class="form-label-rw">Post Session Reflection</label>
                             <p style="color: #B5A898; font-size: 0.85rem; font-style: italic;">
                                 This will be available after your session on
-                                @Model.SessionDate.ToString("MMMM d, yyyy").
+                                    @Model.SessionDate.ToLocal().ToString("MMMM d, yyyy").
                             </p>
                         </div>
                     }

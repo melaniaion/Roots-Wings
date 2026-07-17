@@ -56,7 +56,7 @@
                    class="rw-back-link" style="font-size: 1.2rem;">&#8592;</a>
 
                 <div class="calendar-month-name" style="margin: 0;">
-                    @displayDate.ToString("MMMM yyyy")
+                    @displayDate.ToLocal().ToString("MMMM yyyy")
                 </div>
 
                 <a href="@Url.Action("Index", new { month = nextMonth.Month, year = nextMonth.Year })"
@@ -134,7 +134,7 @@
                     <div class="d-flex justify-content-between align-items-start gap-2">
                         <div>
                             <div class="session-card-date">
-                                @session.SessionDate.ToString("dddd, MMM d · h:mm tt")
+                                @session.SessionDate.ToLocal().ToString("dddd, MMM d · h:mm tt")
                             </div>
                             <p class="session-card-title">@session.Title</p>
                             @if (!string.IsNullOrEmpty(session.TherapistName))
@@ -173,7 +173,7 @@
                     <div class="d-flex justify-content-between align-items-start gap-2">
                         <div>
                             <div class="session-card-date">
-                                @session.SessionDate.ToString("dddd, MMM d · h:mm tt")
+                                @session.SessionDate.ToLocal().ToString("dddd, MMM d · h:mm tt")
                             </div>
                             <p class="session-card-title">@session.Title</p>
                             @if (!string.IsNullOrEmpty(session.TherapistName))

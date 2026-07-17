@@ -40,7 +40,7 @@
                     <div class="paper-tape"></div>
 
                     <div class="paper-date">
-                        @entry.CreatedAt.ToString("MMM dd, yyyy")
+                        @entry.CreatedAt.ToLocal().ToString("MMM dd, yyyy")
                     </div>
 
                     <h2 class="paper-title">

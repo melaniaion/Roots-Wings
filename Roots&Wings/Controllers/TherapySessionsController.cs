@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Roots_Wings.Data;
 using Roots_Wings.DTOs;
+using Roots_Wings.Helpers;
 using Roots_Wings.Models;
 using Roots_Wings.Services;
 
@@ -106,9 +107,10 @@ namespace Roots_Wings.Controllers
             }
 
             var userId = _userManager.GetUserId(User);
+            var sessionDateUtc = newSession.SessionDate.ToUtc();
 
             // Check if the user already has a session on this calendar day
-            var dayStart = newSession.SessionDate.Date;
+            var dayStart = sessionDateUtc.Date;
             var dayEnd = dayStart.AddDays(1);
 
             bool dayAlreadyTaken = await _context.TherapySessions
@@ -122,10 +124,12 @@ namespace Roots_Wings.Controllers
                 return View(newSession);
             }
 
+           
             newSession.UserId = userId;
             newSession.CreatedAt = DateTime.UtcNow;
-
+            newSession.SessionDate = sessionDateUtc;
             _context.TherapySessions.Add(newSession);
+
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -170,9 +174,11 @@ namespace Roots_Wings.Controllers
                 return NotFound();
             }
 
+            var sessionDateUtc = model.SessionDate.ToUtc();
+
             // Check if the new date conflicts with another session on that day
             // Excluding the current session from the check
-            var dayStart = model.SessionDate.Date;
+            var dayStart = sessionDateUtc.Date;
             var dayEnd = dayStart.AddDays(1);
 
             bool dayAlreadyTaken = await _context.TherapySessions
@@ -188,10 +194,10 @@ namespace Roots_Wings.Controllers
             }
 
             session.Title = model.Title;
-            session.SessionDate = model.SessionDate;
             session.TherapistName = model.TherapistName;
             session.PrepNotes = model.PrepNotes;
             session.PostNotes = model.PostNotes;
+            session.SessionDate = sessionDateUtc;
 
             await _context.SaveChangesAsync();
 

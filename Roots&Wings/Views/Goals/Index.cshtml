@@ -135,7 +135,7 @@
                                             <span class="badge-dot"></span> Completed
                                         </div>
                                         <h4 class="card-goal-title">@goal.Title</h4>
-                                        <div class="shelf-date-info">Grown by @goal.CompletedAt?.ToString("MMM d, yyyy")</div>
+                                        <div class="shelf-date-info">Grown by @goal.CompletedAt?.ToLocal().ToString("MMM d, yyyy")</div>
                                     </a>
                                 }
                             }

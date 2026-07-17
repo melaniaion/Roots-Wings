@@ -87,7 +87,7 @@
                         </div>
                         <span class="gd-bloom-stat-div"></span>
                         <div class="gd-bloom-stat">
-                            <span class="gd-bloom-stat-num">@Model.CompletedAt?.ToString("MMM d")</span>
+                            <span class="gd-bloom-stat-num">@Model.CompletedAt?.ToLocal().ToString("MMM d")</span>
                             <span class="gd-bloom-stat-label">the day it bloomed</span>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                         <div class="gd-milestone-meta">
                             <span class="gd-grown-date">
                                 <i class="bi bi-check2"></i>
-                                Grown @m.CompletedAt?.ToString("MMM d")
+                                Grown @m.CompletedAt?.ToLocal().ToString("MMM d")
                             </span>
                         </div>
                     }

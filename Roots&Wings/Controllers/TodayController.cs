@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Roots_Wings.Data;
+using Roots_Wings.Helpers;
 using Roots_Wings.Models;
 
 namespace Roots_Wings.Controllers
@@ -85,23 +86,34 @@ namespace Roots_Wings.Controllers
             string entryText = "";
             if (lastEntry != null)
             {
-                int days = (int)Math.Floor((now - lastEntry.CreatedAt).TotalDays);
-                string time = lastEntry.CreatedAt.ToString("HH:mm");
+                var stamp = (lastEntry.UpdatedAt ?? lastEntry.CreatedAt).ToLocal();
+                var localNow = now.ToLocal();
+                bool edited = lastEntry.UpdatedAt.HasValue;
+
+                // Compare calendar dates, not elapsed hours — an entry from 23:00 yesterday
+                // read at 08:00 today is 9 hours old but still "Yesterday".
+                int days = (int)(localNow.Date - stamp.Date).TotalDays;
+                string time = stamp.ToString("HH:mm");
+
                 entryWhen = days == 0 ? "Today, " + time
                           : days == 1 ? "Yesterday, " + time
-                          : lastEntry.CreatedAt.ToString("d MMM") + ", " + time;
+                          : stamp.ToString("d MMM") + ", " + time;
+
+                if (edited) entryWhen = "Edited " + entryWhen.ToLower();
                 entryText = Excerpt(lastEntry.Content, 150);
             }
 
+            ViewBag.UserName = user != null ? user.Name : "";
+            ViewBag.Today = now.ToLocal().ToString("dddd, d MMMM yyyy");
+
+            int hour = now.ToLocal().Hour;
+            ViewBag.Greeting = hour < 12 ? "Good morning"
+                             : hour < 18 ? "Good afternoon"
+                             : "Good evening";
+
             string sessionDate = "";
             if (nextSession != null)
-                sessionDate = nextSession.SessionDate.ToString("d MMMM yyyy, HH:mm");
-
-            ViewBag.UserName = user != null ? user.Name : "";
-            ViewBag.Today = now.ToString("dddd, d MMMM yyyy");
-            ViewBag.Greeting = now.Hour < 12 ? "Good morning"
-                             : now.Hour < 18 ? "Good afternoon"
-                             : "Good evening";
+                sessionDate = nextSession.SessionDate.ToLocal().ToString("d MMMM yyyy, HH:mm");
 
             ViewBag.NextSession = nextSession;
             ViewBag.SessionDate = sessionDate;
