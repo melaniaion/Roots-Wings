@@ -32,11 +32,6 @@ namespace Roots_Wings.Controllers
                 .OrderBy(s => s.SessionDate)
                 .FirstOrDefault();
 
-            var lastSession = db.TherapySessions
-                .Where(s => s.UserId == userId && s.SessionDate < now)
-                .OrderByDescending(s => s.SessionDate)
-                .FirstOrDefault();
-
             // ── Countdown, resolved here so the view only prints ──
             string countNum = "";
             string countUnit = "";
@@ -53,8 +48,9 @@ namespace Roots_Wings.Controllers
                 }
                 else if (hours < 24)
                 {
-                    countNum = ((int)Math.Ceiling(hours)).ToString();
-                    countUnit = (int)Math.Ceiling(hours) == 1 ? "hour" : "hours";
+                    int h = (int)Math.Ceiling(hours);
+                    countNum = h.ToString();
+                    countUnit = h == 1 ? "hour" : "hours";
                 }
                 else
                 {
@@ -63,8 +59,8 @@ namespace Roots_Wings.Controllers
                     countUnit = d == 1 ? "day" : "days";
                 }
 
-                // The ring fills over the final 14 days — a visual approach, not a
-                // "progress" metric. Far out = nearly empty, session day = full.
+                // The ring fills over the final 14 days — a visual approach,
+                // not a metric. Far out = nearly empty, session day = full.
                 double daysOut = (nextSession.SessionDate - now).TotalDays;
                 double fill = Math.Clamp(1 - (daysOut / 14.0), 0.04, 1);
                 dashOffset = (339.29 * (1 - fill)).ToString("0.##",
@@ -89,22 +85,17 @@ namespace Roots_Wings.Controllers
             string entryText = "";
             if (lastEntry != null)
             {
-                var days = (int)Math.Floor((now - lastEntry.CreatedAt).TotalDays);
-                var time = lastEntry.CreatedAt.ToString("HH:mm");
+                int days = (int)Math.Floor((now - lastEntry.CreatedAt).TotalDays);
+                string time = lastEntry.CreatedAt.ToString("HH:mm");
                 entryWhen = days == 0 ? "Today, " + time
                           : days == 1 ? "Yesterday, " + time
                           : lastEntry.CreatedAt.ToString("d MMM") + ", " + time;
                 entryText = Excerpt(lastEntry.Content, 150);
             }
 
-            // ── Session date, split for the card ──
             string sessionDate = "";
-            string sessionDay = "";
             if (nextSession != null)
-            {
                 sessionDate = nextSession.SessionDate.ToString("d MMMM yyyy, HH:mm");
-                sessionDay = nextSession.SessionDate.ToString("dddd");
-            }
 
             ViewBag.UserName = user != null ? user.Name : "";
             ViewBag.Today = now.ToString("dddd, d MMMM yyyy");
@@ -112,12 +103,8 @@ namespace Roots_Wings.Controllers
                              : now.Hour < 18 ? "Good afternoon"
                              : "Good evening";
 
-            ViewBag.Line = Lines[now.DayOfYear % Lines.Length];
-            ViewBag.Prompt = Prompts[(now.DayOfYear * 7) % Prompts.Length];
-
             ViewBag.NextSession = nextSession;
             ViewBag.SessionDate = sessionDate;
-            ViewBag.SessionDay = sessionDay;
             ViewBag.CountNum = countNum;
             ViewBag.CountUnit = countUnit;
             ViewBag.DashOffset = dashOffset;
@@ -139,37 +126,5 @@ namespace Roots_Wings.Controllers
             if (cut < 40) cut = n;
             return s.Substring(0, cut) + "...";
         }
-
-        private static readonly string[] Lines = new[]
-        {
-            "Roots grow in the dark. That still counts as growing.",
-            "You don't have to feel ready to be doing the work.",
-            "Nothing blooms all year. Rest is part of it.",
-            "The quiet weeks are still weeks you showed up for.",
-            "Slow is a direction, not a failure.",
-            "You can be a work in progress and enough at the same time.",
-            "Some things only make sense once you've said them out loud.",
-            "Being tired of it doesn't mean you're bad at it.",
-            "You've survived every hard day so far. That's the whole record.",
-            "Growth rarely feels like growth while it's happening.",
-            "The fact that it still hurts means it still matters.",
-            "You can hold two true things at once.",
-            "Small is not the same as insignificant.",
-            "Tending something takes longer than planting it.",
-        };
-
-        private static readonly string[] Prompts = new[]
-        {
-            "How are you feeling about our next session?",
-            "What do you keep almost saying out loud?",
-            "What are you tired of explaining?",
-            "What have you been putting off feeling?",
-            "What are you carrying that isn't yours?",
-            "Where did you say yes when you meant no?",
-            "What changed that you haven't let yourself notice?",
-            "Who took up the most room in your head this week?",
-            "What felt heavier than it should have?",
-            "Where were you most yourself this week?",
-        };
     }
 }
