@@ -6,7 +6,7 @@
     padding: 1.5rem 0.5rem 3rem 0.5rem;
 }
 
-/* ══════════ HEADER ══════════ */
+/* HEADER */
 .td-head {
     display: flex;
     align-items: flex-start;
@@ -118,7 +118,7 @@
     color: #A0917E;
 }
 
-/* ══════════ SESSION CARD ══════════ */
+/* SESSION CARD */
 .td-session {
     position: relative;
     display: flex;
@@ -219,7 +219,7 @@
         transform: translateX(3px);
     }
 
-/* ── countdown ring ── */
+/* countdown ring */
 .td-ring-wrap {
     position: relative;
     z-index: 2;
@@ -293,7 +293,7 @@
     opacity: 0.85;
 }
 
-/* ══════════ CARDS ══════════ */
+/* CARDS */
 .td-card {
     position: relative;
     background: rgba(255, 255, 255, 0.55);
@@ -337,7 +337,7 @@
         text-decoration: none;
     }
 
-/* ══════════ GOALS ══════════ */
+/* GOALS */
 .td-goals {
     list-style: none;
     padding: 0;
@@ -481,7 +481,7 @@
         border-bottom: 1px solid rgba(139, 90, 58, 0.35);
     }
 
-/* ══════════ TWO COLUMNS ══════════ */
+/* TWO COLUMNS */
 .td-cols {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -608,7 +608,7 @@
         transform: none;
     }
 
-/* ══════════ BREATHE OVERLAY ══════════ */
+/*  BREATHE OVERLAY */
 .td-breathe-overlay {
     position: fixed;
     inset: 0;
@@ -711,7 +711,7 @@
         color: #5C3D2E;
     }
 
-/* ══════════ MOTION ══════════ */
+/*  MOTION */
 @media (prefers-reduced-motion: reduce) {
     .td-ring-fill,
     .td-breathe-ring,
@@ -720,7 +720,7 @@
     }
 }
 
-/* ══════════ SMALL SCREENS ══════════ */
+/* SMALL SCREENS */
 @media (max-width: 780px) {
     .td-cols {
         grid-template-columns: 1fr;

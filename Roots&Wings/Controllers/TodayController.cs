@@ -27,13 +27,13 @@ namespace Roots_Wings.Controllers
             var user = await db.Users.FindAsync(userId);
             var now = DateTime.UtcNow;
 
-            // ── Next session ──
+            // Next session
             var nextSession = db.TherapySessions
                 .Where(s => s.UserId == userId && s.SessionDate >= now)
                 .OrderBy(s => s.SessionDate)
                 .FirstOrDefault();
 
-            // ── Countdown, resolved here so the view only prints ──
+            //  Countdown, resolved here so the view only shows
             string countNum = "";
             string countUnit = "";
             string dashOffset = "339.29";
@@ -60,7 +60,7 @@ namespace Roots_Wings.Controllers
                     countUnit = d == 1 ? "day" : "days";
                 }
 
-                // The ring fills over the final 14 days — a visual approach,
+                // The ring fills over the final 14 days - a visual approach,
                 // not a metric. Far out = nearly empty, session day = full.
                 double daysOut = (nextSession.SessionDate - now).TotalDays;
                 double fill = Math.Clamp(1 - (daysOut / 14.0), 0.04, 1);
@@ -68,7 +68,7 @@ namespace Roots_Wings.Controllers
                     System.Globalization.CultureInfo.InvariantCulture);
             }
 
-            // ── Top 3 most recently added goals ──
+            // Top 3 most recently added goals
             var goals = db.Goals
                 .Include(g => g.Milestones)
                 .Where(g => g.UserId == userId && g.CompletedAt == null)
@@ -76,7 +76,7 @@ namespace Roots_Wings.Controllers
                 .Take(3)
                 .ToList();
 
-            // ── Most recent journal entry ──
+            //  Most recent journal entry added
             var lastEntry = db.JournalEntries
                 .Where(e => e.UserId == userId)
                 .OrderByDescending(e => e.CreatedAt)
@@ -93,7 +93,7 @@ namespace Roots_Wings.Controllers
                 // Compare calendar dates, not elapsed hours — an entry from 23:00 yesterday
                 // read at 08:00 today is 9 hours old but still "Yesterday".
                 int days = (int)(localNow.Date - stamp.Date).TotalDays;
-                string time = stamp.ToString("HH:mm");
+                string time = stamp.ToString("h:mm tt");
 
                 entryWhen = days == 0 ? "Today, " + time
                           : days == 1 ? "Yesterday, " + time
@@ -113,7 +113,7 @@ namespace Roots_Wings.Controllers
 
             string sessionDate = "";
             if (nextSession != null)
-                sessionDate = nextSession.SessionDate.ToLocal().ToString("d MMMM yyyy, HH:mm");
+                sessionDate = nextSession.SessionDate.ToLocal().ToString("d MMMM yyyy, h:mm tt");
 
             ViewBag.NextSession = nextSession;
             ViewBag.SessionDate = sessionDate;
