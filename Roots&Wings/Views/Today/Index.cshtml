@@ -1,0 +1,324 @@
+@using Roots_Wings.Models
+@{
+    ViewData["Title"] = "Today";
+
+    TherapySession last = ViewBag.LastSession as TherapySession;
+    TherapySession next = ViewBag.NextSession as TherapySession;
+    JournalEntry featured = ViewBag.Featured as JournalEntry;
+    Goal goal = ViewBag.Goal as Goal;
+
+    List<string> agenda = ViewBag.Agenda as List<string> ?? new List<string>();
+    Dictionary<string, int> themes = ViewBag.Themes as Dictionary<string, int> ?? new Dictionary<string, int>();
+
+    int percent = (int)ViewBag.Percent;
+    int entryCount = (int)ViewBag.EntryCount;
+    int grown = (int)ViewBag.Grown;
+    int bloomed = (int)ViewBag.Bloomed;
+    bool needsCapture = (bool)ViewBag.NeedsCapture;
+    bool threadLong = (bool)ViewBag.ThreadLong;
+    bool hasThread = last != null && !string.IsNullOrWhiteSpace(last.PostNotes);
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/today.css" asp-append-version="true" />
+}
+
+<div class="td-page">
+
+    <!-- HERO -->
+    <div class="td-hero">
+        <svg class="td-hero-vein" viewBox="0 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M180 12 C120 42 78 88 50 168" stroke="#7A9B6E" stroke-width="1.6" stroke-linecap="round" opacity="0.6" />
+            <path d="M150 28 C138 44 135 56 138 70" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.5" />
+            <path d="M126 48 C113 62 109 74 111 88" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.5" />
+            <path d="M104 72 C90 84 86 96 88 110" stroke="#7A9B6E" stroke-width="1.3" stroke-linecap="round" opacity="0.5" />
+        </svg>
+
+        <div class="td-hero-inner">
+            <div class="td-hero-lead">
+                <span class="gd-eyebrow"><i class="bi bi-sun"></i> @ViewBag.Greeting</span>
+                <h1 class="td-title">@ViewBag.UserName</h1>
+                <p class="td-date">@ViewBag.Today</p>
+
+                <div class="td-line">
+                    <i class="bi bi-quote"></i>
+                    <p>@ViewBag.Line</p>
+                </div>
+            </div>
+
+            @if (next != null)
+            {
+                <a class="td-ring-link" asp-controller="TherapySessions" asp-action="Details" asp-route-id="@next.Id">
+                    <div class="td-ring-wrap">
+                        <svg class="td-ring" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="tdRingGrad" x1="0" y1="0" x2="1" y2="1">
+                                    <stop offset="0%" stop-color="#C3D0B5" />
+                                    <stop offset="55%" stop-color="#8BAA7D" />
+                                    <stop offset="100%" stop-color="#E7A98C" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="td-ring-track" cx="65" cy="65" r="54" />
+                            <circle class="td-ring-fill" cx="65" cy="65" r="54"
+                                    stroke="url(#tdRingGrad)"
+                                    stroke-dasharray="339.29"
+                                    stroke-dashoffset="@ViewBag.DashOffset" />
+                        </svg>
+
+                        <div class="td-ring-mid">
+                            <span class="td-count-num">@ViewBag.CountNum</span>
+                            <span class="td-count-unit">@ViewBag.CountUnit</span>
+                        </div>
+                    </div>
+
+                    <div class="td-ring-meta">
+                        <span class="td-ring-title">@next.Title</span>
+                        <span class="td-ring-when">@next.SessionDate.ToString("ddd d MMM, HH:mm")</span>
+                        @if (!string.IsNullOrEmpty(next.TherapistName))
+                        {
+                            <span class="td-ring-who">@next.TherapistName</span>
+                        }
+                    </div>
+                </a>
+            }
+            else
+            {
+                <div class="td-ring-link td-ring-empty">
+                    <div class="td-ring-wrap">
+                        <svg class="td-ring" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+                            <circle class="td-ring-track" cx="65" cy="65" r="54" />
+                        </svg>
+                        <div class="td-ring-mid">
+                            <i class="bi bi-calendar-heart td-empty-icon"></i>
+                        </div>
+                    </div>
+                    <div class="td-ring-meta">
+                        <a class="td-ring-title td-link" asp-controller="TherapySessions" asp-action="Create">Add a session</a>
+                        <span class="td-ring-when">Nothing scheduled</span>
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (next != null && last != null)
+        {
+            <div class="gd-progress td-interval">
+                <div class="gd-progress-track">
+                    <div class="gd-progress-fill" style="width:@(percent)%"></div>
+                </div>
+                <span class="gd-progress-label">@percent% through the gap</span>
+            </div>
+        }
+    </div>
+
+    @if (TempData["TodayNote"] != null)
+    {
+        <div class="td-note"><i class="bi bi-info-circle"></i> @TempData["TodayNote"]</div>
+    }
+
+    <!-- CAPTURE -->
+    @if (needsCapture && last != null)
+    {
+        <div class="td-capture">
+            <div class="td-capture-icon"><i class="bi bi-bookmark-heart"></i></div>
+            <div class="td-capture-body">
+                <span class="td-capture-lead">@last.Title · @ViewBag.SinceLabel</span>
+                <h3 class="td-capture-ask">What do you want to keep from it?</h3>
+                <p class="td-capture-why">Write it while it's still warm. In two weeks this is the only part that's still here.</p>
+            </div>
+            <a class="td-capture-go" asp-controller="TherapySessions" asp-action="Edit" asp-route-id="@last.Id">
+                Write it <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+    }
+
+    <!-- THE THREAD -->
+    @if (hasThread)
+    {
+        <div class="td-section-head">
+            <div>
+                <h2 class="gd-section-title">The thread</h2>
+                <p class="gd-section-sub">what you took from last time</p>
+            </div>
+        </div>
+
+        <div class="td-thread">
+            <i class="bi bi-quote td-thread-mark"></i>
+            <p class="td-thread-text">@ViewBag.ThreadText</p>
+            <div class="td-thread-foot">
+                <span>@last.Title · @ViewBag.SinceLabel</span>
+                @if (threadLong)
+                {
+                    <a asp-controller="TherapySessions" asp-action="Details" asp-route-id="@last.Id">
+                        Read all <i class="bi bi-arrow-right"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    <!-- AGENDA -->
+    @if (next != null)
+    {
+        <div class="td-section-head">
+            <div>
+                <h2 class="gd-section-title">To bring in</h2>
+                <p class="gd-section-sub">two or three things, no more</p>
+            </div>
+            <span class="td-agenda-count">@agenda.Count / 3</span>
+        </div>
+
+        <div class="td-frame">
+            @if (agenda.Count > 0)
+            {
+                <ul class="td-agenda">
+                    @for (int i = 0; i < agenda.Count; i++)
+                    {
+                        <li class="td-agenda-item">
+                            <span class="td-agenda-dot"><i class="bi bi-record-circle"></i></span>
+                            <span class="td-agenda-text">@agenda[i]</span>
+                            <form asp-action="RemoveAgendaItem" method="post" class="td-agenda-rm">
+                                <input type="hidden" name="sessionId" value="@next.Id" />
+                                <input type="hidden" name="index" value="@i" />
+                                <button type="submit" title="Remove"><i class="bi bi-x-lg"></i></button>
+                            </form>
+                        </li>
+                    }
+                </ul>
+            }
+
+            @if (agenda.Count < 3)
+            {
+                <form asp-action="AddAgendaItem" method="post" class="td-add">
+                    <input type="hidden" name="sessionId" value="@next.Id" />
+                    <i class="bi bi-chat-quote td-add-icon"></i>
+                    <input type="text" name="item" maxlength="200" autocomplete="off"
+                           placeholder="@(agenda.Count > 0 ? "And after that..." : "The thing you'd say first...")" required />
+                    <button type="submit" class="td-add-btn" title="Add"><i class="bi bi-plus"></i></button>
+                </form>
+            }
+            else
+            {
+                <div class="td-rest-note">
+                    <i class="bi bi-check2-circle"></i>
+                    <span>That's a full session. Anything else can wait for the next one.</span>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- SINCE THEN -->
+    <div class="td-section-head">
+        <div>
+            <h2 class="gd-section-title">Since then</h2>
+            <p class="gd-section-sub">
+                @if (last != null)
+                {
+                    <span>everything since @last.SessionDate.ToString("d MMM")</span>
+                }
+                else
+                {
+                    <span>everything so far</span>
+                }
+            </p>
+        </div>
+    </div>
+
+    <div class="td-grid">
+
+        <div class="td-tally">
+            <div class="td-tally-item">
+                <i class="bi bi-journal-text"></i>
+                <span class="td-tally-num">@entryCount</span>
+                <span class="td-tally-label">@(entryCount == 1 ? "entry written" : "entries written")</span>
+            </div>
+            <span class="td-tally-div"></span>
+            <div class="td-tally-item">
+                <i class="bi bi-leaf"></i>
+                <span class="td-tally-num">@grown</span>
+                <span class="td-tally-label">@(grown == 1 ? "step grown" : "steps grown")</span>
+            </div>
+            @if (bloomed > 0)
+            {
+                <span class="td-tally-div"></span>
+                <div class="td-tally-item td-tally-bloom">
+                    <i class="bi bi-flower1"></i>
+                    <span class="td-tally-num">@bloomed</span>
+                    <span class="td-tally-label">@(bloomed == 1 ? "goal bloomed" : "goals bloomed")</span>
+                </div>
+            }
+        </div>
+
+        @if (featured != null)
+        {
+            <a class="td-piece" asp-controller="JournalEntries" asp-action="Details" asp-route-id="@featured.Id">
+                <div class="td-piece-head">
+                    <span class="td-piece-when">@featured.CreatedAt.ToString("dddd d MMM")</span>
+                    @if (entryCount > 1)
+                    {
+                        <span class="td-piece-badge">longest one</span>
+                    }
+                </div>
+                <h3 class="td-piece-title">@featured.Title</h3>
+                <p class="td-piece-body">@ViewBag.FeaturedText</p>
+                <span class="td-piece-go">Read it again <i class="bi bi-arrow-right"></i></span>
+            </a>
+
+            @if (themes.Count > 0)
+            {
+                <div class="td-themes">
+                    <span class="td-themes-lead"><i class="bi bi-arrow-repeat"></i> Kept coming back to</span>
+                    <div class="td-themes-row">
+                        @foreach (var t in themes)
+                        {
+                            <span class="td-theme">@t.Key <em>@t.Value</em></span>
+                        }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="td-prompt">
+                <span class="td-prompt-lead"><i class="bi bi-feather"></i> Nothing written yet this stretch</span>
+                <p class="td-prompt-q">@ViewBag.Prompt</p>
+                <a class="td-prompt-go" asp-controller="JournalEntries" asp-action="Create">
+                    Start there <i class="bi bi-arrow-right"></i>
+                </a>
+                <p class="td-prompt-note">Fifteen minutes. No one reads it. Spelling doesn't matter.</p>
+            </div>
+        }
+
+        @if (goal != null)
+        {
+            <a class="td-goal" asp-controller="Goals" asp-action="Details" asp-route-id="@goal.Id">
+                <span class="gd-eyebrow"><i class="bi bi-leaf"></i> Growing now</span>
+                <h3 class="td-goal-title">@goal.Title</h3>
+
+                @{
+                    int mDone = goal.Milestones.Count(m => m.CompletedAt != null);
+                    int mTotal = goal.Milestones.Count;
+                    int mPct = mTotal == 0 ? 0 : (int)Math.Round(mDone * 100.0 / mTotal);
+                    Milestone nextMs = goal.Milestones
+                        .Where(m => m.CompletedAt == null)
+                        .OrderBy(m => m.Order)
+                        .FirstOrDefault();
+                }
+
+                @if (nextMs != null)
+                {
+                    <p class="td-goal-next"><i class="bi bi-arrow-right-short"></i> @nextMs.Description</p>
+                }
+
+                <div class="gd-progress">
+                    <div class="gd-progress-track">
+                        <div class="gd-progress-fill" style="width:@(mPct)%"></div>
+                    </div>
+                    <span class="gd-progress-label">@mDone of @mTotal</span>
+                </div>
+            </a>
+        }
+    </div>
+
+</div>
