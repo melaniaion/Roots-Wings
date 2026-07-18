@@ -94,11 +94,28 @@
 
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn-rw-primary">Save Changes</button>
-                    <a asp-action="Details" asp-route-id="@Model.Id" class="btn-rw-secondary">Cancel</a>
+                    <button type="button" class="btn-rw-secondary" data-rw-modal-open="cancelEditSession">Cancel
+                    </button>
                 </div>
 
             </form>
 
+        </div>
+    </div>
+</div>
+
+        <div class="rw-modal-overlay" id="cancelEditSession">
+    <div class="rw-modal-card">
+        <div class="rw-modal-title">Cancel editing?</div>
+        <div class="rw-modal-text">Any changes you made will be lost.</div>
+        <div class="rw-modal-actions">
+            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>
+                Keep Editing
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id"
+                    class="rw-modal-btn rw-modal-btn-confirm" style="text-decoration: none;">
+                Cancel
+            </a>
         </div>
     </div>
 </div>
