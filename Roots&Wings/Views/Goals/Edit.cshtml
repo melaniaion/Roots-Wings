@@ -56,10 +56,27 @@
         </div>
 
         <div class="ge-actions">
-            <a asp-action="Details" asp-route-id="@Model.Id" class="ge-btn-ghost">Cancel</a>
+            <button type="button" class="ge-btn-ghost" data-rw-modal-open="cancelEditGoal">Cancel</button>
             <button type="submit" class="ge-btn-primary"> Save changes</button>
         </div>
     </form>
+</div>
+
+<div class="rw-modal-overlay" id="cancelEditGoal">
+    <div class="rw-modal-card">
+        <div class="rw-modal-title">Discard changes?</div>
+        <div class="rw-modal-text">
+            Any edits to this goal will be lost.
+        </div>
+        <div class="rw-modal-actions">
+            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>
+                Keep editing
+            </button>
+            <a asp-action="Details" asp-route-id="@Model.Id"
+                   class="rw-modal-btn rw-modal-btn-confirm" style="text-decoration: none;"> Discard
+            </a>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
