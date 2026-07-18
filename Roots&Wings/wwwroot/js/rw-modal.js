@@ -70,5 +70,5 @@ document.addEventListener("DOMContentLoaded", function () {
     if (closeBtn) closeBtn.addEventListener("click", dismiss);
 
     // auto-dismiss after 4s
-    dismissTimer = setTimeout(dismiss, 6000);
+    dismissTimer = setTimeout(dismiss, 5000);
 });
