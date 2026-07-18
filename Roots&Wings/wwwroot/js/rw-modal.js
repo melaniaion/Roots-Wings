@@ -42,3 +42,33 @@ document.addEventListener("DOMContentLoaded", function () {
             .forEach(function (o) { closeModal(o); });
     });
 });
+
+
+// INFO MESSAGE FOR THE USER (EDIT, DELETE, CREATE etc)
+
+document.addEventListener("DOMContentLoaded", function () {
+    var toast = document.getElementById("rwToast");
+    if (!toast) return;
+
+    var dismissTimer;
+
+    function dismiss() {
+        clearTimeout(dismissTimer);
+        toast.classList.add("is-leaving");
+        toast.addEventListener("transitionend", function () {
+            toast.remove();
+        }, { once: true });
+    }
+
+    // slide in on next frame so the transition plays
+    requestAnimationFrame(function () {
+        toast.classList.add("is-visible");
+    });
+
+    // × button
+    var closeBtn = toast.querySelector(".rw-toast-close");
+    if (closeBtn) closeBtn.addEventListener("click", dismiss);
+
+    // auto-dismiss after 4s
+    dismissTimer = setTimeout(dismiss, 6000);
+});
