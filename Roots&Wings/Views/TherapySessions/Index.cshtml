@@ -55,8 +55,33 @@
                 <a href="@Url.Action("Index", new { month = prevMonth.Month, year = prevMonth.Year })"
                    class="rw-back-link" style="font-size: 1.2rem;">&#8592;</a>
 
-                <div class="calendar-month-name" style="margin: 0;">
-                    @displayDate.ToLocal().ToString("MMMM yyyy")
+                <div class="month-picker">
+                    <button type="button" class="month-picker-toggle" onclick="toggleMonthPicker(event)">
+                        @displayDate.ToLocal().ToString("MMMM yyyy")
+                        <span class="month-picker-caret">&#9662;</span>
+                    </button>
+
+                    <div class="month-picker-panel" id="monthPickerPanel">
+                        <div class="month-picker-years">
+                            <a href="@Url.Action("Index", new { month = displayMonth, year = displayYear - 1 })"
+                               class="month-picker-year-nav">&#8592;</a>
+                            <span class="month-picker-year">@displayYear</span>
+                            <a href="@Url.Action("Index", new { month = displayMonth, year = displayYear + 1 })"
+                               class="month-picker-year-nav">&#8594;</a>
+                        </div>
+
+                        <div class="month-picker-grid">
+                            @for (int m = 1; m <= 12; m++)
+                            {
+                                var monthName = new DateTime(displayYear, m, 1).ToString("MMM");
+                                bool isSelected = m == displayMonth;
+                                <a href="@Url.Action("Index", new { month = m, year = displayYear })"
+                                       class="month-picker-month @(isSelected ? "selected" : "")">
+                                    @monthName
+                                </a>
+                            }
+                        </div>
+                    </div>
                 </div>
 
                 <a href="@Url.Action("Index", new { month = nextMonth.Month, year = nextMonth.Year })"
@@ -190,3 +215,20 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        function toggleMonthPicker(e) {
+            e.stopPropagation();
+            e.currentTarget.closest('.month-picker').classList.toggle('open');
+        }
+
+        document.addEventListener('click', function (e) {
+            document.querySelectorAll('.month-picker.open').forEach(function (mp) {
+                if (!mp.contains(e.target)) {
+                    mp.classList.remove('open');
+                }
+            });
+        });
+    </script>
+}
