@@ -21,5 +21,13 @@ namespace Roots_Wings.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult HttpStatusCode(int id)
+        {
+            ViewData["Code"] = id;
+            return View();
+        }
     }
 }
