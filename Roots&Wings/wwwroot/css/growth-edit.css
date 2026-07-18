@@ -242,6 +242,12 @@
 
     .ge-btn-ghost:hover { color: #5C3D2E; background: rgba(255, 255, 255, 0.5); }
 
+button.ge-btn-ghost {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
 /* Small screens */
 @media (max-width: 560px) {
     .ge-hero { padding: 1.6rem 1.4rem; }

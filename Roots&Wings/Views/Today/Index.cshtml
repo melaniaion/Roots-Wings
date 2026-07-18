@@ -1,0 +1,310 @@
+@using Roots_Wings.Models
+@{
+    ViewData["Title"] = "Today";
+
+    TherapySession next = ViewBag.NextSession as TherapySession;
+    JournalEntry lastEntry = ViewBag.LastEntry as JournalEntry;
+    List<Goal> goals = ViewBag.Goals as List<Goal> ?? new List<Goal>();
+    bool hasPrep = (bool)ViewBag.HasPrep;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/today.css" asp-append-version="true" />
+}
+
+<div class="td-page">
+
+    <!-- HEADER -->
+    <div class="td-head">
+        <div class="td-head-lead">
+            <span class="td-eyebrow"><i class="bi bi-sun"></i> @ViewBag.Greeting</span>
+            <h1 class="td-h1">Today</h1>
+            <p class="td-sub">A few small steps for your mind and heart.</p>
+            <p class="td-date"><i class="bi bi-calendar3"></i> @ViewBag.Today</p>
+        </div>
+
+        <button type="button" class="td-breathe" id="tdBreatheBtn">
+            <span class="td-breathe-icon"><i class="bi bi-flower1"></i></span>
+            <span class="td-breathe-text">
+                <span class="td-breathe-title">Take a breath</span>
+                <span class="td-breathe-sub">Pause for a moment</span>
+            </span>
+        </button>
+    </div>
+
+    <!-- SESSION CARD -->
+    @if (next != null)
+    {
+        <div class="td-session">
+            <svg class="td-session-vein" viewBox="0 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M180 12 C120 42 78 88 50 168" stroke="#C9B79E" stroke-width="1.6" stroke-linecap="round" opacity="0.5" />
+                <path d="M150 28 C138 44 135 56 138 70" stroke="#C9B79E" stroke-width="1.3" stroke-linecap="round" opacity="0.4" />
+                <path d="M126 48 C113 62 109 74 111 88" stroke="#C9B79E" stroke-width="1.3" stroke-linecap="round" opacity="0.4" />
+                <path d="M104 72 C90 84 86 96 88 110" stroke="#C9B79E" stroke-width="1.3" stroke-linecap="round" opacity="0.4" />
+            </svg>
+
+            <div class="td-session-body">
+                <span class="td-session-lead"><i class="bi bi-calendar-event"></i> Next session</span>
+                <h2 class="td-session-date">@ViewBag.SessionDate</h2>
+                <p class="td-session-meta">
+                    @next.Title
+                    @if (!string.IsNullOrEmpty(next.TherapistName))
+                    {
+                        <br />
+
+                        <span>with @next.TherapistName</span>
+                    }
+                </p>
+                <a class="td-session-btn" asp-controller="TherapySessions" asp-action="Details" asp-route-id="@next.Id">
+                    View session details <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="td-ring-wrap">
+                <svg class="td-ring" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="tdRingGrad" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0%" stop-color="#C3D0B5" />
+                            <stop offset="55%" stop-color="#8BAA7D" />
+                            <stop offset="100%" stop-color="#E7A98C" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="td-ring-track" cx="65" cy="65" r="54" />
+                    <circle class="td-ring-fill" cx="65" cy="65" r="54"
+                            stroke="url(#tdRingGrad)"
+                            stroke-dasharray="339.29"
+                            stroke-dashoffset="@ViewBag.DashOffset" />
+                </svg>
+                <div class="td-ring-mid">
+                    <span class="td-count-num">@ViewBag.CountNum</span>
+                    <span class="td-count-unit">@ViewBag.CountUnit</span>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="td-session td-session-empty">
+            <svg class="td-session-vein" viewBox="0 0 190 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M180 12 C120 42 78 88 50 168" stroke="#C9B79E" stroke-width="1.6" stroke-linecap="round" opacity="0.5" />
+                <path d="M150 28 C138 44 135 56 138 70" stroke="#C9B79E" stroke-width="1.3" stroke-linecap="round" opacity="0.4" />
+                <path d="M126 48 C113 62 109 74 111 88" stroke="#C9B79E" stroke-width="1.3" stroke-linecap="round" opacity="0.4" />
+                <path d="M104 72 C90 84 86 96 88 110" stroke="#C9B79E" stroke-width="1.3" stroke-linecap="round" opacity="0.4" />
+            </svg>
+
+            <div class="td-session-body">
+                <span class="td-session-lead"><i class="bi bi-calendar-event"></i> Next session</span>
+                <h2 class="td-session-date td-session-none">Nothing scheduled</h2>
+                <p class="td-session-meta">When you have one booked, it'll show up here.</p>
+                <a class="td-session-btn" asp-controller="TherapySessions" asp-action="Create">
+                    Add a session <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="td-ring-wrap">
+                <svg class="td-ring" viewBox="0 0 130 130" xmlns="http://www.w3.org/2000/svg">
+                    <circle class="td-ring-track" cx="65" cy="65" r="54" />
+                </svg>
+                <div class="td-ring-mid">
+                    <i class="bi bi-calendar-heart td-ring-empty-icon"></i>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- PROGRESS -->
+    <div class="td-card">
+        <div class="td-card-head">
+            <h3 class="td-card-title">Your progress</h3>
+            <a class="td-card-link" asp-controller="Goals" asp-action="Index">
+                View all goals <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        @if (goals.Count > 0)
+        {
+            <ul class="td-goals">
+                @for (int i = 0; i < goals.Count; i++)
+                {
+                    Goal g = goals[i];
+                    int done = g.Milestones.Count(m => m.CompletedAt != null);
+                    int total = g.Milestones.Count;
+                    int pct = total == 0 ? 0 : (int)Math.Round(done * 100.0 / total);
+
+                    <li class="td-goal td-goal-@(i + 1)">
+                        <span class="td-goal-icon">
+                            <i class="bi @(i == 0 ? "bi-leaf" : i == 1 ? "bi-sun" : "bi-flower2")"></i>
+                        </span>
+
+                        <span class="td-goal-name">@g.Title</span>
+
+                        <span class="td-goal-track">
+                            <span class="td-goal-fill" style="width:@(pct)%"></span>
+                        </span>
+
+                        <span class="td-goal-count">@done of @total</span>
+
+                        <a class="td-goal-go" asp-controller="Goals" asp-action="Details" asp-route-id="@g.Id" title="Open goal">
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="td-mini-empty">
+                <i class="bi bi-flower3"></i>
+                <span>No goals growing yet.</span>
+                <a asp-controller="Goals" asp-action="Create">Plant one</a>
+            </div>
+        }
+    </div>
+
+    <!--  TWO COLUMNS  -->
+    <div class="td-cols">
+
+        <!-- last journal entry -->
+        <div class="td-card td-col">
+            <svg class="td-col-art" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="88" cy="34" r="7" stroke="#D9C7B2" stroke-width="1.1" />
+                <path d="M88 41 C88 60 82 78 70 96" stroke="#D9C7B2" stroke-width="1.1" stroke-linecap="round" />
+                <path d="M84 62 C72 60 64 52 62 42 C74 43 82 51 84 62 Z" stroke="#D9C7B2" stroke-width="1.1" />
+                <path d="M86 78 C98 76 106 68 108 58 C96 59 88 67 86 78 Z" stroke="#D9C7B2" stroke-width="1.1" />
+                <circle cx="88" cy="34" r="2.5" fill="#E8DFD0" />
+            </svg>
+
+            <div class="td-col-body">
+                <span class="td-col-lead"><i class="bi bi-book"></i> Last journal entry</span>
+
+                @if (lastEntry != null)
+                {
+                    <h3 class="td-col-title">@lastEntry.Title</h3>
+                    <p class="td-col-when">@ViewBag.EntryWhen</p>
+                    <p class="td-col-text">@ViewBag.EntryText</p>
+                    <a class="td-col-btn" asp-controller="JournalEntries" asp-action="Details" asp-route-id="@lastEntry.Id">
+                        Open journal <i class="bi bi-arrow-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <h3 class="td-col-title td-col-quiet">Nothing written yet</h3>
+                    <p class="td-col-text">The first one is the hardest. It doesn't have to be good.</p>
+                    <a class="td-col-btn" asp-controller="JournalEntry" asp-action="Create">
+                        Write something <i class="bi bi-arrow-right"></i>
+                    </a>
+                }
+            </div>
+        </div>
+
+        <!-- before your next session -->
+        <div class="td-card td-col">
+            <svg class="td-col-art" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M60 100 C60 78 58 62 60 46" stroke="#D9C7B2" stroke-width="1.1" stroke-linecap="round" />
+                <path d="M59 74 C44 72 36 62 34 50 C48 51 57 61 59 74 Z" stroke="#D9C7B2" stroke-width="1.1" />
+                <path d="M61 62 C76 60 84 50 86 38 C72 39 63 49 61 62 Z" stroke="#D9C7B2" stroke-width="1.1" />
+                <circle cx="60" cy="38" r="6" stroke="#D9C7B2" stroke-width="1.1" />
+                <circle cx="51" cy="44" r="5" stroke="#D9C7B2" stroke-width="1.1" />
+                <circle cx="69" cy="44" r="5" stroke="#D9C7B2" stroke-width="1.1" />
+            </svg>
+
+            <div class="td-col-body">
+                <span class="td-col-lead"><i class="bi bi-pencil"></i> Before your next session</span>
+
+                @if (next != null)
+                {
+                    @if (hasPrep)
+                    {
+                        <h3 class="td-col-title">You've made a start</h3>
+                        <p class="td-col-text">
+                            Add anything else that's come up since. There's no wrong way to do this.
+                        </p>
+                    }
+                    else
+                    {
+                        <h3 class="td-col-title">A place to gather your thoughts</h3>
+                        <p class="td-col-text">
+                            Anything you'd like to bring up. Even a few words help you walk in
+                            knowing where you want to start.
+                        </p>
+                    }
+
+                    <a class="td-col-btn" asp-controller="TherapySessions" asp-action="Edit" asp-route-id="@next.Id">
+                        @(hasPrep ? "Continue your notes" : "Write your notes") <i class="bi bi-arrow-right"></i>
+                    </a>
+                }
+                else
+                {
+                    <h3 class="td-col-title td-col-quiet">Nothing to prepare for</h3>
+                    <p class="td-col-text">
+                        Once a session is on the calendar, you can prepare for it writing down your thoughts.
+                    </p>
+                    <span class="td-col-btn td-col-btn-off" aria-disabled="true">
+                        Write your notes <i class="bi bi-arrow-right"></i>
+                    </span>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- BREATHE OVERLAY  -->
+<div class="td-breathe-overlay" id="tdBreatheOverlay">
+    <div class="td-breathe-scene">
+        <div class="td-breathe-circle">
+            <span class="td-breathe-ring"></span>
+            <span class="td-breathe-core"></span>
+        </div>
+        <p class="td-breathe-word" id="tdBreatheWord">Breathe in</p>
+        <button type="button" class="td-breathe-close" id="tdBreatheClose">Done</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        (function () {
+            var btn = document.getElementById('tdBreatheBtn');
+            var overlay = document.getElementById('tdBreatheOverlay');
+            var close = document.getElementById('tdBreatheClose');
+            var word = document.getElementById('tdBreatheWord');
+            var timer = null;
+
+            // 4s in, 4s hold, 4s out
+            var steps = [
+                { text: 'Breathe in', ms: 4000 },
+                { text: 'Hold', ms: 4000 },
+                { text: 'Breathe out', ms: 4000 }
+            ];
+            var i = 0;
+
+            function cycle() {
+                word.textContent = steps[i].text;
+                timer = setTimeout(function () {
+                    i = (i + 1) % steps.length;
+                    cycle();
+                }, steps[i].ms);
+            }
+
+            function open() {
+                overlay.classList.add('open');
+                i = 0;
+                cycle();
+            }
+
+            function shut() {
+                overlay.classList.remove('open');
+                if (timer) clearTimeout(timer);
+            }
+
+            if (btn) btn.addEventListener('click', open);
+            if (close) close.addEventListener('click', shut);
+            if (overlay) overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) shut();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') shut();
+            });
+        })();
+    </script>
+}

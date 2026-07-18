@@ -28,7 +28,7 @@
     <div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
         <div>
             <div class="session-header-date">
-                @Model.SessionDate.ToString("dddd, MMMM d, yyyy · h:mm tt")
+                @Model.SessionDate.ToLocal().ToString("dddd, MMMM d, yyyy · h:mm tt")
                 @if (!string.IsNullOrEmpty(Model.TherapistName))
                 {
                     <span style="margin-left: 0.4rem; color: #B5A898;">
@@ -165,7 +165,7 @@
                 <div class="d-flex justify-content-between align-items-start gap-2">
                     <div>
                         <div class="entry-card-date">
-                            @entry.CreatedAt.ToString("MMM d, yyyy")
+                            @entry.CreatedAt.ToLocal().ToString("MMM d, yyyy")
                         </div>
                         <p class="entry-card-title">@entry.Title</p>
                     </div>

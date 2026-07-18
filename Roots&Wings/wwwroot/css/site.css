@@ -606,3 +606,113 @@ body {
 .rw-back-link:hover {
     color: #5C3D2E !important;
 }
+
+
+
+/* POP-UPS */
+.rw-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(58, 50, 45, 0.35);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+}
+
+    .rw-modal-overlay.is-active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+.rw-modal-card {
+    background: #FFFDFA;
+    border: 1px solid #E8C4A8;
+    border-radius: 20px;
+    padding: 2.25rem;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 20px 50px rgba(92, 61, 46, 0.15);
+    transform: translateY(15px);
+    transition: transform 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.rw-modal-overlay.is-active .rw-modal-card {
+    transform: translateY(0);
+}
+
+.rw-modal-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    color: #5C3D2E;
+    margin-bottom: 0.75rem;
+}
+
+.rw-modal-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: #8B7B6A;
+    margin-bottom: 2rem;
+}
+
+.rw-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+    .rw-modal-actions form {
+        margin: 0;
+    }
+
+.rw-modal-btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s ease;
+}
+
+.rw-modal-btn-cancel {
+    background: #FAF7F2;
+    border: 1px solid #E8C4A8;
+    color: #8B7B6A;
+}
+
+    .rw-modal-btn-cancel:hover {
+        background: #FFFDFA;
+        color: #5C3D2E;
+    }
+
+/*  confirm (delete) */
+.rw-modal-btn-danger {
+    background: #8B4A4A;
+    color: #FBF6F0;
+}
+
+    .rw-modal-btn-danger:hover {
+        opacity: 0.9;
+    }
+
+/* confirm (discard/cancel edit) */
+.rw-modal-btn-confirm {
+    background: #5C3D2E;
+    color: #FBF6F0;
+}
+
+    .rw-modal-btn-confirm:hover {
+        background: #3D5C35;
+    }
+
+body.rw-modal-open {
+    overflow: hidden;
+}

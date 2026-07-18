@@ -29,7 +29,7 @@
 
             <!-- Maintain original entry creation timestamp alignment -->
             <div class="journal-page-date">
-                @Model.CreatedAt.ToString("MMMM dd, yyyy")
+                @Model.CreatedAt.ToLocal().ToString("MMMM dd, yyyy")
             </div>
 
             @* STICKERS *@

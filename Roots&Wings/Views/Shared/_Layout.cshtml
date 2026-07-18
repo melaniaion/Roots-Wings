@@ -49,8 +49,8 @@
             <nav class="sidebar-navigation">
                 <ul class="nav-stack">
                     <li>
-                        <a class="nav-item-artisan @(currentController == "Home" && currentAction == "Index" ? "active" : "")" 
-                           asp-area="" asp-controller="Home" asp-action="Index">
+                        <a class="nav-item-artisan @(currentController == "Today" && currentAction == "Index" ? "active" : "")" 
+                           asp-area="" asp-controller="Today" asp-action="Index">
      
                             <i class="bi bi-sun artisan-icon"></i>
                             <div class="nav-meta">
@@ -151,6 +151,7 @@
         });
     </script>
 
+    <script src="~/js/rw-modal.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
