@@ -132,6 +132,8 @@ namespace Roots_Wings.Controllers
 
             await _context.SaveChangesAsync();
 
+            TempData["Flash"] = "Session added successfully";
+            TempData["FlashType"] = "success";
             return RedirectToAction(nameof(Index));
         }
 
@@ -201,6 +203,9 @@ namespace Roots_Wings.Controllers
 
             await _context.SaveChangesAsync();
 
+            TempData["Flash"] = "Changes saved successfully";
+            TempData["FlashType"] = "success";
+
             return RedirectToAction(nameof(Details), new { id = session.Id });
         }
 
@@ -221,6 +226,9 @@ namespace Roots_Wings.Controllers
 
             _context.TherapySessions.Remove(session);
             await _context.SaveChangesAsync();
+
+            TempData["Flash"] = "Session deleted successfully";
+            TempData["FlashType"] = "success";
 
             return RedirectToAction(nameof(Index));
         }
