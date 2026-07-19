@@ -1,5 +1,4 @@
-﻿
-#nullable disable
+﻿#nullable disable
 
 using System;
 using System.Collections.Generic;
@@ -18,6 +17,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using Roots_Wings.Models;
+using Roots_Wings.Services.Interfaces;
 
 namespace Roots_Wings.Areas.Identity.Pages.Account
 {
@@ -29,13 +29,15 @@ namespace Roots_Wings.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly IProfilePictureService _profilePictureService;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IProfilePictureService profilePictureService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,9 +45,9 @@ namespace Roots_Wings.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _profilePictureService = profilePictureService;
         }
 
-  
         [BindProperty]
         public InputModel Input { get; set; }
         public string ReturnUrl { get; set; }
@@ -53,7 +55,6 @@ namespace Roots_Wings.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -73,8 +74,10 @@ namespace Roots_Wings.Areas.Identity.Pages.Account
             [Required]
             [StringLength(30, MinimumLength = 3, ErrorMessage = "The Name must be between 3 and 30 characters long.")]
             public string Name { get; set; }
-        }
 
+            [Display(Name = "Profile picture")]                
+            public IFormFile ProfilePicture { get; set; }  
+        }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -88,11 +91,21 @@ namespace Roots_Wings.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                
+                // If the profile picture it's invalid, we stop here and the user is never created.
+                var pic = await _profilePictureService.SaveAsync(Input.ProfilePicture);
+                if (!pic.Success)
+                {
+                    // Error shows right next to the file field in the form.
+                    ModelState.AddModelError("Input.ProfilePicture", pic.ErrorMessage);
+                    return Page();
+                }
+
                 var user = CreateUser();
 
-                //ADDED THE EXTENDED PROPERTIES
                 user.DateCreated = DateTime.UtcNow;
                 user.Name = Input.Name;
+                user.ProfilePicture = pic.Path;   // null when no upload
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -104,6 +117,11 @@ namespace Roots_Wings.Areas.Identity.Pages.Account
                     await _userManager.AddToRoleAsync(user, "User");
                     return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
                 }
+
+                // if user creation failed, the saved file would be orphaned.
+                // Clean it up so we don't leave a stray image on disk.
+                _profilePictureService.Delete(pic.Path);
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);

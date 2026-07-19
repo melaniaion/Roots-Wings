@@ -34,6 +34,11 @@
                 <label asp-for="Input.ConfirmPassword">Confirm Password</label>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
             </div>
+            <div class="picture-field mb-3">
+                <label asp-for="Input.ProfilePicture" class="picture-label">Profile picture <span class="optional-tag">(optional)</span></label>
+                <input asp-for="Input.ProfilePicture" type="file" accept="image/png, image/jpeg, image/webp" class="picture-input" />
+                <span asp-validation-for="Input.ProfilePicture" class="text-danger"></span>
+            </div>
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>

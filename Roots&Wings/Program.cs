@@ -16,6 +16,9 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 // Register Gemini as the AI provider.
 builder.Services.AddHttpClient<IAiSummaryService, GeminiSummaryService>();
 
+// PROFILE PICTURE SERVICE
+builder.Services.AddScoped<IProfilePictureService, ProfilePictureService>();
+
 //PDF SERVICE
 builder.Services.AddScoped<IPdfExportService, PdfExportService>();
 
