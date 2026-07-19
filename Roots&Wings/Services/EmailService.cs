@@ -50,7 +50,7 @@ namespace Roots_Wings.Services
             }
         }
 
-        public async Task SendConfirmationEmailAsync(string email, string subject, string confirmationLink, string imageUrl)
+        public async Task SendConfirmationEmailAsync(string email, string subject, string confirmationLink)
         {
             // Constructing the full path to the email template
             var templatePath = Path.Combine(_env.WebRootPath, "emailTemplates", "confirmEmail.html");

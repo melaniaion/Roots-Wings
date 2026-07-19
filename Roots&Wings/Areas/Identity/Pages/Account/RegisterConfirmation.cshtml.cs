@@ -61,10 +61,8 @@ namespace Roots_Wings.Areas.Identity.Pages.Account
                     protocol: Request.Scheme);
 
                 EmailConfirmationUrl = HtmlEncoder.Default.Encode(callbackUrl);
-                var imageUrl = $"{Request.Scheme}://{Request.Host}/images/profile-pictures/EnchantedMusicDefault.png";
-                Console.WriteLine(imageUrl);
 
-                await _sender.SendConfirmationEmailAsync(Email, "Confirm your email", EmailConfirmationUrl, imageUrl);
+                await _sender.SendConfirmationEmailAsync(Email, "Confirm your email", EmailConfirmationUrl);
             }
 
             return Page();
