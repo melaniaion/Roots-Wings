@@ -6,5 +6,6 @@ namespace Roots_Wings.Services.Interfaces
     {
         Task SendConfirmationEmailAsync(string email, string subject, string confirmationLink);
         Task SendEmailChangeAsync(string email, string subject, string confirmationLink);
+        Task SendPasswordResetAsync(string email, string subject, string confirmationLink);
     }
 }
