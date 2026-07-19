@@ -50,6 +50,7 @@ namespace Roots_Wings.Services
             }
         }
 
+        //FOR CHANGED EMAIL
         public async Task SendConfirmationEmailAsync(string email, string subject, string confirmationLink)
         {
             // Constructing the full path to the email template
@@ -68,5 +69,15 @@ namespace Roots_Wings.Services
 
             await SendEmailAsync(email, subject, emailBody);
         }
+
+        public async Task SendPasswordResetAsync(string email, string subject, string confirmationLink)
+        {
+            var templatePath = Path.Combine(_env.WebRootPath, "emailTemplates", "resetPassword.html");
+            var template = await File.ReadAllTextAsync(templatePath);
+            var emailBody = template.Replace("{ConfirmationLink}", confirmationLink);
+
+            await SendEmailAsync(email, subject, emailBody);
+        }
+
     }
 }
