@@ -1,0 +1,89 @@
+﻿/* Shared styling for account manage pages (Email, Password) */
+.rw-account-form {
+    max-width: 440px;
+}
+
+.rw-field {
+    margin-bottom: 1.3rem;
+}
+
+.rw-field-label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #B5A898;
+    margin-bottom: 0.5rem;
+}
+
+.rw-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.75);
+    border: 1.5px solid #E8C4A8;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    color: #5C3D2E;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.92rem;
+    transition: all 0.18s ease;
+}
+
+    .rw-input:focus {
+        outline: none;
+        border-color: #8B5A3A;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(139, 90, 58, 0.1);
+    }
+
+    .rw-input:disabled {
+        background: rgba(245, 240, 235, 0.6);
+        color: #8B7B6A;
+        cursor: not-allowed;
+    }
+
+.rw-field-hint {
+    font-size: 0.76rem;
+    color: #B5A898;
+    margin: 0.4rem 0 0 0;
+    line-height: 1.5;
+}
+
+/* Verified email badge */
+.rw-input-with-badge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.rw-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.76rem;
+    font-weight: 500;
+    color: #3D5C35;
+    background: #E8EDE0;
+    border-radius: 20px;
+    padding: 0.35rem 0.7rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Text link button (send verification) */
+.rw-link-btn {
+    background: none;
+    border: none;
+    padding: 0.4rem 0;
+    margin-top: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    color: #8B5A3A;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+    .rw-link-btn:hover {
+        color: #5C3D2E;
+    }
