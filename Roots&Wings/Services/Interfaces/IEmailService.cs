@@ -5,5 +5,6 @@ namespace Roots_Wings.Services.Interfaces
     public interface IEmailService : IEmailSender
     {
         Task SendConfirmationEmailAsync(string email, string subject, string confirmationLink, string imageUrl);
+        Task SendEmailChangeAsync(string email, string subject, string confirmationLink);
     }
 }

@@ -59,5 +59,14 @@ namespace Roots_Wings.Services
 
             await SendEmailAsync(email, subject, emailBody);
         }
+
+        public async Task SendEmailChangeAsync(string email, string subject, string confirmationLink)
+        {
+            var templatePath = Path.Combine(_env.WebRootPath, "emailTemplates", "confirmEmailChange.html");
+            var template = await File.ReadAllTextAsync(templatePath);
+            var emailBody = template.Replace("{ConfirmationLink}", confirmationLink);
+
+            await SendEmailAsync(email, subject, emailBody);
+        }
     }
 }
