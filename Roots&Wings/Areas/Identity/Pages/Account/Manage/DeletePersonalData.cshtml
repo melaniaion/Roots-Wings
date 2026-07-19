@@ -1,0 +1,55 @@
+﻿@page
+@model DeletePersonalDataModel
+@{
+    ViewData["Title"] = "Delete account";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account/manage-account.css" asp-append-version="true" />
+}
+
+<div class="rw-danger-notice">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <div>
+        <strong>This permanently deletes your account.</strong>
+        <p>Your profile, journal entries, sessions, and goals will be removed. This cannot be undone.</p>
+    </div>
+</div>
+
+<form id="delete-user" method="post" class="rw-account-form">
+    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+    @if (Model.RequirePassword)
+    {
+        <div class="rw-field">
+            <label asp-for="Input.Password" class="rw-field-label">Confirm your password</label>
+            <input asp-for="Input.Password" class="rw-input" type="password" autocomplete="current-password" aria-required="true" placeholder="Enter your password" />
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </div>
+    }
+
+    <button type="button" class="btn-rw-danger" data-rw-modal-open="deleteAccountModal">
+        Delete my account
+    </button>
+</form>
+
+<!-- Confirm pop-up (outside the form; confirm submits it via form="delete-user") -->
+<div class="rw-modal-overlay" id="deleteAccountModal">
+    <div class="rw-modal-card">
+        <h3 class="rw-modal-title">Delete your account?</h3>
+        <p class="rw-modal-text">
+            This permanently removes your account and all your data. This action cannot be undone.
+        </p>
+        <div class="rw-modal-actions">
+            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>Cancel</button>
+            <button type="submit" form="delete-user" class="rw-modal-btn rw-modal-btn-danger">
+                Yes, delete everything
+            </button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

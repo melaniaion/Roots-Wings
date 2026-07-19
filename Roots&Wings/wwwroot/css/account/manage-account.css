@@ -1,4 +1,4 @@
-﻿/* Shared styling for account manage pages (Email, Password) */
+﻿/* Shared styling for account manage pages (Email, Password, Delete account) */
 .rw-account-form {
     max-width: 440px;
 }
@@ -87,3 +87,42 @@
     .rw-link-btn:hover {
         color: #5C3D2E;
     }
+
+/*  Delete account notice */
+.rw-danger-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    background: rgba(244, 217, 217, 0.4);
+    border: 1px solid #E8B4B4;
+    border-radius: 14px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 1.5rem;
+    max-width: 440px;
+}
+
+    .rw-danger-notice i {
+        color: #8B4A4A;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+        margin-top: 0.1rem;
+    }
+
+    .rw-danger-notice strong {
+        color: #5C3D2E;
+        font-size: 0.92rem;
+    }
+
+    .rw-danger-notice p {
+        margin: 0.3rem 0 0 0;
+        font-size: 0.82rem;
+        color: #8B7B6A;
+        line-height: 1.5;
+    }
+
+.rw-personal-intro {
+    font-size: 0.92rem;
+    color: #5C3D2E;
+    line-height: 1.6;
+    margin-bottom: 1.3rem;
+}

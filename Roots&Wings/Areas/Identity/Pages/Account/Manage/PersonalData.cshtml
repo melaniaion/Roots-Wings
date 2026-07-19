@@ -1,0 +1,28 @@
+﻿@page
+@model PersonalDataModel
+@{
+    ViewData["Title"] = "Delete account";
+    ViewData["ActivePage"] = ManageNavPages.PersonalData;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account/manage-account.css" asp-append-version="true" />
+}
+
+<div class="rw-account-form">
+    <p class="rw-personal-intro">
+        Your account contains personal data that you've given us. You can permanently delete your account and everything associated with it below.
+    </p>
+
+    <div class="rw-danger-notice">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        <div>
+            <strong>Deleting your account is permanent.</strong>
+            <p>Your profile, journal entries, sessions and goals will be removed and cannot be recovered.</p>
+        </div>
+    </div>
+
+    <a id="delete" asp-page="DeletePersonalData" class="btn-rw-danger">
+        <i class="bi bi-trash3"></i> Delete my account
+    </a>
+</div>
