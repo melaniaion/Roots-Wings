@@ -799,3 +799,78 @@ body.rw-modal-open {
     .rw-toast-error > .bi {
         color: #8B4A4A;
     }
+
+
+/* ── Manage account section ── */
+.rw-manage-wrap {
+    max-width: 780px;
+}
+
+.rw-manage-header {
+    margin-bottom: 1.5rem;
+}
+
+.rw-manage-subtitle {
+    color: #8B7B6A;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+.rw-manage-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    padding: 0.4rem;
+    margin: 0 0 1.5rem 0;
+    background: rgba(255, 255, 255, 0.45);
+    border: 1px solid rgba(232, 196, 168, 0.6);
+    border-radius: 18px;
+}
+
+    .rw-manage-nav li {
+        margin: 0;
+    }
+
+.rw-manage-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 14px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #6E5343;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+    .rw-manage-tab:hover {
+        background: rgba(232, 224, 215, 0.5);
+        color: #5C3D2E;
+    }
+
+    .rw-manage-tab.active {
+        background: #E6EADF;
+        color: #3D5C35;
+    }
+
+    .rw-manage-tab i {
+        font-size: 1rem;
+    }
+
+.rw-manage-panel {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(8px);
+    border: 1px solid #E8C4A8;
+    border-radius: 20px;
+    padding: 1.8rem;
+}
+
+@media (max-width: 575px) {
+    .rw-manage-tab {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.82rem;
+    }
+}
