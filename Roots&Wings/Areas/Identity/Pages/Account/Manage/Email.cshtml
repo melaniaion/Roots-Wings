@@ -1,0 +1,43 @@
+﻿@page
+@model EmailModel
+@{
+    ViewData["Title"] = "Email";
+    ViewData["ActivePage"] = ManageNavPages.Email;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account/manage-account.css" asp-append-version="true" />
+}
+
+<form id="email-form" method="post" class="rw-account-form">
+
+    <div class="rw-field">
+        <label asp-for="Email" class="rw-field-label"></label>
+        <div class="rw-input-with-badge">
+            <input asp-for="Email" class="rw-input" disabled />
+            @if (Model.IsEmailConfirmed)
+            {
+                <span class="rw-verified-badge" title="Verified"><i class="bi bi-patch-check-fill"></i> Verified</span>
+            }
+        </div>
+        @if (!Model.IsEmailConfirmed)
+        {
+            <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="rw-link-btn">
+                Send verification email
+            </button>
+        }
+    </div>
+
+    <div class="rw-field">
+        <label asp-for="Input.NewEmail" class="rw-field-label"></label>
+        <input asp-for="Input.NewEmail" class="rw-input" autocomplete="email" aria-required="true" placeholder="Enter new email" />
+        <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+        <p class="rw-field-hint">We'll send a confirmation link to the new address. Your email changes only after you confirm it.</p>
+    </div>
+
+    <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="btn-rw-primary">Change email</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

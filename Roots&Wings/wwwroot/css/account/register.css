@@ -86,3 +86,54 @@ hr {
     font-size: 0.78rem;
     color: #8B4A4A !important;
 }
+
+/* Profile picture field */
+.picture-label {
+    display: block;
+    color: #8B7B6A;
+    font-size: 0.9rem;
+    font-family: 'DM Sans', sans-serif;
+    margin-bottom: 0.4rem;
+}
+
+.optional-tag {
+    color: #B5A898;
+    font-size: 0.8rem;
+}
+
+.picture-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1.5px solid #E8C4A8;
+    border-radius: 12px;
+    color: #5C3D2E;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    padding: 0.7rem 0.9rem;
+    cursor: pointer;
+}
+
+    .picture-input:focus {
+        outline: none;
+        border-color: #8B5A3A;
+        box-shadow: 0 0 0 0.15rem rgba(139, 90, 58, 0.15);
+        background: #fff;
+    }
+
+    /* Style the "Choose file" button inside the input */
+    .picture-input::file-selector-button {
+        background: #5C3D2E;
+        color: #FBF6F0;
+        border: none;
+        border-radius: 20px;
+        padding: 0.35rem 1rem;
+        margin-right: 0.9rem;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+        .picture-input::file-selector-button:hover {
+            background: #3D5C35;
+        }

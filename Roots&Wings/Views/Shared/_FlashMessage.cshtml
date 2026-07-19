@@ -1,0 +1,13 @@
+﻿@{
+    var flash = TempData["Flash"] as string;
+    var flashType = TempData["FlashType"] as string ?? "success";
+}
+
+@if (!string.IsNullOrEmpty(flash))
+{
+    <div class="rw-toast rw-toast-@flashType" id="rwToast">
+        <i class="bi @(flashType == "success" ? "bi-check-circle-fill" : "bi-exclamation-circle-fill")"></i>
+        <span class="rw-toast-text">@flash</span>
+        <button type="button" class="rw-toast-close" aria-label="Dismiss">&times;</button>
+    </div>
+}

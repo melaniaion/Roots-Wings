@@ -98,6 +98,9 @@ namespace Roots_Wings.Controllers
                 await _context.SaveChangesAsync();
             }
 
+            TempData["Flash"] = "Page added successfully";
+            TempData["FlashType"] = "success";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -173,6 +176,9 @@ namespace Roots_Wings.Controllers
 
             await _context.SaveChangesAsync();
 
+            TempData["Flash"] = "Changes saved successfully";
+            TempData["FlashType"] = "success"; 
+
             return RedirectToAction(nameof(Details), new { id = entry.Id });
         }
 
@@ -193,6 +199,9 @@ namespace Roots_Wings.Controllers
 
             _context.JournalEntries.Remove(entry);
             await _context.SaveChangesAsync();
+
+            TempData["Flash"] = "Page deleted successfully";
+            TempData["FlashType"] = "success";
 
             return RedirectToAction(nameof(Index));
         }

@@ -1,0 +1,38 @@
+﻿@{
+    var code = ViewData["Code"] as int? ?? 0;
+    string title, message;
+
+    switch (code)
+    {
+        case 404:
+            title = "Page not found";
+            message = "This page may have been moved or the item no longer exists.";
+            break;
+        case 403:
+            title = "No access";
+            message = "You don't have permission to view this page.";
+            break;
+        default:
+            title = "Something went wrong";
+            message = "An unexpected error occurred. Please try again later.";
+            break;
+    }
+
+    ViewData["Title"] = title;
+}
+
+<div class="ge-page" style="text-align: center; padding-top: 3rem;">
+    <div class="rw-card" style="max-width: 480px; margin: 0 auto;">
+        <div style="font-family: 'Playfair Display', serif; font-style: italic;
+            font-size: 3.5rem; color: #E8C4A8; margin-bottom: 0.5rem;">
+            @code
+        </div>
+        <h1 class="rw-page-title" style="margin-bottom: 1rem;">@title</h1>
+        <p style="color: #8B7B6A; line-height: 1.7; margin-bottom: 1.8rem;">
+            @message
+        </p>
+        <a asp-controller="Home" asp-action="Index" class="btn-rw-primary">
+            Back to safety
+        </a>
+    </div>
+</div>

@@ -55,8 +55,20 @@
                 <a href="@Url.Action("Index", new { month = prevMonth.Month, year = prevMonth.Year })"
                    class="rw-back-link" style="font-size: 1.2rem;">&#8592;</a>
 
-                <div class="calendar-month-name" style="margin: 0;">
-                    @displayDate.ToLocal().ToString("MMMM yyyy")
+                <div class="month-picker">
+                    <button type="button" class="month-picker-toggle" onclick="toggleMonthPicker(event)">
+                        @displayDate.ToLocal().ToString("MMMM yyyy")
+                        <span class="month-picker-caret">&#9662;</span>
+                    </button>
+
+                    <div class="month-picker-panel">
+                        <div class="month-picker-years">
+                            <a href="#" class="month-picker-year-nav" onclick="changeYear(event, -1)">&#8592;</a>
+                            <span class="month-picker-year" id="mpYear"></span>
+                            <a href="#" class="month-picker-year-nav" onclick="changeYear(event, 1)">&#8594;</a>
+                        </div>
+                        <div class="month-picker-grid" id="mpGrid"></div>
+                    </div>
                 </div>
 
                 <a href="@Url.Action("Index", new { month = nextMonth.Month, year = nextMonth.Year })"
@@ -190,3 +202,61 @@
     </div>
 
 </div>
+
+@section Scripts {
+    <script>
+        // The year currently shown in the picker, and which month is highlighted.
+        // These start at whatever the page was loaded with.
+        var mpYear = @displayYear;
+        var mpSelectedMonth = @displayMonth;
+        var mpSelectedYear = @displayYear;
+
+        var monthNames = ["Jan","Feb","Mar","Apr","May","Jun",
+                          "Jul","Aug","Sep","Oct","Nov","Dec"];
+
+        // Redraws the year label and the 12-month grid based on mpYear.
+        function renderMonthPicker() {
+            document.getElementById('mpYear').textContent = mpYear;
+
+            var grid = document.getElementById('mpGrid');
+            grid.innerHTML = '';
+
+            for (var m = 1; m <= 12; m++) {
+                var link = document.createElement('a');
+                // Navigate to that month/year, this is the only thing that reloads.
+                link.href = '@Url.Action("Index")' + '?month=' + m + '&year=' + mpYear;
+                link.className = 'month-picker-month';
+                // Highlight the month only if it matches the page's current month AND year.
+                if (m === mpSelectedMonth && mpYear === mpSelectedYear) {
+                    link.className += ' selected';
+                }
+                link.textContent = monthNames[m - 1];
+                grid.appendChild(link);
+            }
+        }
+
+        // Year arrows: change the year and redraw so no page reload.
+        function changeYear(e, delta) {
+            e.preventDefault();
+            e.stopPropagation();
+            mpYear += delta;
+            renderMonthPicker();
+        }
+
+        function toggleMonthPicker(e) {
+            e.stopPropagation();
+            e.currentTarget.closest('.month-picker').classList.toggle('open');
+        }
+
+        document.addEventListener('click', function (e) {
+            document.querySelectorAll('.month-picker.open').forEach(function (mp) {
+                if (!mp.contains(e.target)) {
+                    mp.classList.remove('open');
+                }
+            });
+        });
+
+        // Draw the grid once when the page loads.
+        renderMonthPicker();
+    </script>
+}

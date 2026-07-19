@@ -1,0 +1,23 @@
+﻿@inject SignInManager<ApplicationUser> SignInManager
+<ul class="rw-manage-nav">
+    <li>
+        <a class="rw-manage-tab @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">
+            <i class="bi bi-person"></i> Profile
+        </a>
+    </li>
+    <li>
+        <a class="rw-manage-tab @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">
+            <i class="bi bi-envelope"></i> Email
+        </a>
+    </li>
+    <li>
+        <a class="rw-manage-tab @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">
+            <i class="bi bi-key"></i> Password
+        </a>
+    </li>
+    <li>
+        <a class="rw-manage-tab @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">
+            <i class="bi bi-trash3"></i> Delete account
+        </a>
+    </li>
+</ul>

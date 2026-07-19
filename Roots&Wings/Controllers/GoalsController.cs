@@ -126,6 +126,9 @@ namespace Roots_Wings.Controllers
             _context.Goals.Add(newGoal);
             await _context.SaveChangesAsync();
 
+            TempData["Flash"] = "Goal created successfully";
+            TempData["FlashType"] = "success";
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -175,6 +178,10 @@ namespace Roots_Wings.Controllers
 
             await _context.SaveChangesAsync();
 
+
+            TempData["Flash"] = "Changes saved successfully";
+            TempData["FlashType"] = "success";
+
             return RedirectToAction(nameof(Details), new { id = goal.Id });
         }
 
@@ -196,6 +203,9 @@ namespace Roots_Wings.Controllers
             // Milestones cascade-delete via the FK configured in ApplicationDbContext.
             _context.Goals.Remove(goal);
             await _context.SaveChangesAsync();
+
+            TempData["Flash"] = "Goal deleted successfully";
+            TempData["FlashType"] = "success";
 
             return RedirectToAction(nameof(Index));
         }

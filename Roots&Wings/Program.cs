@@ -16,6 +16,9 @@ builder.Services.AddTransient<IEmailService, EmailService>();
 // Register Gemini as the AI provider.
 builder.Services.AddHttpClient<IAiSummaryService, GeminiSummaryService>();
 
+// PROFILE PICTURE SERVICE
+builder.Services.AddScoped<IProfilePictureService, ProfilePictureService>();
+
 //PDF SERVICE
 builder.Services.AddScoped<IPdfExportService, PdfExportService>();
 
@@ -50,10 +53,12 @@ if (app.Environment.IsDevelopment())
 }
 else
 {
-    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseExceptionHandler("/Home/Error");
+app.UseStatusCodePagesWithReExecute("/Home/HttpStatusCode/{0}");
 
 app.UseHttpsRedirection();
 app.UseRouting();
