@@ -27,7 +27,7 @@ namespace Roots_Wings.Services
             var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
             if (!AllowedExtensions.Contains(ext) ||
                 !AllowedContentTypes.Contains(file.ContentType.ToLowerInvariant()))
-                return ProfilePictureResult.Fail("Only JPG, PNG, or WEBP images are allowed.");
+                return ProfilePictureResult.Fail("Only JPG, JPEG , PNG or WEBP images are allowed.");
 
             var folder = Path.Combine(_env.WebRootPath, "images", "profile-pictures");
             Directory.CreateDirectory(folder); // no-op if it exists

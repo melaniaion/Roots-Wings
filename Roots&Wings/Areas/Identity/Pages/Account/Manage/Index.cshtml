@@ -1,0 +1,93 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/account/manage-profile.css" asp-append-version="true" />
+}
+
+<div class="rw-profile-section">
+    <span class="rw-field-label">Profile picture</span>
+    <div class="rw-picture-block">
+        <div class="rw-avatar-preview">
+            <img src="@Model.CurrentPicture" alt="Profile picture" />
+        </div>
+
+        <div class="rw-picture-actions">
+            <!-- Upload posts immediately when a file is chosen -->
+            <form method="post" asp-page-handler="UploadPicture" enctype="multipart/form-data" id="pictureUploadForm">
+                <label for="pictureInput" class="rw-btn-soft">
+                    <i class="bi bi-upload"></i> Change photo
+                </label>
+                <input asp-for="PictureUpload" id="pictureInput" type="file"
+                       accept="image/png, image/jpeg, image/webp" class="rw-hidden-file" />
+            </form>
+
+            <!-- Remove: disabled on default; otherwise opens confirm pop-up -->
+            @if (Model.HasPicture)
+            {
+                <button type="button" class="rw-btn-soft rw-btn-danger" data-rw-modal-open="removePictureModal">
+                    <i class="bi bi-trash3"></i> Remove
+                </button>
+            }
+            else
+            {
+                <button type="button" class="rw-btn-soft rw-btn-danger" disabled title="No picture to remove">
+                    <i class="bi bi-trash3"></i> Remove
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="rw-divider"></div>
+
+<div class="rw-profile-section">
+    <form method="post" asp-page-handler="SaveProfile">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+        <div class="rw-field">
+            <label asp-for="Input.Name" class="rw-field-label"></label>
+            <input asp-for="Input.Name" class="rw-input" placeholder="Your name" />
+            <span asp-validation-for="Input.Name" class="text-danger"></span>
+        </div>
+
+        <div class="rw-field">
+            <label class="rw-field-label">Username</label>
+            <input value="@Model.Username" class="rw-input" disabled />
+            <p class="rw-field-hint">Your username is your email. Change it under the Email tab.</p>
+        </div>
+
+        <button type="submit" class="btn-rw-primary">Save changes</button>
+    </form>
+</div>
+
+<!-- Remove-picture confirm pop-up (its own post form, outside the others) -->
+<div class="rw-modal-overlay" id="removePictureModal">
+    <div class="rw-modal-card">
+        <h3 class="rw-modal-title">Remove profile picture?</h3>
+        <p class="rw-modal-text">This will remove your picture right away. You can upload a new one anytime.</p>
+        <div class="rw-modal-actions">
+            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>Cancel</button>
+            <form method="post" asp-page-handler="RemovePicture">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="rw-modal-btn rw-modal-btn-danger">Remove</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Auto-submit the picture form the moment a file is chosen.
+        document.getElementById("pictureInput").addEventListener("change", function () {
+            if (this.files && this.files[0]) {
+                document.getElementById("pictureUploadForm").submit();
+            }
+        });
+    </script>
+}
