@@ -23,6 +23,10 @@ namespace Roots_Wings.Models
         [MaxLength(150)]
         public string? TherapistName { get; set; }
 
+        [Required]
+        [MaxLength(50)]
+        public string TherapyType { get; set; } = "Unsure";
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         [Required]
