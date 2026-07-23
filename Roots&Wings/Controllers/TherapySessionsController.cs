@@ -101,6 +101,11 @@ namespace Roots_Wings.Controllers
             ModelState.Remove("UserId");
             ModelState.Remove("User");
 
+            if (!TherapyTypeOptions.IsValid(newSession.TherapyType))
+            {
+                ModelState.AddModelError("TherapyType", "Please choose a valid therapy type.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(newSession);
@@ -161,6 +166,11 @@ namespace Roots_Wings.Controllers
             ModelState.Remove("UserId");
             ModelState.Remove("User");
 
+            if (!TherapyTypeOptions.IsValid(model.TherapyType))
+            {
+                ModelState.AddModelError("TherapyType", "Please choose a valid therapy type.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -200,6 +210,7 @@ namespace Roots_Wings.Controllers
             session.PrepNotes = model.PrepNotes;
             session.PostNotes = model.PostNotes;
             session.SessionDate = sessionDateUtc;
+            session.TherapyType = model.TherapyType;
 
             await _context.SaveChangesAsync();
 

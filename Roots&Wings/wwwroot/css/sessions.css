@@ -459,3 +459,31 @@ button.btn-rw-secondary, button.btn-rw-danger {
     border: none;
     cursor: pointer;
 }
+
+.therapy-type-pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 500;
+    color: #4A5C3F;
+    background: #E8EDE0;
+    border-radius: 20px;
+    padding: 0.15rem 0.7rem;
+    margin-top: 0.5rem;
+    letter-spacing: 0.02em;
+}
+
+/* Styled dropdown: hides the native browser arrow  */
+select.form-control-rw {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5 L6 6.5 L11 1.5' stroke='%23B5A898' stroke-width='1.8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.6rem;
+    cursor: pointer;
+}
+
+    select.form-control-rw:hover {
+        border-color: #C9B79E;
+    }
