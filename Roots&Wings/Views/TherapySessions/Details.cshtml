@@ -18,6 +18,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/prep-panel.css" asp-append-version="true" />
 }
 
 <div class="mb-3">
@@ -51,16 +52,23 @@
 <div class="row g-3 mb-3">
 
     <div class="col-md-6">
-        <div class="rw-card h-100">
+        <div class="rw-card h-100 d-flex flex-column">
             <span class="notes-label">Before the session</span>
+
             @if (!string.IsNullOrWhiteSpace(Model.PrepNotes))
             {
-                <div class="notes-content">@Model.PrepNotes</div>
+                <div class="notes-preview">@Model.PrepNotes</div>
             }
             else
             {
-                <p class="notes-empty">No prep notes written.</p>
+                <p class="notes-empty">No prep notes yet.</p>
             }
+
+            <button type="button" class="btn-rw-primary mt-auto"
+                    style="align-self: flex-start; font-size: 0.82rem; padding: 0.45rem 1.2rem;"
+                    data-rw-panel-open="prepPanel">
+                @(string.IsNullOrWhiteSpace(Model.PrepNotes) ? "Write prep notes" : "Read or edit")
+            </button>
         </div>
     </div>
 
@@ -190,6 +198,51 @@
 
 </div>
 
+<!-- Prep notes -->
+
+<div class="rw-panel-overlay" id="prepPanel">
+    <div class="rw-panel-card">
+        <form asp-action="SavePrepNotes" asp-route-id="@Model.Id" method="post"
+              style="display:flex; flex-direction:column; height:100%; min-height:0;">
+            @Html.AntiForgeryToken()
+
+            <div class="rw-panel-header">
+                <div>
+                    <span class="rw-panel-eyebrow">Before the session</span>
+                    <h2 class="rw-panel-title">@Model.SessionDate.ToLocal().ToString("dddd, MMMM d")</h2>
+                </div>
+                <button type="button" class="rw-panel-close" id="prepPanelClose" aria-label="Close">×</button>
+            </div>
+
+            <div class="rw-panel-body">
+                <p class="rw-panel-invite">What would you like to bring to this session?</p>
+
+                <textarea name="prepNotes" id="prepNotesArea"
+                          class="rw-panel-textarea"
+                          placeholder="Start writing whatever's on your mind…">@Model.PrepNotes</textarea>
+
+                @if (!hasPassed)
+                {
+                    <button type="button" class="rw-assistant-invite" id="askAssistantBtn">
+                        <span class="rw-assistant-invite-icon">✦</span>
+                        <span class="rw-assistant-invite-text">
+                            <span class="rw-assistant-invite-title">Not sure where to start?</span>
+                            <span class="rw-assistant-invite-sub">Reflect with a few gentle questions</span>
+                        </span>
+                    </button>
+                }
+            </div>
+
+            <div class="rw-panel-footer">
+                <button type="submit" class="btn-rw-primary"
+                        style="font-size:0.82rem; padding:0.45rem 1.2rem;">
+                    Save notes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
 <!-- Actions -->
 <div class="d-flex gap-2 mb-4">
     <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-rw-secondary">
@@ -220,3 +273,71 @@
         </div>
     </div>
 </div>
+
+<div class="rw-modal-overlay" id="discardPrepModal">
+    <div class="rw-modal-card">
+        <div class="rw-modal-title">Discard changes?</div>
+        <div class="rw-modal-text">
+            You have unsaved changes to your prep notes. Close without saving?
+        </div>
+        <div class="rw-modal-actions">
+            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>
+                Keep writing
+            </button>
+            <button type="button" class="rw-modal-btn rw-modal-btn-confirm" id="confirmDiscardPrep">
+                Discard
+            </button>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/rw-panel.js" asp-append-version="true"></script>
+}
+
+<script>
+    (function () {
+        var panel = document.getElementById('prepPanel');
+        var textarea = document.getElementById('prepNotesArea');
+        var closeX = document.getElementById('prepPanelClose');
+        var discardModal = document.getElementById('discardPrepModal');
+        var confirmDiscard = document.getElementById('confirmDiscardPrep');
+        if (!panel || !textarea) return;
+
+        var originalValue = textarea.value;
+
+        function hasChanges() {
+            return textarea.value !== originalValue;
+        }
+
+        function closePanel() {
+            panel.classList.remove('is-active');
+            document.body.classList.remove('rw-panel-open');
+        }
+
+        function attemptClose() {
+            if (hasChanges()) {
+                // Route through the existing discard confirmation
+                discardModal.classList.add('is-active');
+                document.body.classList.add('rw-modal-open');
+            } else {
+                closePanel();
+            }
+        }
+
+        closeX.addEventListener('click', attemptClose);
+
+        // Backdrop click
+        panel.addEventListener('click', function (e) {
+            if (e.target === panel) attemptClose();
+        });
+
+        // Confirm discard: close both the modal and the panel
+        confirmDiscard.addEventListener('click', function () {
+            discardModal.classList.remove('is-active');
+            document.body.classList.remove('rw-modal-open');
+            closePanel();
+        });
+    })();
+</script>

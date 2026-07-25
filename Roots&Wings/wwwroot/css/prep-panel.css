@@ -1,0 +1,216 @@
+/* PREP NOTES PANEL  */
+
+.rw-panel-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(58, 50, 45, 0.4);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    padding: 1.5rem;
+}
+
+    .rw-panel-overlay.is-active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+/* The panel*/
+.rw-panel-card {
+    background: #FEFCF9;
+    border-radius: 26px;
+    box-shadow: 0 30px 70px rgba(92, 61, 46, 0.22);
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(22px) scale(0.97);
+    transition: transform 0.32s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.rw-panel-overlay.is-active .rw-panel-card {
+    transform: translateY(0) scale(1);
+}
+
+/* Header: eyebrow + title on the left, close on the right */
+.rw-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.6rem 2rem 1.1rem 2rem;
+    flex-shrink: 0;
+}
+
+.rw-panel-eyebrow {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #8BAA7D;
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.rw-panel-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.6rem;
+    color: #5C3D2E;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.rw-panel-close {
+    background: none;
+    border: none;
+    color: #C4B5A5;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0.3rem 0.55rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+    margin-top: 0.2rem;
+}
+
+    .rw-panel-close:hover {
+        background: rgba(242, 224, 208, 0.5);
+        color: #5C3D2E;
+    }
+
+/* Body scrolls if content grows */
+.rw-panel-body {
+    padding: 0 2rem;
+    overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* invitation line above the writing surface */
+.rw-panel-invite {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: #B5A898;
+    margin-bottom: 1rem;
+}
+
+/* The writing surface
+   Faint ruled baseline via a repeating gradient for the notebook feel. */
+.rw-panel-textarea {
+    background-color: #FFFDFA;
+    border: 1px solid #F2E6D8;
+    border-radius: 16px;
+    padding: 1.2rem 1.4rem;
+    color: #5C3D2E;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    line-height: 1.9;
+    width: 100%;
+    flex-grow: 1;
+    min-height: 260px;
+    resize: none;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+    .rw-panel-textarea:focus {
+        outline: none;
+        border-color: #E8C4A8;
+        box-shadow: 0 0 0 3px rgba(139, 90, 58, 0.08);
+    }
+
+    .rw-panel-textarea::placeholder {
+        color: #C9B79E;
+    }
+
+/* The assistant invitation */
+.rw-assistant-invite {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    background: linear-gradient(135deg, rgba(232,237,224,0.6), rgba(242,224,208,0.4));
+    border: 1px solid #E3D3BE;
+    border-radius: 16px;
+    padding: 0.9rem 1.1rem;
+    margin: 1.1rem 0 0.4rem 0;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    width: 100%;
+}
+
+    .rw-assistant-invite:hover {
+        border-color: #8BAA7D;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 18px rgba(92, 61, 46, 0.08);
+    }
+
+.rw-assistant-invite-icon {
+    font-size: 1.3rem;
+    color: #7A9B6E;
+    flex-shrink: 0;
+}
+
+.rw-assistant-invite-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+}
+
+.rw-assistant-invite-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #5C3D2E;
+}
+
+.rw-assistant-invite-sub {
+    font-size: 0.78rem;
+    color: #8B7B6A;
+}
+
+/* Footer with the save action */
+.rw-panel-footer {
+    padding: 1.2rem 2rem 1.6rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+/* Notes preview on the Details / Edit cards  */
+.notes-preview {
+    color: #5C3D2E;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0.9rem;
+}
+
+.notes-empty {
+    margin-bottom: 1.1rem;
+}
+
+body.rw-panel-open {
+    overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rw-panel-overlay,
+    .rw-panel-card,
+    .rw-assistant-invite {
+        transition: none;
+    }
+}
