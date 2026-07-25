@@ -153,3 +153,60 @@
     margin-top: 1.5rem;
     letter-spacing: 0.04em;
 }
+
+
+/* GENERATING RESPONSE */
+/* Loading overlay while the AI generates the summary */
+.summary-loading {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(251, 246, 240, 0.92);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+    .summary-loading.active {
+        display: flex;
+    }
+
+.summary-loading-leaf {
+    font-size: 2.4rem;
+    color: #7A9B6E;
+    animation: summaryPulse 1.8s ease-in-out infinite;
+}
+
+.summary-loading-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.3rem;
+    color: #5C3D2E;
+    margin-top: 1.2rem;
+}
+
+.summary-loading-sub {
+    font-size: 0.85rem;
+    color: #8B7B6A;
+    margin-top: 0.4rem;
+}
+
+@keyframes summaryPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+
+    50% {
+        transform: scale(1.15);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .summary-loading-leaf {
+        animation: none;
+    }
+}
