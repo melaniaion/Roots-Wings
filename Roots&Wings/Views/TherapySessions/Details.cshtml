@@ -1,4 +1,5 @@
-﻿@model Roots_Wings.Models.TherapySession
+﻿@using Roots_Wings.Helpers
+@model Roots_Wings.Models.TherapySession
 
 @{
     ViewData["Title"] = Model.Title;
@@ -37,6 +38,7 @@
                 }
             </div>
             <h1 class="rw-page-title">@Model.Title</h1>
+            <span class="therapy-type-pill">@TherapyTypeOptions.LabelFor(Model.TherapyType)</span>
         </div>
 
         <span class="countdown-pill @(hasPassed ? "status-past" : "status-upcoming")">

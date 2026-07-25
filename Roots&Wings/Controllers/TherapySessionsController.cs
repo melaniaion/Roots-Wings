@@ -101,6 +101,11 @@ namespace Roots_Wings.Controllers
             ModelState.Remove("UserId");
             ModelState.Remove("User");
 
+            if (!TherapyTypeOptions.IsValid(newSession.TherapyType))
+            {
+                ModelState.AddModelError("TherapyType", "Please choose a valid therapy type.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(newSession);
@@ -161,6 +166,11 @@ namespace Roots_Wings.Controllers
             ModelState.Remove("UserId");
             ModelState.Remove("User");
 
+            if (!TherapyTypeOptions.IsValid(model.TherapyType))
+            {
+                ModelState.AddModelError("TherapyType", "Please choose a valid therapy type.");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -200,6 +210,7 @@ namespace Roots_Wings.Controllers
             session.PrepNotes = model.PrepNotes;
             session.PostNotes = model.PostNotes;
             session.SessionDate = sessionDateUtc;
+            session.TherapyType = model.TherapyType;
 
             await _context.SaveChangesAsync();
 
@@ -276,14 +287,25 @@ namespace Roots_Wings.Controllers
             var rangeEnd = session.SessionDate.AddDays(rangeDays);
 
             var entries = await _context.JournalEntries
-                .Where(e => e.UserId == userId
-                         && e.CreatedAt >= rangeStart
-                         && e.CreatedAt <= rangeEnd)
-                .OrderBy(e => e.CreatedAt)
-                .ToListAsync();
+                        .Where(e => e.UserId == userId
+                                 && e.CreatedAt >= rangeStart
+                                 && e.CreatedAt <= rangeEnd)
+                        .Include(e => e.Tags)
+                        .OrderBy(e => e.CreatedAt)
+                        .ToListAsync();
 
             // Call the AI
-            var summary = await _aiSummaryService.SummariseEntriesAsync(entries, session);
+            SummaryResult summary;
+            try
+            {
+                summary = await _aiSummaryService.SummariseEntriesAsync(entries, session);
+            }
+            catch
+            {
+                TempData["Flash"] = "The summary couldn't be generated right now. Please try again in a moment.";
+                TempData["FlashType"] = "error";
+                return RedirectToAction(nameof(Details), new { id });
+            }
 
             ViewBag.Summary = summary;
             ViewBag.SessionId = id;
@@ -300,7 +322,6 @@ namespace Roots_Wings.Controllers
             string[] includeBlocks,       // the checked toggles from the form
             string summaryOverview,
             string summaryThemes,
-            string summaryEmotions,
             string summaryDiscuss)
         {
             var userId = _userManager.GetUserId(User);
@@ -313,10 +334,9 @@ namespace Roots_Wings.Controllers
             // Rebuild the summary DTO from the posted hidden fields
             var summary = new SummaryResult
             {
-                OneSentenceSummary = summaryOverview,
-                MainThemes = summaryThemes,
-                EmotionalPatterns = summaryEmotions,
-                ThingsToDiscuss = summaryDiscuss
+                Overall = summaryOverview,
+                WhatKeptComingUp = summaryThemes,
+                MightBringUp = summaryDiscuss
             };
 
             var pdfBytes = _pdfExportService.GenerateSummaryPdf(

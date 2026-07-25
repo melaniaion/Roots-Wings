@@ -29,7 +29,7 @@ namespace Roots_Wings.Services
 
                     page.Content().Column(col =>
                     {
-                        // ── Letterhead ──
+                        // Letterhead
                         col.Item()
                             .PaddingBottom(6)
                             .Text("Prepared for therapy")
@@ -66,9 +66,9 @@ namespace Roots_Wings.Services
                             .LineHorizontal(0.5f)
                             .LineColor("#E8C4A8");
 
-                        // ── Section: Overview ──
-                        if (includeBlocks.Contains("summary") &&
-                            !string.IsNullOrWhiteSpace(summary.OneSentenceSummary))
+                        // Section: Overall
+                        if (includeBlocks.Contains("overall") &&
+                            !string.IsNullOrWhiteSpace(summary.Overall))
                         {
                             col.Item()
                                 .PaddingBottom(20)
@@ -76,13 +76,13 @@ namespace Roots_Wings.Services
                                 {
                                     section.Item()
                                         .PaddingBottom(6)
-                                        .Text("Overview")
+                                        .Text("Overall")
                                         .FontSize(7.5f)
                                         .LetterSpacing(0.12f)
                                         .FontColor("#B5A898");
 
                                     section.Item()
-                                        .Text(summary.OneSentenceSummary)
+                                        .Text(summary.Overall)
                                         .FontSize(13)
                                         .Italic()
                                         .FontColor("#5C3D2E")
@@ -95,9 +95,9 @@ namespace Roots_Wings.Services
                                 .LineColor("#E8C4A8");
                         }
 
-                        // ── Section: Main Themes ──
+                        // Section: What kept coming up
                         if (includeBlocks.Contains("themes") &&
-                            !string.IsNullOrWhiteSpace(summary.MainThemes))
+                            !string.IsNullOrWhiteSpace(summary.WhatKeptComingUp))
                         {
                             col.Item()
                                 .PaddingBottom(20)
@@ -105,13 +105,13 @@ namespace Roots_Wings.Services
                                 {
                                     section.Item()
                                         .PaddingBottom(8)
-                                        .Text("Main Themes")
+                                        .Text("What kept coming up")
                                         .FontSize(7.5f)
                                         .LetterSpacing(0.12f)
                                         .FontColor("#B5A898");
 
                                     section.Item()
-                                        .Text(summary.MainThemes)
+                                        .Text(summary.WhatKeptComingUp)
                                         .FontColor("#5C3D2E");
                                 });
 
@@ -121,54 +121,28 @@ namespace Roots_Wings.Services
                                 .LineColor("#E8C4A8");
                         }
 
-                        // ── Section: Emotional Patterns ──
-                        if (includeBlocks.Contains("emotions") &&
-                            !string.IsNullOrWhiteSpace(summary.EmotionalPatterns))
-                        {
-                            col.Item()
-                                .PaddingBottom(20)
-                                .Column(section =>
-                                {
-                                    section.Item()
-                                        .PaddingBottom(8)
-                                        .Text("Emotional Patterns")
-                                        .FontSize(7.5f)
-                                        .LetterSpacing(0.12f)
-                                        .FontColor("#B5A898");
-
-                                    section.Item()
-                                        .Text(summary.EmotionalPatterns)
-                                        .FontColor("#5C3D2E");
-                                });
-
-                            col.Item()
-                                .PaddingBottom(20)
-                                .LineHorizontal(0.5f)
-                                .LineColor("#E8C4A8");
-                        }
-
-                        // ── Section: Things to Discuss ──
+                        // Section: Might bring up
                         if (includeBlocks.Contains("discuss") &&
-                            !string.IsNullOrWhiteSpace(summary.ThingsToDiscuss))
+                            !string.IsNullOrWhiteSpace(summary.MightBringUp))
                         {
                             col.Item()
                                 .Column(section =>
                                 {
                                     section.Item()
                                         .PaddingBottom(8)
-                                        .Text("Things to Discuss")
+                                        .Text("Might bring up")
                                         .FontSize(7.5f)
                                         .LetterSpacing(0.12f)
                                         .FontColor("#B5A898");
 
                                     section.Item()
-                                        .Text(summary.ThingsToDiscuss)
+                                        .Text(summary.MightBringUp)
                                         .FontColor("#5C3D2E");
                                 });
                         }
                     });
 
-                    // ── Footer ──
+                    // Footer
                     page.Footer()
                         .AlignCenter()
                         .Text(txt =>

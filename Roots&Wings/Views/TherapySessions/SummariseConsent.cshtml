@@ -8,6 +8,7 @@
 
 @section Styles {
     <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/summarise.css" asp-append-version="true" />
 }
 
 <div class="mb-3">
@@ -18,57 +19,96 @@
 
 <div class="rw-card" style="max-width: 580px; margin: 0 auto;">
 
-    
-
-    <h1 class="rw-page-title mb-2">Before we continue</h1>
-
-    <p style="color: #8B7B6A; font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem;">
-        You're about to summarise <strong style="color:#5C3D2E;">
-        @entryCount journal
-        @(entryCount == 1 ? "entry" : "entries")
-    </strong> written around
-    <strong style="color:#5C3D2E;">@Model.SessionDate.ToString("MMMM d, yyyy")</strong>.
-</p>
-
-<!-- What happens explanation -->
-<div style="background: rgba(242,224,208,0.3); border-radius: 14px;
-    padding: 1.2rem 1.4rem; margin-bottom: 1.5rem;">
-    <span class="rw-section-label" style="margin-bottom: 0.8rem;">What happens</span>
-    <ul style="color: #5C3D2E; font-size: 0.9rem; line-height: 2;
-        margin: 0; padding-left: 1.2rem;">
-        <li>The text of your journal entries is sent securely to Anthropic's AI API</li>
-        <li>The AI reads them and returns a structured summary</li>
-        <li>You choose which parts of the summary to keep</li>
-        <li>You can export a clean PDF to bring to your session</li>
-    </ul>
-</div>
-
-<!-- Privacy note -->
-<div style="background: #E8EDE0; border-radius: 14px;
-    padding: 1rem 1.4rem; margin-bottom: 2rem;">
-    <span class="rw-section-label" style="margin-bottom: 0.4rem;">Privacy</span>
-    <p style="color: #4A5C3F; font-size: 0.88rem; line-height: 1.6; margin: 0;">
-        Your entries are processed by Anthropic's API under their
-        <a href="https://www.anthropic.com/privacy" target="_blank"
-           style="color: #3D5C35;">privacy policy</a>.
-        They are not used to train AI models and are not stored by Anthropic.
-    </p>
-</div>
-
-<!-- The form carries id and rangeDays to the next step -->
-<form asp-action="Summarise" asp-route-id="@Model.Id" method="post">
-    @Html.AntiForgeryToken()
-    <input type="hidden" name="rangeDays" value="@rangeDays" />
-
-    <div class="d-flex gap-2 flex-wrap">
-        <button type="submit" class="btn-rw-primary">
-            Yes, summarise the journal entries
-        </button>
-        <a asp-action="Details" asp-route-id="@Model.Id"
-               class="btn-rw-secondary">
-            Cancel
+    @if (entryCount == 0)
+    {
+        <!-- Nothing to work with yet -->
+        <h1 class="rw-page-title mb-2">Nothing to gather just yet</h1>
+        <p style="color: #8B7B6A; font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem;">
+            There aren't any journal entries around this session yet. Once you've
+            written a few, come back here and this will pull them together into a
+            summary to help you prepare.
+        </p>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn-rw-secondary">
+            Back to session
         </a>
-    </div>
-</form>
+    }
+    else
+    {
+        <h1 class="rw-page-title mb-2">Look back before you go in</h1>
+
+        <p style="color: #8B7B6A; font-size: 0.95rem; line-height: 1.7; margin-bottom: 1.5rem;">
+            It can be hard to remember everything you've been carrying between
+            sessions. This gathers what you wrote around
+            <strong style="color:#5C3D2E;">@Model.SessionDate.ToLocal().ToString("MMMM d, yyyy")</strong>
+            and turns it into a calm, one-page summary so you walk in with a
+            clearer sense of what you might want to talk about.
+        </p>
+
+        <!-- What happens: plain and reassuring -->
+        <div style="background: rgba(242,224,208,0.3); border-radius: 14px;
+            padding: 1.2rem 1.4rem; margin-bottom: 1.5rem;">
+            <span class="rw-section-label" style="margin-bottom: 0.8rem;">How it works</span>
+            <ul style="color: #5C3D2E; font-size: 0.9rem; line-height: 2;
+                margin: 0; padding-left: 1.2rem;">
+                <li>
+                    Your <strong style="color:#5C3D2E;">@entryCount journal
+                    @(entryCount == 1 ? "entry" : "entries")</strong> from around
+                    this session are read by an AI writing assistant
+                </li>
+                <li>It gathers the recurring threads into a gentle summary</li>
+                <li>You choose which parts to keep</li>
+                <li>You can export a clean PDF to bring to your session</li>
+            </ul>
+        </div>
+
+        <!-- Privacy: reassuring the user and informing him -->
+        <div style="background: #E8EDE0; border-radius: 14px;
+            padding: 1rem 1.4rem; margin-bottom: 2rem;">
+            <span class="rw-section-label" style="margin-bottom: 0.4rem;">Your privacy</span>
+            <p style="color: #4A5C3F; font-size: 0.88rem; line-height: 1.6; margin: 0;">
+                The summary is created just for this moment and isn't saved
+                anywhere. It disappears when you leave the page. Your entries are
+                read by the AI service only to write this summary and nothing is
+                kept or used to train any model.
+            </p>
+        </div>
+
+        <!-- The form carries id and rangeDays to the next step -->
+        <form asp-action="Summarise" asp-route-id="@Model.Id" method="post" id="consentForm">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="rangeDays" value="@rangeDays" />
+
+            <div class="d-flex gap-2 flex-wrap">
+                <button type="submit" class="btn-rw-primary">
+                    Create my summary
+                </button>
+                <a asp-action="Details" asp-route-id="@Model.Id"
+                   class="btn-rw-secondary">
+                    Not now
+                </a>
+            </div>
+        </form>
+    }
 
 </div>
+
+<!-- Full screen calm overlay shown while the AI is working -->
+<div class="summary-loading" id="summaryLoading">
+    <i class="bi bi-flower1 summary-loading-leaf"></i>
+    <p class="summary-loading-text">Gathering your reflections…</p>
+    <p class="summary-loading-sub">This usually takes a few seconds.</p>
+</div>
+
+@section Scripts {
+    <script>
+        // When the user confirms, show the overlay while the summary
+        // is generated. The normal form post continues underneath; when the
+        // server returns the summary page, this overlay is gone with it.
+        var consentForm = document.getElementById('consentForm');
+        if (consentForm) {
+            consentForm.addEventListener('submit', function () {
+                document.getElementById('summaryLoading').classList.add('active');
+            });
+        }
+    </script>
+}

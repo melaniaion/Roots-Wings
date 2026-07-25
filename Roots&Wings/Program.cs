@@ -13,8 +13,12 @@ var builder = WebApplication.CreateBuilder(args);
 //EMAIL SERVICE
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-// Register Gemini as the AI provider.
-builder.Services.AddHttpClient<IAiSummaryService, GeminiSummaryService>();
+// AI PROVIDERS
+// Both providers are registered as concrete types, each with its own HttpClient.
+builder.Services.AddHttpClient<GroqSummaryService>();
+builder.Services.AddHttpClient<GeminiSummaryService>();
+// The controller receives the resilient wrapper, which tries Groq then Gemini.
+builder.Services.AddScoped<IAiSummaryService, ResilientSummaryService>();
 
 // PROFILE PICTURE SERVICE
 builder.Services.AddScoped<IProfilePictureService, ProfilePictureService>();
