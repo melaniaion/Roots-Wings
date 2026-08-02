@@ -1,0 +1,292 @@
+/* ─────────────────────────────────────────────────────────
+   ROOTS & WINGS ASSISTANT  — chat view inside the prep panel
+   A calm, modern reflection companion. Warm messaging aesthetic,
+   not a sterile chatbot. Shares the app palette.
+   ───────────────────────────────────────────────────────── */
+
+/* The chat view fills the panel body when active. Hidden by default;
+   the writing view and chat view swap via a .is-hidden toggle. */
+.is-hidden {
+    display: none !important;
+}
+
+.rw-chat {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 420px;
+}
+
+/* Scrolling message area */
+.rw-chat-stream {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 0.5rem 0.4rem 1rem 0.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+/* A single message row */
+.rw-msg {
+    display: flex;
+    gap: 0.6rem;
+    max-width: 88%;
+    animation: rwMsgIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rw-msg-assistant {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.rw-msg-user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+/* The little assistant mark */
+.rw-msg-mark {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8BAA7D, #7A9B6E);
+    color: #FEFCF9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+/* The message bubble */
+.rw-msg-bubble {
+    padding: 0.75rem 1rem;
+    border-radius: 16px;
+    font-size: 0.93rem;
+    line-height: 1.6;
+}
+
+.rw-msg-assistant .rw-msg-bubble {
+    background: #FFFFFF;
+    border: 1px solid #EFE0CD;
+    color: #5C3D2E;
+    border-top-left-radius: 5px;
+}
+
+.rw-msg-user .rw-msg-bubble {
+    background: #F2E0D0;
+    color: #5C3D2E;
+    border: 1px solid #ECD9C4;
+    border-top-right-radius: 5px;
+}
+
+/* Typing indicator (three pulsing dots) */
+.rw-typing {
+    display: flex;
+    gap: 0.3rem;
+    padding: 0.85rem 1rem;
+    align-items: center;
+}
+
+    .rw-typing span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: #B5A898;
+        animation: rwTypingPulse 1.3s infinite ease-in-out;
+    }
+
+        .rw-typing span:nth-child(2) {
+            animation-delay: 0.18s;
+        }
+
+        .rw-typing span:nth-child(3) {
+            animation-delay: 0.36s;
+        }
+
+/* Input row */
+.rw-chat-input {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-end;
+    padding-top: 1rem;
+    margin-top: 0.3rem;
+    border-top: 1px solid #F2E6D8;
+    flex: 0 0 auto;
+}
+
+.rw-chat-textarea {
+    flex-grow: 1;
+    background: #FFFDFA;
+    border: 1px solid #E8C4A8;
+    border-radius: 18px;
+    padding: 0.75rem 1.1rem;
+    color: #5C3D2E;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    resize: none;
+    min-height: 48px;
+    max-height: 120px;
+    transition: border-color 0.2s;
+}
+
+    .rw-chat-textarea:focus {
+        outline: none;
+        border-color: #8B5A3A;
+        box-shadow: 0 0 0 3px rgba(139, 90, 58, 0.08);
+    }
+
+.rw-chat-send {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: none;
+    background: #5C3D2E;
+    color: #FBF6F0;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, transform 0.15s;
+}
+
+    .rw-chat-send:hover:not(:disabled) {
+        background: #3D5C35;
+        transform: translateY(-1px);
+    }
+
+    .rw-chat-send:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+/* ── Closing takeaways step ── */
+.rw-takeaways {
+    padding: 0.4rem 0.2rem 0.5rem 0.2rem;
+}
+
+.rw-takeaways-intro {
+    font-size: 0.86rem;
+    color: #8B7B6A;
+    margin-bottom: 0.9rem;
+    line-height: 1.55;
+}
+
+.rw-takeaway-chip {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #FFFDFA;
+    border: 1px solid #E8C4A8;
+    border-radius: 14px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.6rem;
+    color: #5C3D2E;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+}
+
+    .rw-takeaway-chip:hover {
+        border-color: #8BAA7D;
+    }
+
+    .rw-takeaway-chip.selected {
+        background: linear-gradient(135deg, rgba(232,237,224,0.7), rgba(242,224,208,0.4));
+        border-color: #7A9B6E;
+    }
+
+/* The tick box on the left of each chip */
+.rw-takeaway-check {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid #C9B79E;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: #FEFCF9;
+    margin-top: 1px;
+    transition: all 0.18s;
+}
+
+.rw-takeaway-chip.selected .rw-takeaway-check {
+    background: #7A9B6E;
+    border-color: #7A9B6E;
+}
+
+/* Animations */
+@keyframes rwMsgIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes rwTypingPulse {
+    0%, 60%, 100% {
+        transform: scale(0.7);
+        opacity: 0.4;
+    }
+
+    30% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rw-msg {
+        animation: none;
+    }
+
+    .rw-typing span {
+        animation: none;
+    }
+
+    .rw-chat-send:hover:not(:disabled) {
+        transform: none;
+    }
+}
+
+/* When the chat is active, give the panel a stable, comfortable height
+   so the messages scroll internally and the input stays visible. Using
+   a capped height rather than viewport units avoids the input being
+   pushed past the panel edge. */
+.rw-panel-card:has(#prepChatView:not(.is-hidden)) {
+    height: min(680px, 85vh);
+}
+
+/* When chat is active, the panel body must NOT be its own scroll container
+   or add bottom padding — the chat view owns the layout and scrolling.
+   This prevents the input row being pushed below the panel edge. */
+.rw-panel-body:has(#prepChatView:not(.is-hidden)) {
+    overflow: hidden;
+    padding-bottom: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+}
+
+    /* The chat fills the body fully; only the message stream scrolls. */
+    .rw-panel-body:has(#prepChatView:not(.is-hidden)) #prepChatView {
+        flex: 1 1 auto;
+        min-height: 0;
+    }

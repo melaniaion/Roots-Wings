@@ -1,4 +1,5 @@
-﻿@using Roots_Wings.Helpers
+﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@using Roots_Wings.Helpers
 @model Roots_Wings.Models.TherapySession
 
 @{
@@ -19,6 +20,7 @@
 @section Styles {
     <link rel="stylesheet" href="~/css/sessions.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/prep-panel.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/prep-chat.css" asp-append-version="true" />
 }
 
 <div class="mb-3">
@@ -67,7 +69,7 @@
             <button type="button" class="btn-rw-primary mt-auto"
                     style="align-self: flex-start; font-size: 0.82rem; padding: 0.45rem 1.2rem;"
                     data-rw-panel-open="prepPanel">
-                @(string.IsNullOrWhiteSpace(Model.PrepNotes) ? "Write prep notes" : "Read or edit")
+                @(string.IsNullOrWhiteSpace(Model.PrepNotes) ? "Write prep notes" : "More")
             </button>
         </div>
     </div>
@@ -215,25 +217,38 @@
             </div>
 
             <div class="rw-panel-body">
-                <p class="rw-panel-invite">What would you like to bring to this session?</p>
+                <!-- WRITING VIEW -->
+                <div id="prepWritingView" style="display:flex; flex-direction:column; flex-grow:1; min-height:0;">
+                    <p class="rw-panel-invite">What would you like to bring to this session?</p>
 
-                <textarea name="prepNotes" id="prepNotesArea"
-                          class="rw-panel-textarea"
-                          placeholder="Start writing whatever's on your mind…">@Model.PrepNotes</textarea>
+                    <textarea name="prepNotes" id="prepNotesArea"
+                              class="rw-panel-textarea"
+                              placeholder="Start writing whatever's on your mind…">@Model.PrepNotes</textarea>
 
-                @if (!hasPassed)
-                {
-                    <button type="button" class="rw-assistant-invite" id="askAssistantBtn">
-                        <span class="rw-assistant-invite-icon">✦</span>
-                        <span class="rw-assistant-invite-text">
-                            <span class="rw-assistant-invite-title">Not sure where to start?</span>
-                            <span class="rw-assistant-invite-sub">Reflect with a few gentle questions</span>
-                        </span>
-                    </button>
-                }
+                    @if (!hasPassed)
+                    {
+                        <button type="button" class="rw-assistant-invite" onclick="rwStartChat()">
+                            <span class="rw-assistant-invite-icon">✦</span>
+                            <span class="rw-assistant-invite-text">
+                                <span class="rw-assistant-invite-title">Not sure where to start?</span>
+                                <span class="rw-assistant-invite-sub">Reflect with the Roots &amp; Wings Assistant</span>
+                            </span>
+                        </button>
+                    }
+                </div>
+
+                <!-- CHAT VIEW (hidden until the assistant is opened) -->
+                <div id="prepChatView" class="rw-chat is-hidden">
+                    <div class="rw-chat-stream" id="rwChatStream"></div>
+                    <div class="rw-chat-input">
+                        <textarea id="rwChatInput" class="rw-chat-textarea" rows="1"
+                                  placeholder="Type your reflection…"></textarea>
+                        <button type="button" class="rw-chat-send" id="rwChatSend" aria-label="Send">→</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="rw-panel-footer">
+            <div class="rw-panel-footer" id="prepPanelFooter">
                 <button type="submit" class="btn-rw-primary"
                         style="font-size:0.82rem; padding:0.45rem 1.2rem;">
                     Save notes
@@ -294,50 +309,58 @@
 
 @section Scripts {
     <script src="~/js/rw-panel.js" asp-append-version="true"></script>
-}
+    <script>
+        window.rwChatConfig = {
+            sessionId: @Model.Id,
+            endpoint: '@Url.Action("ReflectTurn", "TherapySessions")',
+            antiforgeryToken: '@Xsrf.GetAndStoreTokens(Context).RequestToken'
+        };
+    </script>
+    <script src="~/js/prep-chat.js" asp-append-version="true"></script>
 
-<script>
-    (function () {
-        var panel = document.getElementById('prepPanel');
-        var textarea = document.getElementById('prepNotesArea');
-        var closeX = document.getElementById('prepPanelClose');
-        var discardModal = document.getElementById('discardPrepModal');
-        var confirmDiscard = document.getElementById('confirmDiscardPrep');
-        if (!panel || !textarea) return;
+    <script>
+        (function () {
+            var panel = document.getElementById('prepPanel');
+            var textarea = document.getElementById('prepNotesArea');
+            var closeX = document.getElementById('prepPanelClose');
+            var discardModal = document.getElementById('discardPrepModal');
+            var confirmDiscard = document.getElementById('confirmDiscardPrep');
+            if (!panel || !textarea) return;
 
-        var originalValue = textarea.value;
+            var originalValue = textarea.value;
 
-        function hasChanges() {
-            return textarea.value !== originalValue;
-        }
-
-        function closePanel() {
-            panel.classList.remove('is-active');
-            document.body.classList.remove('rw-panel-open');
-        }
-
-        function attemptClose() {
-            if (hasChanges()) {
-                // Route through the existing discard confirmation
-                discardModal.classList.add('is-active');
-                document.body.classList.add('rw-modal-open');
-            } else {
-                closePanel();
+            function hasChanges() {
+                return textarea.value !== originalValue;
             }
-        }
 
-        closeX.addEventListener('click', attemptClose);
+            function closePanel() {
+                panel.classList.remove('is-active');
+                document.body.classList.remove('rw-panel-open');
+            }
 
-        // Backdrop click
-        panel.addEventListener('click', function (e) {
-            if (e.target === panel) attemptClose();
-        });
+            function attemptClose() {
+                if (hasChanges()) {
+                    // Route through the existing discard confirmation
+                    discardModal.classList.add('is-active');
+                    document.body.classList.add('rw-modal-open');
+                } else {
+                    closePanel();
+                }
+            }
 
-        // Confirm discard: close both the modal and the panel
-        confirmDiscard.addEventListener('click', function () {
-            discardModal.classList.remove('is-active');
-            document.body.classList.remove('rw-modal-open');
-            closePanel();
-        });
-    })();
-</script>
+            closeX.addEventListener('click', attemptClose);
+
+            // Backdrop click
+            panel.addEventListener('click', function (e) {
+                if (e.target === panel) attemptClose();
+            });
+
+            // Confirm discard: close both the modal and the panel
+            confirmDiscard.addEventListener('click', function () {
+                discardModal.classList.remove('is-active');
+                document.body.classList.remove('rw-modal-open');
+                closePanel();
+            });
+        })();
+    </script>
+}

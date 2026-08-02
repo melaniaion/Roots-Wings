@@ -73,14 +73,6 @@
                     </select>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label-rw">Prep Notes</label>
-                    <textarea asp-for="PrepNotes"
-                              class="form-control-rw"
-                              placeholder="What do you want to bring up?">
-                    </textarea>
-                </div>
-
                 @if (Model.SessionDate < DateTime.Now)
                     {
                         <div class="mb-4">
