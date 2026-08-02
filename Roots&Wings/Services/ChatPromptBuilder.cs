@@ -14,9 +14,9 @@ namespace Roots_Wings.Services
     public static class ChatPromptBuilder
     {
         // Hard cap on how many questions the assistant asks before closing.
-        // Kept small so the user does not get tired, and so a small model
-        // stays coherent across the whole exchange.
-        public const int MaxAssistantQuestions = 4;
+        // Long enough for the conversation to actually develop, short enough
+        // that the user does not get tired and a small model stays coherent.
+        public const int MaxAssistantQuestions = 6;
 
         // Shapes the STYLE of questioning to match the user's therapy type.
         // The technique (Socratic questioning) is the same; what it leans
@@ -73,14 +73,28 @@ namespace Roots_Wings.Services
         private static string SystemInstruction(TherapySession session)
         {
             return $"""
-                You are a warm, gentle reflection companion inside a therapy preparation app. You are NOT a therapist. You help the user think about what they might want to bring to their upcoming session by asking open, Socratic questions, one at a time.
+                You are a warm, perceptive reflection companion inside a therapy preparation app. You are NOT a therapist. Your job is to help someone work out what they want to bring to their upcoming session, by asking one thoughtful open question at a time.
 
-                Firm rules:
-                - Ask ONE short, open question per reply. Never more than one.
-                - Never give advice, opinions, interpretations, reassurance, or diagnoses. Only ask, and briefly acknowledge what they said before asking.
-                - Keep each reply to two or three sentences at most.
-                - Stay with what the user actually says. Do not invent details about their life.
-                - Warm, plain language. No clinical terms. Speak to them as "you".
+                HOW TO ASK WELL:
+                - Ask exactly ONE question per reply. Never two.
+                - Begin with a short, warm lead-in of one sentence that eases into the question, then ask it.
+                - Go DEEPER into what they just said. Pick up the most specific or most charged detail in their answer and ask about that particular thing, not the general topic.
+                - Prefer questions that open something new: what sits underneath a feeling, when it started, what it would mean if it were true, what they would want instead, what makes this one harder than others.
+
+                THE LEAD-IN, DONE RIGHT:
+                The opening sentence must ADD something, not replay what they said. Good lead-ins notice a thread running through their answers, name a tension between two things they said, connect back to something from earlier in the conversation, or gently frame why you are asking next. For example: "There seems to be something about how others see you running underneath this." or "That sounds like it pulls in two directions at once."
+
+                NEVER DO THIS (it feels robotic and unhelpful):
+                - Do NOT restate, paraphrase, mirror, or summarise what they just told you. If they say they feel awkward, do not reply "You feel awkward about this." Just move on and ask.
+                - Do NOT begin with "It sounds like you...", "You mentioned...", "You're feeling...", "So you...", or any variation that simply plays their own words back at them.
+                - Do NOT praise, reassure, validate, advise, interpret, or diagnose.
+                - Do NOT ask about something they already answered.
+
+                If they say they are unsure or do not know, do not push the same question again. Move to a different angle, or make the question smaller and more concrete.
+
+                STYLE:
+                - Two or three sentences: a short lead-in, then the question.
+                - Warm, plain, human language. No clinical terms. Address them as "you".
 
                 {LensFor(session.TherapyType)}
                 """;
@@ -131,9 +145,16 @@ namespace Roots_Wings.Services
                     {
                         role = "user",
                         content =
-                            "That is enough for now. Reply with a short warm closing sentence, then on a new line output ONLY a JSON array " +
-                            "of 3 to 4 short first-person phrases capturing things I might want to bring to my session, drawn strictly from what I said above. " +
-                            "Format exactly: CLOSING: <one sentence>\nTAKEAWAYS: [\"...\",\"...\"]"
+                            "That is enough for now. Write a short warm closing sentence, then a JSON array of talking points I could bring to my session.\n\n" +
+                            "Rules for the talking points:\n" +
+                            "- Give 5 or 6 of them.\n" +
+                            "- Each one a full, specific sentence of about 12 to 25 words, written in my voice starting with \"I\".\n" +
+                            "- Draw each from something different I actually said. Do not repeat the same idea in two points.\n" +
+                            "- Make them concrete enough to actually open a conversation with my therapist, not vague labels.\n" +
+                            "- Do not invent anything I did not say.\n\n" +
+                            "Format exactly like this and nothing else:\n" +
+                            "CLOSING: <one sentence>\n" +
+                            "TAKEAWAYS: [\"I ...\",\"I ...\",\"I ...\",\"I ...\",\"I ...\"]"
                     });
                 }
             }
@@ -185,10 +206,24 @@ namespace Roots_Wings.Services
                 var parsed = JsonSerializer.Deserialize<List<string>>(jsonPart);
                 if (parsed != null)
                 {
-                    reply.Takeaways = parsed
-                        .Where(s => !string.IsNullOrWhiteSpace(s))
-                        .Select(s => s.Trim())
-                        .ToList();
+                    // Clean up and remove near duplicates. The model sometimes
+                    // repeats the same idea, so we compare on a normalised
+                    // form (lowercase, no punctuation) and keep the first.
+                    var seen = new HashSet<string>();
+                    foreach (var raw2 in parsed)
+                    {
+                        if (string.IsNullOrWhiteSpace(raw2)) continue;
+
+                        var cleaned = raw2.Trim();
+                        var key = new string(cleaned.ToLowerInvariant()
+                            .Where(char.IsLetterOrDigit)
+                            .ToArray());
+
+                        if (key.Length > 0 && seen.Add(key))
+                        {
+                            reply.Takeaways.Add(cleaned);
+                        }
+                    }
                 }
             }
             catch

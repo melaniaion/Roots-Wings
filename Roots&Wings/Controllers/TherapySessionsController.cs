@@ -372,10 +372,18 @@ namespace Roots_Wings.Controllers
             return File(pdfBytes, "application/pdf", fileName);
         }
 
-      
+
         // This one endpoint drives the whole dialogue for prep notes. The browser holds the
         // transcript and posts it back each turn, so the server stays stateless:
         // it rebuilds the context, calls the AI and returns the next reply.
+
+        // ── Add to TherapySessionsController ──
+        // Requires: private readonly IAiChatService _aiChatService; injected via
+        // the constructor (add the parameter and assignment alongside the others).
+        //
+        // This one endpoint drives the whole dialogue. The browser holds the
+        // transcript and posts it back each turn, so the server stays stateless:
+        // it rebuilds the context, calls the AI, and returns the next reply.
 
         // POST: /TherapySessions/ReflectTurn
         [HttpPost]
@@ -395,7 +403,7 @@ namespace Roots_Wings.Controllers
             // The previous session is the most recent one BEFORE this session's date
             // that belongs to this user. Its PostNotes are the strongest context
             // (for example homework the therapist set). Note: this is "before this
-            // session's date", not "most recently created".
+            // session's date", not "most recently created", so the bridge is correct.
             var previousSession = await _context.TherapySessions
                 .Where(s => s.UserId == userId
                          && s.Id != session.Id
@@ -411,11 +419,13 @@ namespace Roots_Wings.Controllers
                 .ToListAsync();
 
             // Guard the transcript so a tampered request cannot make the model loop
-            // forever. Never trust the client's length.
+            // forever. Never trust the client's length. A real conversation reaches
+            // at most 12 messages (6 questions plus 6 answers), so 16 leaves headroom
+            // while still stopping an abusive payload.
             transcript ??= new List<ChatTurn>();
-            if (transcript.Count > 12)
+            if (transcript.Count > 16)
             {
-                transcript = transcript.Take(12).ToList();
+                transcript = transcript.Take(16).ToList();
             }
 
             ChatReply reply;

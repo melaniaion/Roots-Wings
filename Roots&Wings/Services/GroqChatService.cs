@@ -43,8 +43,8 @@ namespace Roots_Wings.Services
             {
                 model = "llama-3.1-8b-instant",
                 messages = messagesElement,
-                temperature = 0.6,
-                max_tokens = 500
+                temperature = 0.85,
+                max_tokens = 600
             };
 
             var request = new HttpRequestMessage(
