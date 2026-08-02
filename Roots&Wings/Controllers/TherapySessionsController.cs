@@ -17,13 +17,15 @@ namespace Roots_Wings.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAiSummaryService _aiSummaryService;
         private readonly IPdfExportService _pdfExportService;
+        private readonly IAiChatService _aiChatService;
 
-        public TherapySessionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IAiSummaryService aiSummaryService, IPdfExportService pdfExportService)
+        public TherapySessionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IAiSummaryService aiSummaryService, IPdfExportService pdfExportService, IAiChatService aiChatService)
         {
             _context = context;
             _userManager = userManager;
             _aiSummaryService = aiSummaryService;
             _pdfExportService = pdfExportService;
+            _aiChatService = aiChatService;
         }
 
         // GET: /Sessions
@@ -231,7 +233,6 @@ namespace Roots_Wings.Controllers
 
             session.Title = model.Title;
             session.TherapistName = model.TherapistName;
-            session.PrepNotes = model.PrepNotes;
             session.PostNotes = model.PostNotes;
             session.SessionDate = sessionDateUtc;
             session.TherapyType = model.TherapyType;
@@ -369,6 +370,73 @@ namespace Roots_Wings.Controllers
             // Stream the file directly to the browser as a download
             var fileName = $"therapy-summary-{session.SessionDate:yyyy-MM-dd}.pdf";
             return File(pdfBytes, "application/pdf", fileName);
+        }
+
+      
+        // This one endpoint drives the whole dialogue for prep notes. The browser holds the
+        // transcript and posts it back each turn, so the server stays stateless:
+        // it rebuilds the context, calls the AI and returns the next reply.
+
+        // POST: /TherapySessions/ReflectTurn
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ReflectTurn(int id, [FromBody] List<ChatTurn> transcript)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            // The previous session is the most recent one BEFORE this session's date
+            // that belongs to this user. Its PostNotes are the strongest context
+            // (for example homework the therapist set). Note: this is "before this
+            // session's date", not "most recently created".
+            var previousSession = await _context.TherapySessions
+                .Where(s => s.UserId == userId
+                         && s.Id != session.Id
+                         && s.SessionDate < session.SessionDate)
+                .OrderByDescending(s => s.SessionDate)
+                .FirstOrDefaultAsync();
+
+            // Open (not yet completed) goals, for secondary context.
+            var openGoals = await _context.Goals
+                .Where(g => g.UserId == userId && g.CompletedAt == null)
+                .OrderByDescending(g => g.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+
+            // Guard the transcript so a tampered request cannot make the model loop
+            // forever. Never trust the client's length.
+            transcript ??= new List<ChatTurn>();
+            if (transcript.Count > 12)
+            {
+                transcript = transcript.Take(12).ToList();
+            }
+
+            ChatReply reply;
+            try
+            {
+                reply = await _aiChatService.ContinueDialogueAsync(
+                    session, previousSession, openGoals, transcript);
+            }
+            catch
+            {
+                // Both providers failed. Return a graceful, non technical message the
+                // frontend can show in place of a question.
+                return Json(new ChatReply
+                {
+                    Message = "The assistant isn't available right now. You can keep writing your notes on your own, or try again in a moment.",
+                    IsFinal = true,
+                    GeneratedBy = ""
+                });
+            }
+
+            return Json(reply);
         }
     }
 }
