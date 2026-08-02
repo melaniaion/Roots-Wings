@@ -13,12 +13,18 @@ var builder = WebApplication.CreateBuilder(args);
 //EMAIL SERVICE
 builder.Services.AddTransient<IEmailService, EmailService>();
 
-// AI PROVIDERS
+// AI PROVIDERS SUMMARISE
 // Both providers are registered as concrete types, each with its own HttpClient.
 builder.Services.AddHttpClient<GroqSummaryService>();
 builder.Services.AddHttpClient<GeminiSummaryService>();
 // The controller receives the resilient wrapper, which tries Groq then Gemini.
 builder.Services.AddScoped<IAiSummaryService, ResilientSummaryService>();
+
+// AI PROVIDERS FOR CHAT PREP NPTES
+builder.Services.AddHttpClient<GroqChatService>();
+builder.Services.AddHttpClient<GeminiChatService>();
+builder.Services.AddScoped<IAiChatService, ResilientChatService>();
+
 
 // PROFILE PICTURE SERVICE
 builder.Services.AddScoped<IProfilePictureService, ProfilePictureService>();
