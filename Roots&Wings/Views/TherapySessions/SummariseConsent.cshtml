@@ -40,11 +40,10 @@
             It can be hard to remember everything you've been carrying between
             sessions. This gathers what you wrote around
             <strong style="color:#5C3D2E;">@Model.SessionDate.ToLocal().ToString("MMMM d, yyyy")</strong>
-            and turns it into a calm, one-page summary so you walk in with a
-            clearer sense of what you might want to talk about.
+            and turns it into one-page summary for your therapy session.
         </p>
 
-        <!-- What happens: plain and reassuring -->
+        <!-- What happens: reassuring -->
         <div style="background: rgba(242,224,208,0.3); border-radius: 14px;
             padding: 1.2rem 1.4rem; margin-bottom: 1.5rem;">
             <span class="rw-section-label" style="margin-bottom: 0.8rem;">How it works</span>
@@ -53,11 +52,11 @@
                 <li>
                     Your <strong style="color:#5C3D2E;">@entryCount journal
                     @(entryCount == 1 ? "entry" : "entries")</strong> from around
-                    this session are read by an AI writing assistant
+                    this session are read by an AI
                 </li>
-                <li>It gathers the recurring threads into a gentle summary</li>
+                <li>It gathers the recurring notes into a gentle summary</li>
                 <li>You choose which parts to keep</li>
-                <li>You can export a clean PDF to bring to your session</li>
+                <li>You can export a PDF to bring to your session</li>
             </ul>
         </div>
 
@@ -66,7 +65,7 @@
             padding: 1rem 1.4rem; margin-bottom: 2rem;">
             <span class="rw-section-label" style="margin-bottom: 0.4rem;">Your privacy</span>
             <p style="color: #4A5C3F; font-size: 0.88rem; line-height: 1.6; margin: 0;">
-                The summary is created just for this moment and isn't saved
+                The summary is created just for now and isn't saved
                 anywhere. It disappears when you leave the page. Your entries are
                 read by the AI service only to write this summary and nothing is
                 kept or used to train any model.
@@ -95,7 +94,7 @@
 <!-- Full screen calm overlay shown while the AI is working -->
 <div class="summary-loading" id="summaryLoading">
     <i class="bi bi-flower1 summary-loading-leaf"></i>
-    <p class="summary-loading-text">Gathering your reflections…</p>
+    <p class="summary-loading-text">Gathering your pages…</p>
     <p class="summary-loading-sub">This usually takes a few seconds.</p>
 </div>
 
