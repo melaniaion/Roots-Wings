@@ -1,11 +1,6 @@
-/* ─────────────────────────────────────────────────────────
-   ROOTS & WINGS ASSISTANT  — chat view inside the prep panel
-   A calm, modern reflection companion. Warm messaging aesthetic,
-   not a sterile chatbot. Shares the app palette.
-   ───────────────────────────────────────────────────────── */
+/* ROOTS & WINGS ASSISTANT chat view inside the prep panel */
 
-/* The chat view fills the panel body when active. Hidden by default;
-   the writing view and chat view swap via a .is-hidden toggle. */
+/* the writing view and chat view swap via a .is-hidden toggle. */
 .is-hidden {
     display: none !important;
 }
@@ -166,7 +161,7 @@
         cursor: not-allowed;
     }
 
-/* ── Closing takeaways step ── */
+/* Closing takeaways step */
 .rw-takeaways {
     padding: 0.4rem 0.2rem 0.5rem 0.2rem;
 }
@@ -266,7 +261,7 @@
     }
 }
 
-/* When the chat is active, give the panel a stable, comfortable height
+/* When the chat is active, give the panel a stable height
    so the messages scroll internally and the input stays visible. Using
    a capped height rather than viewport units avoids the input being
    pushed past the panel edge. */
@@ -274,8 +269,8 @@
     height: min(680px, 85vh);
 }
 
-/* When chat is active, the panel body must NOT be its own scroll container
-   or add bottom padding — the chat view owns the layout and scrolling.
+/* When chat is active, the panel body must not be its own scroll container
+   or add bottom padding. the chat view owns the layout and scrolling.
    This prevents the input row being pushed below the panel edge. */
 .rw-panel-body:has(#prepChatView:not(.is-hidden)) {
     overflow: hidden;
@@ -289,4 +284,30 @@
     .rw-panel-body:has(#prepChatView:not(.is-hidden)) #prepChatView {
         flex: 1 1 auto;
         min-height: 0;
+    }
+
+/* Header left group: back arrow sits to the left of the title in chat mode */
+.rw-panel-header-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+
+/* "Cancel" link, sits top-left in the header during chat */
+.rw-panel-back {
+    all: unset;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: #B5A898;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+    .rw-panel-back:hover {
+        color: #8B5A3A;
     }

@@ -1,41 +1,79 @@
-// Roots & Wings Assistant — the reflection dialogue.
-// Holds the conversation in the browser and posts the whole transcript to
-// the server each turn, so the server stays stateless. Renders messages,
-// a typing indicator, and the closing takeaway chips.
+// Roots & Wings Assistant the dialogue.
 
 (function () {
-    // Elements are looked up lazily when the chat starts, because the panel
-    // markup is on the page from the beginning but only used on demand.
     var config = window.rwChatConfig || {};
     var sessionId = config.sessionId;
     var token = config.antiforgeryToken;
     var endpoint = config.endpoint;
 
-    var transcript = [];      // [{ role: 'assistant'|'user', content: '...' }]
+    var transcript = [];        // [{ role, content }]
     var finished = false;
     var selectedTakeaways = [];
 
-    var writingView, chatView, stream, input, sendBtn, textarea;
+    var writingView, chatView, stream, input, sendBtn, textarea, footer, closeX, backBtn;
 
-    // Called when the user clicks the assistant invitation.
-    window.rwStartChat = function () {
+    function lookup() {
         writingView = document.getElementById('prepWritingView');
         chatView = document.getElementById('prepChatView');
         stream = document.getElementById('rwChatStream');
         input = document.getElementById('rwChatInput');
         sendBtn = document.getElementById('rwChatSend');
         textarea = document.getElementById('prepNotesArea');
+        footer = document.getElementById('prepPanelFooter');
+        closeX = document.getElementById('prepPanelClose');
+        backBtn = document.getElementById('prepPanelBack');
+    }
 
-        // Swap writing view for chat view within the same panel.
+    // Opens the assistant. Always starts a fresh conversation.
+    window.rwStartChat = function () {
+        lookup();
+        resetChat();
+
         writingView.classList.add('is-hidden');
         chatView.classList.remove('is-hidden');
+        if (footer) footer.classList.add('is-hidden');   // no "Save notes" during chat
+        if (closeX) closeX.classList.add('is-hidden');   // X hidden during chat
+        if (backBtn) backBtn.classList.remove('is-hidden'); // back arrow shown instead
 
-        // If we already have a conversation (user reopened), don't restart.
-        if (transcript.length === 0) {
-            requestTurn(); // opening question
-        }
-
+        requestTurn(); // opening question
         wireInput();
+    };
+
+    // Wipe any previous conversation so reopening starts clean.
+    function resetChat() {
+        transcript = [];
+        finished = false;
+        selectedTakeaways = [];
+        if (stream) stream.innerHTML = '';
+        // Make sure the input row is visible again (the takeaway step hides it).
+        var inputRow = document.querySelector('#prepChatView .rw-chat-input');
+        if (inputRow) inputRow.classList.remove('is-hidden');
+        if (input) { input.value = ''; input.disabled = false; }
+        if (sendBtn) sendBtn.disabled = false;
+    }
+
+    // Returns to the writing view. Used by the header back arrow, "Add to my
+    // notes" and "Skip".
+    function backToWriting() {
+        chatView.classList.add('is-hidden');
+        writingView.classList.remove('is-hidden');
+        if (footer) footer.classList.remove('is-hidden');
+        if (closeX) closeX.classList.remove('is-hidden');
+        if (backBtn) backBtn.classList.add('is-hidden');
+    }
+    window.rwBackToWriting = backToWriting;
+
+    // Called when the panel closes, so however it was closed and whatever view
+    // it was on, reopening always starts on the writing view.
+    window.rwResetToWriting = function () {
+        lookup();
+        if (chatView && writingView) {
+            chatView.classList.add('is-hidden');
+            writingView.classList.remove('is-hidden');
+            if (footer) footer.classList.remove('is-hidden');
+            if (closeX) closeX.classList.remove('is-hidden');
+            if (backBtn) backBtn.classList.add('is-hidden');
+        }
     };
 
     function wireInput() {
@@ -58,11 +96,9 @@
         addMessage('user', text);
         transcript.push({ role: 'user', content: text });
         input.value = '';
-
         requestTurn();
     }
 
-    // Posts the transcript, gets the next assistant reply.
     function requestTurn() {
         setInputEnabled(false);
         showTyping();
@@ -80,7 +116,6 @@
                 hideTyping();
 
                 if (reply.isFinal) {
-                    // Assistant's closing message, then the takeaway step.
                     if (reply.message) {
                         addMessage('assistant', reply.message);
                         transcript.push({ role: 'assistant', content: reply.message });
@@ -96,12 +131,13 @@
             })
             .catch(function () {
                 hideTyping();
-                addMessage('assistant', "Something went wrong reaching the assistant. You can keep writing on your own.");
+                addMessage('assistant', "Something went wrong reaching the assistant. Please try again later.");
                 finished = true;
+                renderTakeaways([]);
             });
     }
 
-    // ── Rendering ──
+    // Rendering
 
     function addMessage(role, text) {
         var row = document.createElement('div');
@@ -139,20 +175,20 @@
     }
 
     function renderTakeaways(items) {
-        // Hide the input; show the pick-what-to-keep step.
-        input.parentElement.classList.add('is-hidden');
+        // Hide the input row; show the pick-what-to-keep step.
+        var inputRow = document.querySelector('#prepChatView .rw-chat-input');
+        if (inputRow) inputRow.classList.add('is-hidden');
 
         var wrap = document.createElement('div');
         wrap.className = 'rw-takeaways';
 
         if (items.length === 0) {
-            var doneOnly = document.createElement('button');
-            doneOnly.type = 'button';
-            doneOnly.className = 'btn-rw-secondary';
-            doneOnly.style.cssText = 'font-size:0.82rem; padding:0.45rem 1.2rem;';
-            doneOnly.textContent = 'Back to my notes';
-            doneOnly.addEventListener('click', backToWriting);
-            wrap.appendChild(doneOnly);
+            var intro0 = document.createElement('p');
+            intro0.className = 'rw-takeaways-intro';
+            intro0.textContent = 'That is a good place to pause. Head back to your notes whenever you are ready.';
+            wrap.appendChild(intro0);
+
+            wrap.appendChild(makeBackButton('Back to my notes'));
             stream.appendChild(wrap);
             scrollToBottom();
             return;
@@ -179,16 +215,34 @@
             wrap.appendChild(chip);
         });
 
+        // Action row: Add to notes + a plain "Skip" that adds nothing.
+        var actions = document.createElement('div');
+        actions.style.cssText = 'display:flex; gap:0.6rem; flex-wrap:wrap; margin-top:0.6rem;';
+
         var addBtn = document.createElement('button');
         addBtn.type = 'button';
         addBtn.className = 'btn-rw-primary';
-        addBtn.style.cssText = 'font-size:0.82rem; padding:0.45rem 1.2rem; margin-top:0.6rem;';
+        addBtn.style.cssText = 'font-size:0.82rem; padding:0.45rem 1.2rem;';
         addBtn.textContent = 'Add to my notes';
         addBtn.addEventListener('click', appendAndReturn);
-        wrap.appendChild(addBtn);
+        actions.appendChild(addBtn);
 
+        var skipBtn = makeBackButton('Skip');
+        actions.appendChild(skipBtn);
+
+        wrap.appendChild(actions);
         stream.appendChild(wrap);
         scrollToBottom();
+    }
+
+    function makeBackButton(label) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn-rw-secondary';
+        b.style.cssText = 'font-size:0.82rem; padding:0.45rem 1.2rem;';
+        b.textContent = label;
+        b.addEventListener('click', backToWriting);
+        return b;
     }
 
     function appendAndReturn() {
@@ -202,12 +256,7 @@
         backToWriting();
     }
 
-    function backToWriting() {
-        chatView.classList.add('is-hidden');
-        writingView.classList.remove('is-hidden');
-    }
-
-    // ── Helpers ──
+    // Helpers
 
     function setInputEnabled(on) {
         input.disabled = !on;
@@ -215,12 +264,8 @@
     }
 
     function scrollToBottom() {
-        // Defer to next frame so the new message is laid out first, then
-        // scroll only the stream (not the panel) to its bottom.
         requestAnimationFrame(function () {
-            if (stream) {
-                stream.scrollTop = stream.scrollHeight;
-            }
+            if (stream) stream.scrollTop = stream.scrollHeight;
         });
     }
 
