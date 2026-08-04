@@ -230,7 +230,8 @@
                         </p>
                     }
 
-                    <a class="td-col-btn" asp-controller="TherapySessions" asp-action="Edit" asp-route-id="@next.Id">
+                    <a class="td-col-btn" asp-controller="TherapySessions" asp-action="Details"
+                           asp-route-id="@next.Id" asp-route-openPrep="true">
                         @(hasPrep ? "Continue your notes" : "Write your notes") <i class="bi bi-arrow-right"></i>
                     </a>
                 }
