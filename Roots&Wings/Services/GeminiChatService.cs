@@ -5,7 +5,7 @@ using Roots_Wings.Models;
 
 namespace Roots_Wings.Services
 {
-    // Fallback provider for the reflection dialogue. Gemini uses a different
+    // Fallback provider for the dialogue. Gemini uses a different
     // request shape (contents/parts with roles) than the OpenAI style, so the
     // messages built by ChatPromptBuilder are translated here. The system
     // instruction is folded into the first user turn because Gemini handles

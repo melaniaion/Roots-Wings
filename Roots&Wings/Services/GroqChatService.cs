@@ -6,7 +6,7 @@ using Roots_Wings.Models;
 
 namespace Roots_Wings.Services
 {
-    // Primary provider for the reflection dialogue. Uses Groq (Llama 3.1 8B),
+    // Primary provider for the reflection dialogue. Uses Groq
     // OpenAI shaped chat completions. The prompt building and parsing live in
     // ChatPromptBuilder so this class only handles talking to the API.
     public class GroqChatService : IAiChatService
@@ -14,7 +14,7 @@ namespace Roots_Wings.Services
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public const string ProviderName = "Groq (Llama 3.1 8B)";
+        public const string ProviderName = "Groq (Llama-3.3-70b-versatile)";
 
         public GroqChatService(HttpClient httpClient, IConfiguration config)
         {
@@ -41,10 +41,10 @@ namespace Roots_Wings.Services
 
             var requestBody = new
             {
-                model = "llama-3.1-8b-instant",
+                model = "llama-3.3-70b-versatile",
                 messages = messagesElement,
                 temperature = 0.85,
-                max_tokens = 600
+                max_tokens = 900
             };
 
             var request = new HttpRequestMessage(

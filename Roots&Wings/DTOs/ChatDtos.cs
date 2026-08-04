@@ -13,7 +13,7 @@ namespace Roots_Wings.DTOs
     // What the server sends back after each step of the dialogue.
     public class ChatReply
     {
-        // The assistant's next message (a question, or the closing message).
+        // The assistant's next message
         public string Message { get; set; } = "";
 
         // True when the dialogue has reached its natural end. The frontend
@@ -26,7 +26,7 @@ namespace Roots_Wings.DTOs
         // chooses which of these to append to their prep notes.
         public List<string> Takeaways { get; set; } = new List<string>();
 
-        // Which provider produced this, for transparency and the demo.
+        // Which provider produced this
         public string GeneratedBy { get; set; } = "";
     }
 }

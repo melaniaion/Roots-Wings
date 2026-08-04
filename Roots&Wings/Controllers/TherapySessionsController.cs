@@ -376,14 +376,7 @@ namespace Roots_Wings.Controllers
         // This one endpoint drives the whole dialogue for prep notes. The browser holds the
         // transcript and posts it back each turn, so the server stays stateless:
         // it rebuilds the context, calls the AI and returns the next reply.
-
-        // ── Add to TherapySessionsController ──
-        // Requires: private readonly IAiChatService _aiChatService; injected via
         // the constructor (add the parameter and assignment alongside the others).
-        //
-        // This one endpoint drives the whole dialogue. The browser holds the
-        // transcript and posts it back each turn, so the server stays stateless:
-        // it rebuilds the context, calls the AI, and returns the next reply.
 
         // POST: /TherapySessions/ReflectTurn
         [HttpPost]
@@ -402,7 +395,7 @@ namespace Roots_Wings.Controllers
 
             // The previous session is the most recent one BEFORE this session's date
             // that belongs to this user. Its PostNotes are the strongest context
-            // (for example homework the therapist set). Note: this is "before this
+            // (for example homework the therapist set). Note for myself: this is "before this
             // session's date", not "most recently created", so the bridge is correct.
             var previousSession = await _context.TherapySessions
                 .Where(s => s.UserId == userId
@@ -436,11 +429,10 @@ namespace Roots_Wings.Controllers
             }
             catch
             {
-                // Both providers failed. Return a graceful, non technical message the
-                // frontend can show in place of a question.
+                // Both providers failed. Return a message for the user
                 return Json(new ChatReply
                 {
-                    Message = "The assistant isn't available right now. You can keep writing your notes on your own, or try again in a moment.",
+                    Message = "The assistant isn't available right now. You can keep writing your notes on your own or try again in a moment.",
                     IsFinal = true,
                     GeneratedBy = ""
                 });
