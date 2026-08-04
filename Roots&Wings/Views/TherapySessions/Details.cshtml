@@ -1,4 +1,4 @@
-﻿@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Xsrf
 @using Roots_Wings.Helpers
 @model Roots_Wings.Models.TherapySession
 
@@ -53,44 +53,51 @@
 <!-- Prep and Post notes -->
 <div class="row g-3 mb-3">
 
+    <!-- Before the session -->
     <div class="col-md-6">
-        <div class="rw-card h-100 d-flex flex-column">
-            <span class="notes-label">Before the session</span>
+        <div class="rw-card h-100">
+            <div class="notes-card-head">
+                <span class="notes-label" style="margin: 0;">Before the session</span>
+                <button type="button" class="notes-edit-pen"
+                        data-rw-panel-open="prepPanel"
+                        aria-label="Edit prep notes" title="Edit prep notes">
+                    <i class="bi bi-pencil"></i>
+                </button>
+            </div>
 
             @if (!string.IsNullOrWhiteSpace(Model.PrepNotes))
             {
-                <div class="notes-preview">@Model.PrepNotes</div>
+                <div class="notes-body-preview">@Model.PrepNotes</div>
             }
             else
             {
                 <p class="notes-empty">No prep notes yet.</p>
             }
-
-            <button type="button" class="btn-rw-primary mt-auto"
-                    style="align-self: flex-start; font-size: 0.82rem; padding: 0.45rem 1.2rem;"
-                    data-rw-panel-open="prepPanel">
-                @(string.IsNullOrWhiteSpace(Model.PrepNotes) ? "Write prep notes" : "More")
-            </button>
         </div>
     </div>
 
+    <!-- After the session -->
     <div class="col-md-6">
         <div class="rw-card h-100">
-            <span class="notes-label">After the session</span>
+            <div class="notes-card-head">
+                <span class="notes-label" style="margin: 0;">After the session</span>
+                @if (hasPassed)
+                {
+                    <button type="button" class="notes-edit-pen"
+                            data-rw-panel-open="postPanel"
+                            aria-label="Edit reflection" title="Edit reflection">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                }
+            </div>
+
             @if (!string.IsNullOrWhiteSpace(Model.PostNotes))
             {
-                <div class="notes-content">@Model.PostNotes</div>
+                <div class="notes-body-preview">@Model.PostNotes</div>
             }
             else if (hasPassed)
             {
-                <!-- Session has passed, invite the user to reflect -->
-                <p class="notes-empty">How did it go?</p>
-                <a asp-action="Edit"
-                   asp-route-id="@Model.Id"
-                   class="btn-rw-primary"
-                   style="font-size: 0.82rem; padding: 0.45rem 1.2rem; margin-top: 0.8rem;">
-                    Add reflection
-                </a>
+                <p class="notes-empty">How did it go? Add a reflection.</p>
             }
             else
             {
@@ -112,56 +119,21 @@
         @if (linkedEntries.Any())
         {
             <a asp-controller="TherapySessions"
-                   asp-action="SummariseConsent"
-                   asp-route-id="@Model.Id"
-                   asp-route-rangeDays="@selectedRange"
-                   class="btn-rw-primary"
-                   style="font-size: 0.82rem; padding: 0.45rem 1.2rem;">
+               asp-action="SummariseConsent"
+               asp-route-id="@Model.Id"
+               asp-route-rangeDays="@selectedRange"
+               class="btn-rw-primary"
+               style="font-size: 0.82rem; padding: 0.45rem 1.2rem;">
                 ✦ Summarise entries
             </a>
         }
 
         <form method="get" asp-action="Details" asp-route-id="@Model.Id">
-            <select name="rangeDays"
-                    class="range-select"
-                    onchange="this.form.submit()">
-
-                @if (selectedRange == 3)
-                {
-                    <option value="3" selected>± 3 days</option>
-                }
-                else
-                {
-                    <option value="3">± 3 days</option>
-                }
-
-                @if (selectedRange == 7)
-                {
-                    <option value="7" selected>± 1 week</option>
-                }
-                else
-                {
-                    <option value="7">± 1 week</option>
-                }
-
-                @if (selectedRange == 14)
-                {
-                    <option value="14" selected>± 2 weeks</option>
-                }
-                else
-                {
-                    <option value="14">± 2 weeks</option>
-                }
-
-                @if (selectedRange == 30)
-                {
-                    <option value="30" selected>± 1 month</option>
-                }
-                else
-                {
-                    <option value="30">± 1 month</option>
-                }
-
+            <select name="rangeDays" class="range-select" onchange="this.form.submit()">
+                @if (selectedRange == 3)  { <option value="3" selected>± 3 days</option> }  else { <option value="3">± 3 days</option> }
+                @if (selectedRange == 7)  { <option value="7" selected>± 1 week</option> }  else { <option value="7">± 1 week</option> }
+                @if (selectedRange == 14) { <option value="14" selected>± 2 weeks</option> } else { <option value="14">± 2 weeks</option> }
+                @if (selectedRange == 30) { <option value="30" selected>± 1 month</option> } else { <option value="30">± 1 month</option> }
             </select>
         </form>
     </div>
@@ -200,8 +172,18 @@
 
 </div>
 
-<!-- Prep notes -->
+<!-- Actions -->
+<div class="d-flex gap-2 mb-4">
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-rw-secondary">
+        Edit Session
+    </a>
+    <button type="button" class="btn-rw-danger" data-rw-modal-open="deleteSession">
+        Delete
+    </button>
+</div>
 
+
+@* PREP NOTES PANEL *@
 <div class="rw-panel-overlay" id="prepPanel">
     <div class="rw-panel-card">
         <form asp-action="SavePrepNotes" asp-route-id="@Model.Id" method="post"
@@ -209,9 +191,15 @@
             @Html.AntiForgeryToken()
 
             <div class="rw-panel-header">
-                <div>
-                    <span class="rw-panel-eyebrow">Before the session</span>
-                    <h2 class="rw-panel-title">@Model.SessionDate.ToLocal().ToString("dddd, MMMM d")</h2>
+                <div class="rw-panel-header-left">
+                    <button type="button" class="rw-panel-back is-hidden" id="prepPanelBack"
+                            onclick="rwBackToWriting()">
+                        ← Cancel
+                    </button>
+                    <div>
+                        <span class="rw-panel-eyebrow">Before the session</span>
+                        <h2 class="rw-panel-title">@Model.SessionDate.ToLocal().ToString("dddd, MMMM d")</h2>
+                    </div>
                 </div>
                 <button type="button" class="rw-panel-close" id="prepPanelClose" aria-label="Close">×</button>
             </div>
@@ -251,39 +239,59 @@
             <div class="rw-panel-footer" id="prepPanelFooter">
                 <button type="submit" class="btn-rw-primary"
                         style="font-size:0.82rem; padding:0.45rem 1.2rem;">
-                    Save notes
+                    Save
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Actions -->
-<div class="d-flex gap-2 mb-4">
-    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn-rw-secondary">
-        Edit Session
-    </a>
 
-    <button type="button" class="btn-rw-danger" data-rw-modal-open="deleteSession">
-        Delete
-    </button>
+@* POST NOTES PANEL  *@
+<div class="rw-panel-overlay" id="postPanel">
+    <div class="rw-panel-card">
+        <form asp-action="SavePostNotes" asp-route-id="@Model.Id" method="post"
+              style="display:flex; flex-direction:column; height:100%; min-height:0;">
+            @Html.AntiForgeryToken()
+
+            <div class="rw-panel-header">
+                <div>
+                    <span class="rw-panel-eyebrow">After the session</span>
+                    <h2 class="rw-panel-title">@Model.SessionDate.ToLocal().ToString("dddd, MMMM d")</h2>
+                </div>
+                <button type="button" class="rw-panel-close" id="postPanelClose" aria-label="Close">×</button>
+            </div>
+
+            <div class="rw-panel-body">
+                <p class="rw-panel-invite">How did the session go?</p>
+                <textarea name="postNotes" id="postNotesArea"
+                          class="rw-panel-textarea"
+                          placeholder="What came up, what you took away, anything you want to remember…">@Model.PostNotes</textarea>
+            </div>
+
+            <div class="rw-panel-footer">
+                <button type="submit" class="btn-rw-primary"
+                        style="font-size:0.82rem; padding:0.45rem 1.2rem;">
+                    Save
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
 
+
+@*  MODALS *@
 <div class="rw-modal-overlay" id="deleteSession">
     <div class="rw-modal-card">
         <div class="rw-modal-title">Delete permanently?</div>
-        <div class="rw-modal-text">
-            Are you sure? This cannot be undone.
-        </div>
+        <div class="rw-modal-text">Are you sure? This cannot be undone.</div>
         <div class="rw-modal-actions">
             <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>
                 Keep
             </button>
             <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="rw-modal-btn rw-modal-btn-danger">
-                    Delete
-                </button>
+                <button type="submit" class="rw-modal-btn rw-modal-btn-danger">Delete</button>
             </form>
         </div>
     </div>
@@ -292,16 +300,21 @@
 <div class="rw-modal-overlay" id="discardPrepModal">
     <div class="rw-modal-card">
         <div class="rw-modal-title">Discard changes?</div>
-        <div class="rw-modal-text">
-            You have unsaved changes to your prep notes. Close without saving?
-        </div>
+        <div class="rw-modal-text">You have unsaved changes to your prep notes. Close without saving?</div>
         <div class="rw-modal-actions">
-            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>
-                Keep writing
-            </button>
-            <button type="button" class="rw-modal-btn rw-modal-btn-confirm" id="confirmDiscardPrep">
-                Discard
-            </button>
+            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>Keep writing</button>
+            <button type="button" class="rw-modal-btn rw-modal-btn-confirm" id="confirmDiscardPrep">Discard</button>
+        </div>
+    </div>
+</div>
+
+<div class="rw-modal-overlay" id="discardPostModal">
+    <div class="rw-modal-card">
+        <div class="rw-modal-title">Discard changes?</div>
+        <div class="rw-modal-text">You have unsaved changes to your reflection. Close without saving?</div>
+        <div class="rw-modal-actions">
+            <button type="button" class="rw-modal-btn rw-modal-btn-cancel" data-rw-modal-close>Keep writing</button>
+            <button type="button" class="rw-modal-btn rw-modal-btn-confirm" id="confirmDiscardPost">Discard</button>
         </div>
     </div>
 </div>
@@ -309,6 +322,7 @@
 
 @section Scripts {
     <script src="~/js/rw-panel.js" asp-append-version="true"></script>
+
     <script>
         window.rwChatConfig = {
             sessionId: @Model.Id,
@@ -319,19 +333,17 @@
     <script src="~/js/prep-chat.js" asp-append-version="true"></script>
 
     <script>
-        (function () {
-            var panel = document.getElementById('prepPanel');
-            var textarea = document.getElementById('prepNotesArea');
-            var closeX = document.getElementById('prepPanelClose');
-            var discardModal = document.getElementById('discardPrepModal');
-            var confirmDiscard = document.getElementById('confirmDiscardPrep');
-            if (!panel || !textarea) return;
+        // Discard confirm guard, shared by both note panels. If the textarea
+        // changed, the X and backdrop route through a confirm modal.
+        function wirePanelDiscard(panelId, closeId, textareaId, modalId, confirmId) {
+            var panel = document.getElementById(panelId);
+            var textarea = document.getElementById(textareaId);
+            var closeX = document.getElementById(closeId);
+            var discardModal = document.getElementById(modalId);
+            var confirmDiscard = document.getElementById(confirmId);
+            if (!panel || !textarea || !closeX) return;
 
             var originalValue = textarea.value;
-
-            function hasChanges() {
-                return textarea.value !== originalValue;
-            }
 
             function closePanel() {
                 panel.classList.remove('is-active');
@@ -339,8 +351,7 @@
             }
 
             function attemptClose() {
-                if (hasChanges()) {
-                    // Route through the existing discard confirmation
+                if (textarea.value !== originalValue) {
                     discardModal.classList.add('is-active');
                     document.body.classList.add('rw-modal-open');
                 } else {
@@ -349,18 +360,45 @@
             }
 
             closeX.addEventListener('click', attemptClose);
-
-            // Backdrop click
             panel.addEventListener('click', function (e) {
                 if (e.target === panel) attemptClose();
             });
-
-            // Confirm discard: close both the modal and the panel
             confirmDiscard.addEventListener('click', function () {
                 discardModal.classList.remove('is-active');
                 document.body.classList.remove('rw-modal-open');
                 closePanel();
             });
+        }
+
+        wirePanelDiscard('prepPanel', 'prepPanelClose', 'prepNotesArea', 'discardPrepModal', 'confirmDiscardPrep');
+        wirePanelDiscard('postPanel', 'postPanelClose', 'postNotesArea', 'discardPostModal', 'confirmDiscardPost');
+
+        // Whenever the prep panel opens, it shows the writing view, not
+        // a leftover chat from a previous time it was open.
+        document.querySelectorAll('[data-rw-panel-open="prepPanel"]').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                if (typeof window.rwResetToWriting === 'function') {
+                    window.rwResetToWriting();
+                }
+            });
+        });
+
+
+
+        // If arriving from Today with ?openPrep=true, open the prep panel automatically.
+        (function () {
+            var params = new URLSearchParams(window.location.search);
+            if (params.get('openPrep') === 'true') {
+                var panel = document.getElementById('prepPanel');
+                if (panel) {
+                    if (typeof window.rwResetToWriting === 'function') {
+                        window.rwResetToWriting();
+                    }
+                    panel.classList.add('is-active');
+                    document.body.classList.add('rw-panel-open');
+                    window.history.replaceState({}, '', window.location.pathname);
+                }
+            }
         })();
     </script>
 }

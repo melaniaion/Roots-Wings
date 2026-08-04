@@ -111,6 +111,30 @@ namespace Roots_Wings.Controllers
             return RedirectToAction(nameof(Details), new { id = session.Id });
         }
 
+        // POST: /TherapySessions/SavePostNotes/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SavePostNotes(int id, string postNotes)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            var session = await _context.TherapySessions
+                .FirstOrDefaultAsync(s => s.Id == id && s.UserId == userId);
+
+            if (session == null)
+            {
+                return NotFound();
+            }
+
+            session.PostNotes = postNotes;
+            await _context.SaveChangesAsync();
+
+            TempData["Flash"] = "Post notes saved";
+            TempData["FlashType"] = "success";
+
+            return RedirectToAction(nameof(Details), new { id = session.Id });
+        }
+
         // GET: /Sessions/Create
         public IActionResult Create()
         {

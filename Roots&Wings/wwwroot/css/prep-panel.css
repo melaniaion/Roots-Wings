@@ -1,4 +1,4 @@
-/* PREP NOTES PANEL  */
+/* PREP NOTES PANEL */
 
 .rw-panel-overlay {
     position: fixed;
@@ -20,14 +20,14 @@
         pointer-events: auto;
     }
 
-/* The panel*/
+/* The panel */
 .rw-panel-card {
     background: #FEFCF9;
     border-radius: 26px;
     box-shadow: 0 30px 70px rgba(92, 61, 46, 0.22);
     width: 100%;
     max-width: 680px;
-    max-height: 90vh;
+    height: min(680px, 88vh);
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -39,12 +39,12 @@
     transform: translateY(0) scale(1);
 }
 
-/* Header: eyebrow + title on the left, close on the right */
+/* Header: title on the left, close on the right */
 .rw-panel-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 1.6rem 2rem 1.1rem 2rem;
+    padding: 1.6rem 2rem 0.7rem 2rem;
     flex-shrink: 0;
 }
 
@@ -85,26 +85,26 @@
         color: #5C3D2E;
     }
 
-/* Body scrolls if content grows */
+/* Body holds the writing view; it does not scroll itself, the textarea does */
 .rw-panel-body {
     padding: 0 2rem;
-    overflow-y: auto;
-    flex-grow: 1;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 0;
     display: flex;
     flex-direction: column;
 }
 
-/* invitation line above the writing surface */
+/* Soft line above the writing surface */
 .rw-panel-invite {
     font-family: 'Playfair Display', serif;
     font-style: italic;
     font-size: 1rem;
     color: #B5A898;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
 }
 
-/* The writing surface
-   Faint ruled baseline via a repeating gradient for the notebook feel. */
+/* The writing surface */
 .rw-panel-textarea {
     background-color: #FFFDFA;
     border: 1px solid #F2E6D8;
@@ -115,8 +115,9 @@
     font-size: 1rem;
     line-height: 1.9;
     width: 100%;
-    flex-grow: 1;
-    min-height: 260px;
+    flex: 1 1 auto;
+    min-height: 200px;
+    overflow-y: auto;
     resize: none;
     transition: box-shadow 0.2s, border-color 0.2s;
 }
@@ -139,7 +140,7 @@
     background: linear-gradient(135deg, rgba(232,237,224,0.6), rgba(242,224,208,0.4));
     border: 1px solid #E3D3BE;
     border-radius: 16px;
-    padding: 0.9rem 1.1rem;
+    padding: 0.5rem 1.1rem;
     margin: 1.1rem 0 0.4rem 0;
     cursor: pointer;
     transition: all 0.2s;
@@ -186,7 +187,7 @@
     flex-shrink: 0;
 }
 
-/* Notes preview on the Details / Edit cards  */
+/* Notes preview on the Details / Edit cards */
 .notes-preview {
     color: #5C3D2E;
     font-size: 0.92rem;
@@ -199,10 +200,6 @@
     margin-bottom: 0.9rem;
 }
 
-.notes-empty {
-    margin-bottom: 1.1rem;
-}
-
 body.rw-panel-open {
     overflow: hidden;
 }
@@ -213,4 +210,53 @@ body.rw-panel-open {
     .rw-assistant-invite {
         transition: none;
     }
+}
+
+/*  Notes card header with a corner edit pen */
+/* The card body holds only the notes; the action is a pen pinned  */
+.notes-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.7rem;
+}
+
+.notes-edit-pen {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid #E8C4A8;
+    background: rgba(255, 255, 255, 0.5);
+    color: #8B7B6A;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+    .notes-edit-pen:hover {
+        border-color: #8B5A3A;
+        color: #5C3D2E;
+        background: rgba(255, 255, 255, 0.85);
+    }
+
+/* Preview clamps long notes so both cards stay the same height regardless
+   of content length. */
+.notes-body-preview {
+    color: #5C3D2E;
+    font-size: 0.92rem;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+#prepWritingView {
+    min-height: 0;
 }
