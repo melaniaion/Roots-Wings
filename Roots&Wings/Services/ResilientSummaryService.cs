@@ -36,8 +36,7 @@ namespace Roots_Wings.Services
             }
             catch (Exception ex)
             {
-                // The primary failed. This is expected occasionally, so it is
-                // logged as a warning rather than an error, and we carry on.
+                // The primary failed.
                 _logger.LogWarning(ex, "Primary AI provider failed, falling back to the secondary provider.");
             }
 

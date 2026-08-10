@@ -6,8 +6,7 @@ using Roots_Wings.Models;
 
 namespace Roots_Wings.Services
 {
-    // Primary AI provider. Talks to Groq, which runs the open source
-    // Llama 3.1 8B model. Groq uses the same request shape as the OpenAI API,
+    // Primary AI provider. Groq uses the same request shape as the OpenAI API,
     // so the body is a list of messages, compared to Gemini's contents/parts.
     public class GroqSummaryService : IAiSummaryService
     {
