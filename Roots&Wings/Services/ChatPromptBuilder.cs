@@ -5,17 +5,8 @@ using Roots_Wings.Models;
 
 namespace Roots_Wings.Services
 {
-    // Builds the prompts for the reflection dialogue. This is a guided
-    // Socratic exchange: the assistant asks open questions to help the user
-    // think, rather than giving advice. It never diagnoses or instructs.
-    //
-    // The dialogue is deliberately short. After a small number of exchanges
-    // it closes and offers the user a few takeaways drawn from their own words.
     public static class ChatPromptBuilder
     {
-        // Hard cap on how many questions the assistant asks before closing.
-        // Long enough for the conversation to actually develop, short enough
-        // that the user does not get tired and a small model stays coherent.
         public const int MaxAssistantQuestions = 6;
 
         // Shapes the STYLE of questioning to match the user's therapy type.
@@ -40,8 +31,8 @@ namespace Roots_Wings.Services
         }
 
         // Assembles the context the assistant opens from. Uses a priority
-        // ladder: previous session takeaways first, then goals, always the
-        // therapy lens. If nothing is available it degrades to a general open.
+        // previous session post-notes first, then goals
+        // If nothing is available it uses a general open.
         private static string BuildContext(
             TherapySession session,
             TherapySession? previousSession,
@@ -69,7 +60,7 @@ namespace Roots_Wings.Services
         }
 
         // The system instruction sent on every turn. Defines the assistant's
-        // character and its hard boundaries.
+        // character and its boundaries.
         private static string SystemInstruction(TherapySession session)
         {
             return $"""
@@ -139,22 +130,26 @@ namespace Roots_Wings.Services
 
                 if (shouldClose)
                 {
-                    // Ask the model to close and produce takeaways as JSON so
-                    // we can render them as pick-able chips.
+                    // Ask the model to close and list the conclusions.
+                    // Uses a simple line format
                     messages.Add(new
                     {
                         role = "user",
                         content =
-                            "That is enough for now. Write a short warm closing sentence, then a JSON array of talking points I could bring to my session.\n\n" +
+                            "That is enough for now. Write a short warm closing sentence, then list the talking points I could bring to my session.\n\n" +
                             "Rules for the talking points:\n" +
-                            "- Give 5 or 6 of them.\n" +
-                            "- Each one a full, specific sentence of about 12 to 25 words, written in my voice starting with \"I\".\n" +
-                            "- Draw each from something different I actually said. Do not repeat the same idea in two points.\n" +
-                            "- Make them concrete enough to actually open a conversation with my therapist, not vague labels.\n" +
+                            "- Give exactly 4.\n" +
+                            "- Each one a full sentence of about 20 to 35 words, written in my voice starting with \"I\".\n" +
+                            "- Each must draw on something DIFFERENT I said. Never repeat an idea.\n" +
+                            "- Make each one specific and rich enough to genuinely open a conversation with my therapist.\n" +
                             "- Do not invent anything I did not say.\n\n" +
-                            "Format exactly like this and nothing else:\n" +
-                            "CLOSING: <one sentence>\n" +
-                            "TAKEAWAYS: [\"I ...\",\"I ...\",\"I ...\",\"I ...\",\"I ...\"]"
+                            "Use exactly this format, with each point on its own line starting with a dash:\n" +
+                            "CLOSING: <one warm sentence>\n" +
+                            "POINTS:\n" +
+                            "- I ...\n" +
+                            "- I ...\n" +
+                            "- I ...\n" +
+                            "- I ..."
                     });
                 }
             }
@@ -173,63 +168,94 @@ namespace Roots_Wings.Services
             };
         }
 
-        // Parses the closing reply, splitting the closing line from the
-        // JSON takeaways. Falls back gracefully if the model does not format
-        // the JSON perfectly.
+        // Parses the closing reply. Uses a simple line format with
+        // several fallbacks, because getting nothing back would waste the
+        // whole conversation for the user.
         public static ChatReply ParseClosing(string raw, string generatedBy)
         {
             var reply = new ChatReply { IsFinal = true, GeneratedBy = generatedBy };
 
-            var closingMarker = "CLOSING:";
-            var takeawayMarker = "TAKEAWAYS:";
-
-            var takeIdx = raw.IndexOf(takeawayMarker, StringComparison.OrdinalIgnoreCase);
-
-            if (takeIdx == -1)
+            if (string.IsNullOrWhiteSpace(raw))
             {
-                // Model ignored the format. Use the whole thing as the closing
-                // message and offer no chips rather than crashing.
-                reply.Message = raw.Replace(closingMarker, "").Trim();
+                reply.Message = "Thank you for reflecting. Take what feels useful into your notes.";
                 return reply;
             }
 
-            var closingPart = raw.Substring(0, takeIdx);
-            var closingStart = closingPart.IndexOf(closingMarker, StringComparison.OrdinalIgnoreCase);
-            reply.Message = closingStart == -1
-                ? closingPart.Trim()
-                : closingPart.Substring(closingStart + closingMarker.Length).Trim();
+            var lines = raw.Replace("\r\n", "\n").Split('\n'); //Windows ends lines with \r\n, Mac/Linux with \n. This normalises everything to just \n
+            var closingParts = new List<string>();   // lines that belong to the closing sentence
+            var points = new List<string>();         // lines that are bullet points
+            bool inPoints = false;                    // a flag: "have we reached the points yet?"
 
-            var jsonPart = raw.Substring(takeIdx + takeawayMarker.Length).Trim();
-
-            try
+            foreach (var line in lines)
             {
-                var parsed = JsonSerializer.Deserialize<List<string>>(jsonPart);
-                if (parsed != null)
+                var trimmed = line.Trim();
+                if (trimmed.Length == 0) continue;
+
+                // Once we hit the POINTS label, everything after is a point.
+                if (trimmed.StartsWith("POINTS", StringComparison.OrdinalIgnoreCase))
                 {
-                    // Clean up and remove near duplicates. The model sometimes
-                    // repeats the same idea, so we compare on a normalised
-                    // form (lowercase, no punctuation) and keep the first.
-                    var seen = new HashSet<string>();
-                    foreach (var raw2 in parsed)
+                    inPoints = true;
+                    continue;
+                }
+
+                // A dashed or bulleted line is a point wherever it appears.
+                if (trimmed.StartsWith("-") || trimmed.StartsWith("•") || trimmed.StartsWith("*"))
+                {
+                    var cleaned = trimmed.TrimStart('-', '•', '*', ' ').Trim();
+                    if (cleaned.Length > 0) points.Add(cleaned);
+                    continue;
+                }
+
+                // A numbered line ("1. I ...") is also a point.
+                if (trimmed.Length > 2 && char.IsDigit(trimmed[0]) &&
+                    (trimmed[1] == '.' || trimmed[1] == ')'))
+                {
+                    var cleaned = trimmed.Substring(2).Trim();
+                    if (cleaned.Length > 0) points.Add(cleaned);
+                    continue;
+                }
+
+                if (!inPoints)
+                {
+                    // Part of the closing sentence. Strip the label if present.
+                    var text = trimmed;
+                    if (text.StartsWith("CLOSING:", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (string.IsNullOrWhiteSpace(raw2)) continue;
-
-                        var cleaned = raw2.Trim();
-                        var key = new string(cleaned.ToLowerInvariant()
-                            .Where(char.IsLetterOrDigit)
-                            .ToArray());
-
-                        if (key.Length > 0 && seen.Add(key))
-                        {
-                            reply.Takeaways.Add(cleaned);
-                        }
+                        text = text.Substring("CLOSING:".Length).Trim();
                     }
+                    if (text.Length > 0) closingParts.Add(text);
+                }
+                else
+                {
+                    // Inside the points block but without a bullet marker.
+                    points.Add(trimmed);
                 }
             }
-            catch
+
+            reply.Message = closingParts.Count > 0
+                ? string.Join(" ", closingParts)
+                : "Thank you for reflecting. Take what feels useful into your notes.";
+
+            // Remove near duplicates, comparing on a normalised form so the
+            // same idea phrased twice does not appear twice.
+            var seen = new HashSet<string>();
+            foreach (var point in points)
             {
-                // Bad JSON: leave takeaways empty, keep the closing message.
-                // The user still gets a graceful end to the dialogue.
+                var key = new string(point.ToLowerInvariant()
+                    .Where(char.IsLetterOrDigit)
+                    .ToArray());
+
+                // Ignore very short fragments, they are rarely useful.
+                if (key.Length > 15 && seen.Add(key))
+                {
+                    reply.Takeaways.Add(point);
+                }
+            }
+
+            // Keep at most 5
+            if (reply.Takeaways.Count > 5)
+            {
+                reply.Takeaways = reply.Takeaways.Take(5).ToList();
             }
 
             return reply;

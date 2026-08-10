@@ -30,7 +30,7 @@ namespace Roots_Wings.Services
         {
             // The builder returns the message list plus whether this is the
             // closing turn. We read both out of the anonymous object via JSON
-            // round trip to keep the builder framework free.
+
             var built = ChatPromptBuilder.BuildRequestMessages(
                 session, previousSession, openGoals, transcript);
 
@@ -48,7 +48,7 @@ namespace Roots_Wings.Services
             };
 
             var request = new HttpRequestMessage(
-                HttpMethod.Post, "https://api.groq.com/openai/v1/chat/completions");
+                HttpMethod.Post, "https://api.groq.com/openai/v1/chat/completions");  //construct the HTTP request
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
             request.Content = new StringContent(
                 JsonSerializer.Serialize(requestBody), Encoding.UTF8, "application/json");

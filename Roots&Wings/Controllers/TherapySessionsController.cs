@@ -397,10 +397,9 @@ namespace Roots_Wings.Controllers
         }
 
 
-        // This one endpoint drives the whole dialogue for prep notes. The browser holds the
+        // the dialogue for prep notes. The browser holds the
         // transcript and posts it back each turn, so the server stays stateless:
         // it rebuilds the context, calls the AI and returns the next reply.
-        // the constructor (add the parameter and assignment alongside the others).
 
         // POST: /TherapySessions/ReflectTurn
         [HttpPost]
@@ -419,8 +418,8 @@ namespace Roots_Wings.Controllers
 
             // The previous session is the most recent one BEFORE this session's date
             // that belongs to this user. Its PostNotes are the strongest context
-            // (for example homework the therapist set). Note for myself: this is "before this
-            // session's date", not "most recently created", so the bridge is correct.
+            // (for example homework the therapist set). this is "before this
+            // session's date", not "most recently created"
             var previousSession = await _context.TherapySessions
                 .Where(s => s.UserId == userId
                          && s.Id != session.Id
