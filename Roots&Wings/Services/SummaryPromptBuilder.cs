@@ -4,10 +4,6 @@ using Roots_Wings.Models;
 
 namespace Roots_Wings.Services
 {
-    // Both AI providers send the same prompt and parse the response the same
-    // way. Keeping that logic here means the two services differ only in how
-    // they talk to their API, not in what they ask for. If the prompt changes,
-    // it changes once for every provider.
     public static class SummaryPromptBuilder
     {
         // The section labels. The prompt asks for these exact strings and the

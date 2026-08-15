@@ -11,7 +11,7 @@ namespace Roots_Wings.Services
 
         // Shapes the STYLE of questioning to match the user's therapy type.
         // The technique (Socratic questioning) is the same; what it leans
-        // toward differs by modality, mirroring how each approach works.
+        // toward differs by modality.
         private static string LensFor(string? therapyType)
         {
             switch (therapyType)
