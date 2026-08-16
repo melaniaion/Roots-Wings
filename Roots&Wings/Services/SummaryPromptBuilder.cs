@@ -7,15 +7,13 @@ namespace Roots_Wings.Services
     public static class SummaryPromptBuilder
     {
         // The section labels. The prompt asks for these exact strings and the
-        // parser looks for these exact strings. They must always match, so they
-        // live here as constants instead of being typed out twice.
+        // parser looks for these exact strings. They must always match.
         public const string LabelOverall = "OVERALL:";
         public const string LabelThemes = "WHAT KEPT COMING UP:";
         public const string LabelDiscuss = "MIGHT BRING UP:";
 
         // Tells the model what to pay attention to when writing the last
-        // section. Each line reflects what that modality actually works with
-        // between sessions.
+        // section considering the therapy type.
         private static string LensFor(string? therapyType)
         {
             switch (therapyType)
@@ -41,7 +39,7 @@ namespace Roots_Wings.Services
                          + "critical voice or a part that wants to withdraw, described in plain everyday language.";
 
                 default:
-                    // Covers PersonCentred, Unsure, and anything unrecognised.
+                    // Covers Unsure and anything unrecognised.
                     return "The user has not specified a particular type of therapy. When suggesting things to "
                          + "bring up, simply follow what appears most present and most alive in the writing.";
             }

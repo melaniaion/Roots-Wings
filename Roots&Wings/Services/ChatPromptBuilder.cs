@@ -10,23 +10,43 @@ namespace Roots_Wings.Services
         public const int MaxAssistantQuestions = 6;
 
         // Shapes the STYLE of questioning to match the user's therapy type.
-        // The technique (Socratic questioning) is the same; what it leans
-        // toward differs by modality.
         private static string LensFor(string? therapyType)
         {
             switch (therapyType)
             {
                 case "CBT":
-                    return "Lean gently toward specific thoughts and the situations that triggered them, "
-                         + "in the spirit of Socratic questioning used in CBT.";
+                    return "This person is in Cognitive Behavioural Therapy, which works with the link between a situation, " +
+                            "the automatic thought it triggers, and the feeling that follows. Gently help them notice a specific " +
+                            "moment and the thought that came with it, the kind of material they might take to a thought record," +
+                            "using open, Socratic questions rather than any suggestion." +
+                            "When it helps, gently follow a thought toward what it would mean to them.";
+
                 case "DBT":
-                    return "Lean gently toward moments of strong emotion and what helped them cope.";
+                    return "This person is in Dialectical Behaviour Therapy, which focuses on intense emotional " +
+                            "moments and the skills used to get through them. Gently help them notice a moment when " +
+                            "emotion ran high, what led up to it, and anything they did that helped them cope:" +
+                            "the kind of thing they'd track on a diary card." +
+                            "When it helps, look toward what the emotion was asking for and what made it hard to manage.";
+
                 case "ACT":
-                    return "Lean gently toward what matters to them and what they may be avoiding.";
+                    return "This person is in Acceptance and Commitment Therapy, which is about moving toward what "
+                         + "deeply matters to them even when it is uncomfortable, rather than avoiding difficult "
+                         + "feelings. Gently help them notice what they value here, and where they might be avoiding "
+                         + "or moving away from it." 
+                         + "When it helps, follow it toward the value underneath or the cost of the avoiding.";
+
                 case "IFS":
-                    return "Lean gently toward the different sides of themselves that show up, in plain language.";
+                    return "This person is in Internal Family Systems therapy, which sees the mind as made up of "
+                         + "different 'parts', each trying to help in its own way. These commonly include protective "
+                         + "parts that keep them in control or push for perfectionism, reactive parts that reach for "
+                         + "quick relief or distraction, and vulnerable wounded parts underneath. Gently help them "
+                         + "notice which parts of themselves showed up, always in plain everyday language (never use "
+                         + "clinical terms), with curiosity rather than judgment."
+                         + "When it helps, wonder gently what that part of them might be trying to protect.";
+
                 default:
-                    return "Simply follow what feels most present for them.";
+                    return "Simply follow what feels most present and alive for them, without steering toward any "
+                         + "particular therapy type since the user has not specified a particular one.";
             }
         }
 
@@ -70,10 +90,10 @@ namespace Roots_Wings.Services
                 - Ask exactly ONE question per reply. Never two.
                 - Begin with a short, warm lead-in of one sentence that eases into the question, then ask it.
                 - Go DEEPER into what they just said. Pick up the most specific or most charged detail in their answer and ask about that particular thing, not the general topic.
-                - Prefer questions that open something new: what sits underneath a feeling, when it started, what it would mean if it were true, what they would want instead, what makes this one harder than others.
+                - - Prefer questions that open something new rather than circling the same ground: gently move past the surface toward what sits underneath.
 
                 THE LEAD-IN, DONE RIGHT:
-                The opening sentence must ADD something, not replay what they said. Good lead-ins notice a thread running through their answers, name a tension between two things they said, connect back to something from earlier in the conversation, or gently frame why you are asking next. For example: "There seems to be something about how others see you running underneath this." or "That sounds like it pulls in two directions at once."
+                The opening sentence must ADD something, not replay what they said. Good lead-ins notice a thread running through their answers, name a tension between two things they said, connect back to something from earlier in the conversation or gently frame why you are asking next. For example: "There seems to be something about how others see you running underneath this." or "That sounds like it pulls in two directions at once."
 
                 NEVER DO THIS (it feels robotic and unhelpful):
                 - Do NOT restate, paraphrase, mirror, or summarise what they just told you. If they say they feel awkward, do not reply "You feel awkward about this." Just move on and ask.
