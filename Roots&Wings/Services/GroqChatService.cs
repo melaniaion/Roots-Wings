@@ -14,7 +14,7 @@ namespace Roots_Wings.Services
         private readonly HttpClient _httpClient;
         private readonly string _apiKey;
 
-        public const string ProviderName = "Groq (Llama-3.3-70b-versatile)";
+        public const string ProviderName = "Groq (openai/gpt-oss-120b)";
 
         public GroqChatService(HttpClient httpClient, IConfiguration config)
         {
@@ -41,7 +41,7 @@ namespace Roots_Wings.Services
 
             var requestBody = new
             {
-                model = "llama-3.3-70b-versatile",
+                model = "openai/gpt-oss-120b",
                 messages = messagesElement,
                 temperature = 0.85,
                 max_tokens = 900

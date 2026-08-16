@@ -14,7 +14,7 @@ namespace Roots_Wings.Services
         private readonly string _apiKey;
 
         // Shown to the user so they can see which provider produced the text.
-        public const string ProviderName = "Groq (Llama 3.1 8B)";
+        public const string ProviderName = "Groq (openai/gpt-oss-120b)";
 
         public GroqSummaryService(HttpClient httpClient, IConfiguration config)
         {
@@ -29,7 +29,7 @@ namespace Roots_Wings.Services
 
             var requestBody = new
             {
-                model = "llama-3.1-8b-instant",
+                model = "openai/gpt-oss-120b",
                 messages = new[]
                 {
                     new { role = "user", content = prompt }
