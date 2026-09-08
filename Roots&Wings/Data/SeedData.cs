@@ -11,22 +11,6 @@ namespace Roots_Wings.Data
             using (var context = new ApplicationDbContext(
                 serviceProvider.GetRequiredService<DbContextOptions<ApplicationDbContext>>()))
             {
-                // Look for any moods already in the database.
-                //if (!context.Moods.Any())
-                //{
-                //    context.Moods.AddRange(
-                //        new Mood { Id = Guid.NewGuid().ToString(), Name = "Happy" },
-                //        new Mood { Id = Guid.NewGuid().ToString(), Name = "Sad" },
-                //        new Mood { Id = Guid.NewGuid().ToString(), Name = "Romantic" },
-                //        new Mood { Id = Guid.NewGuid().ToString(), Name = "Chill" },
-                //        new Mood { Id = Guid.NewGuid().ToString(), Name = "Party" },
-                //        new Mood { Id = Guid.NewGuid().ToString(), Name = "Focus" },
-                //        new Mood { Id = Guid.NewGuid().ToString(), Name = "Workout" }
-                //    );
-
-                //    context.SaveChanges();
-                //}
-                Console.WriteLine(context.Database.GetConnectionString());
                 // ROLE SEEDING 
                 if (!context.Roles.Any())
                 {
@@ -215,6 +199,31 @@ namespace Roots_Wings.Data
                     //         RoleId = "48b9c598-8ba0-407c-9c32-d243f9d20a52",
                     //         UserId = "222dc744-48b7-4ed2-ab05-5bb119e4a0f8"
                     //     });
+
+
+
+                    // Tags for emotions for Journal
+                    if (!context.Tags.Any())
+                    {
+                        Console.WriteLine("Seeding Tags");
+
+                        context.Tags.AddRange(
+                            new Tag { Name = "Anxious" },
+                            new Tag { Name = "Sad" },
+                            new Tag { Name = "Angry" },
+                            new Tag { Name = "Overwhelmed" },
+                            new Tag { Name = "Ashamed" },
+                            new Tag { Name = "Numb" },
+                            new Tag { Name = "Calm" },
+                            new Tag { Name = "Hopeful" },
+                            new Tag { Name = "Grateful" },
+                            new Tag { Name = "Content" },
+                            new Tag { Name = "Confident" },
+                            new Tag { Name = "Connected" }
+                        );
+
+                        context.SaveChanges();
+                    }
 
                     context.SaveChanges();
                 }
