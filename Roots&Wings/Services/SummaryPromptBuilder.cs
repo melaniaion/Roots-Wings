@@ -82,9 +82,7 @@ namespace Roots_Wings.Services
 
             var lens = LensFor(session.TherapyType);
 
-            // The prompt itself.
-            // Written to be warm but factual, to report rather than interpret
-            // and to stay strictly inside what the user actually wrote.
+
             var prompt = $"""
                 You are helping someone get ready for their therapy session. You are not a therapist and you are not assessing them. Your job is to organise their own journal writing and reflect it back so it is easier for them to remember and decide what to talk about.
 
