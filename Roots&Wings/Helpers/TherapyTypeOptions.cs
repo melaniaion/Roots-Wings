@@ -9,8 +9,7 @@
             { "DBT", "Dialectical Behaviour Therapy (DBT)" },
             { "ACT", "Acceptance & Commitment Therapy (ACT)" },
             { "IFS", "Internal Family Systems (IFS)" },
-            { "PersonCentred", "Person-Centred / General" },
-            { "Unsure", "Not sure" }
+            { "Unsure", "Type not sure" }
         };
 
         // The value we fall back to when nothing is chosen
