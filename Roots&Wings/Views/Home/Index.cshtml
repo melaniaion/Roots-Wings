@@ -11,8 +11,14 @@
     <h1>Grow your <em>roots.</em><br />Spread your <em>wings.</em></h1>
     <p class="hero-sub">A gentle space to prepare for therapy, reflect between sessions, and watch yourself grow, one day at a time.</p>
     <div class="hero-btns">
-        <a asp-area="Identity" asp-page="/Account/Register" class="btn-primary-rw">Begin your journey</a>
-        <a asp-controller="Home" asp-action="About" class="btn-secondary-rw">Learn more</a>
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Today" asp-action="Index" class="btn-primary-rw">Continue your journey</a>
+        }
+        else
+        {
+            <a asp-area="Identity" asp-page="/Account/Login" class="btn-primary-rw">Begin your journey</a>
+        }
     </div>
 </div>
 
