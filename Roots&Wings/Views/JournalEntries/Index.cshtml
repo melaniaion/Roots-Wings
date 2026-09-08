@@ -4,6 +4,8 @@
     ViewData["Title"] = "Journal";
 
     int rotationIndex = 0;
+    bool hasMore = ViewBag.HasMore ?? false;
+    int nextTake = ViewBag.NextTake ?? 0;
 }
 
 @section Styles {
@@ -69,6 +71,15 @@
             }
 
         </div>
+        <div id="older"></div>
+        @if (hasMore)
+        {
+            <div class="text-center mt-4">
+                <a asp-action="Index" asp-route-take="@nextTake" asp-fragment="older" class="btn-rw-secondary">
+                    Show older entries
+                </a>
+            </div>
+        }
     }
     else
     {

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Helpers;
 using Roots_Wings.Data;
 using Roots_Wings.Models;
 
@@ -12,6 +13,7 @@ namespace Roots_Wings.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private const int PageSize = 6;
 
         public JournalEntriesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -20,15 +22,34 @@ namespace Roots_Wings.Controllers
         }
 
         // GET: /Journal
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int take = PageSize)
         {
             var userId = _userManager.GetUserId(User);
 
+            // The value arrives from the query string, so it cannot be trusted
+            if (take < PageSize)
+            {
+                take = PageSize;
+            }
+
+            // Asking for one more than we intend to show tells us whether an older
+            // entry exists without paying for a second COUNT query.
             var entries = await _context.JournalEntries
                 .Where(e => e.UserId == userId)
                 .Include(e => e.Tags)
                 .OrderByDescending(e => e.CreatedAt)
+                .Take(take + 1)
                 .ToListAsync();
+
+            bool hasMore = entries.Count > take;
+
+            if (hasMore)
+            {
+                entries.RemoveAt(entries.Count - 1);
+            }
+
+            ViewBag.HasMore = hasMore;
+            ViewBag.NextTake = take + PageSize;
 
             return View(entries);
         }
