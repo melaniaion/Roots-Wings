@@ -4,6 +4,8 @@
     var completed = Model.Milestones.Count(m => m.CompletedAt.HasValue);
     var total = Model.Milestones.Count;
     var percent = total == 0 ? 0 : (int)Math.Round(completed * 100.0 / total);
+    var maxMilestones = (int)ViewBag.MaxMilestones;
+    var isFull = total >= maxMilestones;
 }
 
 @section Styles {
@@ -167,13 +169,20 @@
             }
         </ul>
 
-        @if (!Model.IsCompleted)
+        @if (!Model.IsCompleted && !isFull)
         {
             <form asp-action="AddMilestone" asp-route-id="@Model.Id" method="post" class="gd-add">
                 <i class="bi bi-flower3 gd-add-leaf"></i>
                 <input type="text" name="description" placeholder="Add another step to grow..." maxlength="200" required />
                 <button type="submit" class="gd-add-btn" title="Add milestone" aria-label="Add milestone"><i class="bi bi-plus"></i></button>
             </form>
+        }
+        else if (!Model.IsCompleted)
+        {
+        <div class="gd-rest-note">
+            <i class="bi bi-flower3"></i>
+            <span>This goal contains the full @maxMilestones steps. Focus on these first or start a second goal for what's beyond them.</span>
+        </div>
         }
         else
         {

@@ -7,6 +7,7 @@
         // start with a couple of empty rows so the form feels alive
         seededMilestones = new List<string> { "", "" };
     }
+    var maxMilestones = (int)ViewBag.MaxMilestones;
 }
 
 @section Styles {
@@ -78,9 +79,10 @@
                 }
             </ul>
 
-            <button type="button" class="gc-add-step" onclick="gcAddRow()">
+            <button type="button" class="gc-add-step" id="gcAddStep" onclick="gcAddRow()">
                 <i class="bi bi-plus"></i> Add another step
             </button>
+            <span class="gc-hint" id="gcStepCount"></span>
         </section>
 
         <!-- ACTIONS -->
@@ -98,6 +100,8 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
+        const gcMaxMilestones = @maxMilestones;
+
         function gcMakeRow(value = "") {
             const li = document.createElement('li');
             li.className = 'gc-milestone-row';
@@ -111,6 +115,7 @@
 
         function gcAddRow() {
             const list = document.getElementById('milestoneList');
+            if (list.querySelectorAll('.gc-milestone-row').length >= gcMaxMilestones) { return; }
             const row = gcMakeRow();
             list.appendChild(row);
             row.classList.add('gc-row-enter');
@@ -135,6 +140,14 @@
             const rows = document.querySelectorAll('#milestoneList .gc-milestone-row');
             const only = rows.length <= 1;
             rows.forEach(r => r.querySelector('.gc-row-remove').classList.toggle('is-hidden', only));
+
+            // Same max the controller enforces. Hiding the button rather than
+            // disabling it.
+            const atCap = rows.length >= gcMaxMilestones;
+            document.getElementById('gcAddStep').style.display = atCap ? 'none' : '';
+            document.getElementById('gcStepCount').textContent = atCap
+                ? 'All ' + gcMaxMilestones + ' steps used. If it needs more, it is probably two goals.'
+                : rows.length + ' of ' + gcMaxMilestones + ' steps';
         }
 
         document.addEventListener('DOMContentLoaded', gcSyncRemoveButtons);

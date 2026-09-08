@@ -12,6 +12,7 @@ namespace Roots_Wings.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private const int MaxMilestonesPerGoal = 6;
 
         public GoalsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -73,12 +74,14 @@ namespace Roots_Wings.Controllers
                 return NotFound();
             }
 
+            ViewBag.MaxMilestones = MaxMilestonesPerGoal;
             return View(goal);
         }
 
         // GET: /Goals/Create
         public IActionResult Create()
         {
+            ViewBag.MaxMilestones = MaxMilestonesPerGoal;
             return View(new Goal());
         }
 
@@ -104,9 +107,16 @@ namespace Roots_Wings.Controllers
                 ModelState.AddModelError(string.Empty, "Add at least one milestone to get started.");
             }
 
+            if (cleanedMilestones.Count > MaxMilestonesPerGoal)
+            {
+                ModelState.AddModelError(string.Empty,
+                    $"A goal can hold up to {MaxMilestonesPerGoal} milestones. If it needs more, it's probably two or more goals :)");
+            }
+
             if (!ModelState.IsValid)
             {
                 ViewBag.MilestoneDescriptions = cleanedMilestones;
+                ViewBag.MaxMilestones = MaxMilestonesPerGoal;
                 return View(newGoal);
             }
 
@@ -228,10 +238,17 @@ namespace Roots_Wings.Controllers
 
             // A completed goal is a closed record on the Wins Shelf.
             // Reopening it with a fresh, unfinished milestone would contradict
-            // its own "done" status, so this is blocked rather than silently allowed.
+            // its own "done" status, so this is blocked rather than allowed.
             if (goal.CompletedAt != null)
             {
                 TempData["GoalError"] = "This goal is already complete and can't take new milestones.";
+                return RedirectToAction(nameof(Details), new { id = goal.Id });
+            }
+
+            // Check number of milestones, shouldn't exceed the max
+            if (goal.Milestones.Count >= MaxMilestonesPerGoal)
+            {
+                TempData["GoalError"] = $"This goal already holds {MaxMilestonesPerGoal} milestones, which is the most it can take.";
                 return RedirectToAction(nameof(Details), new { id = goal.Id });
             }
 
